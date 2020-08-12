@@ -1,0 +1,6 @@
+PREFIX = "%"
+COGS_PATH = "./cogs/"
+# GUILDS_PATH = "data/guilds/"
+TOKEN_PATH = "data/discord.token"
+DISPATCHER_PATH = "data/dispatcher.json"
+# GUILDS_LIST = GUILDS_PATH + "guilds_list.json"
