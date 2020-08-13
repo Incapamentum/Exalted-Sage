@@ -1,1 +1,1 @@
-worker: python3 /bot/exalted-sage.py
+worker: python exalted-sage.py
