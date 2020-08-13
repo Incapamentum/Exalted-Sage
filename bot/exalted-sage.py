@@ -15,7 +15,8 @@ from datetime import datetime, timedelta
 from discord.ext import commands
 from requests_futures.sessions import FuturesSession
 
-sys.path.insert(1, settings.COGS_PATH)
+# sys.path.insert(1, settings.COGS_PATH)
+sys.path.append(settings.COGS_PATH)
 import dispatch
 
 DAILY_LIST_PATH = "data/daily_list.txt"
@@ -220,7 +221,6 @@ async def on_ready():
     print(sage.user.name)
     print(sage.user.id)
     print("------")
-    print(settings.TOKEN)
 
     # Shows that the bot is doing a listening 'activity' for help
     helpActivity = discord.Activity(name = settings.PREFIX + "help", type = discord.ActivityType.listening)

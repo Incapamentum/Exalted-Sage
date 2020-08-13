@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 PREFIX = "%"
-COGS_PATH = "./cogs/"
+COGS_PATH = "./cogs"
 # GUILDS_PATH = "data/guilds/"
 DISPATCHER_PATH = "data/dispatcher.json"
 TOKEN = os.getenv("DISCORD_TOKEN")
