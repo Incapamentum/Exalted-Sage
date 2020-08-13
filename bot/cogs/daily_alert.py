@@ -6,7 +6,7 @@ from discord.ext import commands
 from requests_futures.sessions import FuturesSession
 
 DAILY_LIST_PATH = "data/daily_list.txt"
-DAILY_ACHIEVE_PATH = "data/daily_achievements.json"
+DAILY_PATH = "data/daily_achievements.json"
 
 INSUFF_ARGS = "Insufficient arguments!"
 
@@ -107,7 +107,7 @@ class DailyAlertCog(commands.Cog):
                 dailyToAdd = "Daily " + tupToSentence(args[1:])
                 dailyToAdd = dailyToAdd.strip()
 
-                with open(DAILY_ACHIEVE_PATH, "r") as daily_file:
+                with open(DAILY_PATH, "r") as daily_file:
                     daily_achieve = json.load(daily_file)
 
                 if (dailyToAdd not in daily_achieve):
@@ -159,7 +159,7 @@ class DailyAlertCog(commands.Cog):
 
             elif (args[0] == "display"):
 
-                with open(DAILY_ACHIEVE_PATH, "r") as daily_file:
+                with open(DAILY_PATH, "r") as daily_file:
                     daily_achieve = json.load(daily_file)
 
                 response = "Here is the list of daily achievements I am currently keeping track of..."

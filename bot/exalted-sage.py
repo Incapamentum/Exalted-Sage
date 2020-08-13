@@ -1,6 +1,7 @@
 import asyncio
 import cogs
 import discord
+import dotenv
 import importlib
 import json
 import os
@@ -9,23 +10,110 @@ import re
 import settings
 import shutil
 import sys
-import utilities
 
 from datetime import datetime, timedelta
 from discord.ext import commands
+from requests_futures.sessions import FuturesSession
 
 sys.path.insert(1, settings.COGS_PATH)
 import dispatch
 
+DAILY_LIST_PATH = "data/daily_list.txt"
+DAILY_PATH = "data/daily_achievements.json"
+# DAILY_ID_PATH = "data/daily_achieveID.json"
+
+def read_data(file_path):
+    """
+        Returns a list of entries found within the .txt file
+        pointed at by the 'file_path' parameter
+    """
+
+    data = []
+
+    with open(file_path, "r") as f:
+
+        while True:
+            line = f.readline()
+
+            if not line:
+                break
+
+            data.append(line.strip())
+
+    return data
+
+def obtain_description(achieve_id):
+
+    session = FuturesSession()
+
+    request = session.get("https://api.guildwars2.com/v2/achievements/" + str(achieve_id))
+    request_result = request.result()
+
+    result = json.loads(request_result.text)
+
+    return result['requirement']
+
 async def on_reset(ctx):
+
+    session = FuturesSession()
 
     while True:
 
         utc_now = datetime.utcnow()
 
-        if (utc_now.hour == 0):
-            await ctx.send("It is reset time my dudes!")
-            time_left = 86400
+        # Checks the watchlist of daily achievements and determines if it will
+        # make an announcement about one being available or not
+        if (utc_now.hour == 3):
+
+            embed_msg = discord.Embed(color=0xffee05)
+            report = False
+
+            request = session.get("https://api.guildwars2.com/v2/achievements/daily/tomorrow")
+            request_result = request.result()
+
+            result = json.loads(request_result.text)
+
+            # Obtains a list of the PVE daily achievements for tomorrow.
+            # Each entry in the list is a dictionary
+            pve_daily = result['pve']
+
+            # Obtaining the list of dailies we are watching for
+            # Each entry in the list is a Daily name
+            daily_list = read_data(DAILY_LIST_PATH)
+
+            # Obtaining the dictionary associated each Daily name with its
+            # respective ID to be compared against the watchlist
+            with open(DAILY_PATH, "r") as daily_file:
+                daily_achieves = json.load(daily_file)
+
+            daily_names = []
+
+            for entry in daily_list:
+
+                daily_id = daily_achieves[entry]
+
+                for daily in pve_daily:
+
+                    if ((daily['id'] == daily_id) and (entry not in daily_names)):
+
+                        report = True
+                        daily_names.append(entry)
+
+                        embed_msg.add_field(
+                            name=entry,
+                            value=obtain_description(daily_id),
+                            inline=False
+                        )
+
+            if (report):
+                response = "Exalted! A daily achievement that is being monitored will appear tomorrow!"
+                await ctx.send(response, embed=embed_msg)
+                return
+
+            await ctx.send("Nothing to report...")
+
+            # Full 24hrs (86400) + 1min
+            time_left = 86460
         else:
             hour = 23 - utc_now.hour
             minute = 59 - utc_now.minute
@@ -33,6 +121,7 @@ async def on_reset(ctx):
 
             time = timedelta(hours=hour, minutes=minute, seconds=sec)
             time_left = time.total_seconds()
+            print(time_left)
 
         await asyncio.sleep(time_left)
 
@@ -127,12 +216,11 @@ async def init_tasks(ctx):
 @sage.event
 async def on_ready():
 
-    # dir_check(settings.GUILDS_PATH)
-
     print("Logged in as")
     print(sage.user.name)
     print(sage.user.id)
     print("------")
+    print(settings.TOKEN)
 
     # Shows that the bot is doing a listening 'activity' for help
     helpActivity = discord.Activity(name = settings.PREFIX + "help", type = discord.ActivityType.listening)
@@ -164,4 +252,4 @@ cogs_list = data["cogs"]
 init_cogs(sage, cogs_list)
 
 # Initializing the bot
-sage.run(utilities.load_token(settings.TOKEN_PATH))
+sage.run(settings.TOKEN)
