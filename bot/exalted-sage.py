@@ -13,10 +13,9 @@ from datetime import datetime, timedelta
 from discord.ext import commands
 from pathlib import Path
 from requests_futures.sessions import FuturesSession
-# from cogs.daily_alert import DailyAlertCog
 
-DAILY_LIST_PATH = "data/daily_list.txt"
-DAILY_PATH = "data/daily_achievements.json"
+DAILY_LIST_PATH = "./data/daily_list.txt"
+DAILY_PATH = "./data/daily_achievements.json"
 
 def read_data(file_path):
     """
@@ -124,9 +123,6 @@ def init_cogs(bot, cog_list):
     """
         Add all the cogs in the given list of available cogs
     """
-
-    print(settings.COGS_PATH)
-    print(cog_list)
 
     for cog in cog_list:
         bot.load_extension(settings.COGS_PATH.strip("./") + "." + cog)
