@@ -1,5 +1,4 @@
 import asyncio
-# import cogs
 import discord
 import dotenv
 import importlib
@@ -9,9 +8,7 @@ import random
 import re
 import settings
 import shutil
-import sys
 
-from cogs import cogs_list
 from datetime import datetime, timedelta
 from discord.ext import commands
 from pathlib import Path
@@ -120,7 +117,6 @@ async def on_reset(ctx):
 
             time = timedelta(hours=hour, minutes=minute, seconds=sec)
             time_left = time.total_seconds()
-            print(time_left)
 
         await asyncio.sleep(time_left)
 
@@ -129,17 +125,11 @@ def init_cogs(bot, cog_list):
         Add all the cogs in the given list of available cogs
     """
 
-    print("Hello from init_cogs()!")
+    print(settings.COGS_PATH)
     print(cog_list)
 
-    bot.load_extension("cogs.daily_alert.py")
-
-
-    # for cog in cog_list:
-
-    #     bot.load_extension(cog)
-
-        # bot.add_cog(commands.Cog(cog))
+    for cog in cog_list:
+        bot.load_extension(settings.COGS_PATH.strip("./") + "." + cog)
 
 def dir_check(path):
 
@@ -253,11 +243,9 @@ async def on_message(msg):
 
 # Obtaining list of commands/cogs to include in the bot
 with open(settings.DISPATCHER_PATH, "r") as settings_file:
-    data = json.load(settings_file)
+    cogs = json.load(settings_file)
 
-init_cogs(sage, cogs_list)
-
-# sage.load_extension(DailyAlertCog)
+init_cogs(sage, cogs['cogs'])
 
 # Initializing the bot
 sage.run(settings.TOKEN)
