@@ -10,6 +10,13 @@ DAILY_PATH = "data/daily_achievements.json"
 
 INSUFF_ARGS = "Insufficient arguments!"
 
+def setup(bot):
+    """
+        Add this cog to the given bot
+    """
+
+    bot.add_cog(DailyAlertCog(bot))
+
 def tupToSentence(tup):
     """
         Takes a tuple, converts it to a string

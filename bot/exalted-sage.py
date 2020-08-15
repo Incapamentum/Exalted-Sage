@@ -1,5 +1,5 @@
 import asyncio
-import cogs
+# import cogs
 import discord
 import dotenv
 import importlib
@@ -11,17 +11,15 @@ import settings
 import shutil
 import sys
 
+from cogs import cogs_list
 from datetime import datetime, timedelta
 from discord.ext import commands
+from pathlib import Path
 from requests_futures.sessions import FuturesSession
-
-# sys.path.insert(1, settings.COGS_PATH)
-sys.path.append(settings.COGS_PATH)
-import dispatch
+# from cogs.daily_alert import DailyAlertCog
 
 DAILY_LIST_PATH = "data/daily_list.txt"
 DAILY_PATH = "data/daily_achievements.json"
-# DAILY_ID_PATH = "data/daily_achieveID.json"
 
 def read_data(file_path):
     """
@@ -64,7 +62,7 @@ async def on_reset(ctx):
 
         # Checks the watchlist of daily achievements and determines if it will
         # make an announcement about one being available or not
-        if (utc_now.hour == 3):
+        if (utc_now.hour == 0):
 
             embed_msg = discord.Embed(color=0xffee05)
             report = False
@@ -127,11 +125,21 @@ async def on_reset(ctx):
         await asyncio.sleep(time_left)
 
 def init_cogs(bot, cog_list):
-    """Add all the cogs in the given list of available cogs"""
-    
-    for cog in cog_list:
-        importlib.import_module(cog)
-        bot.add_cog(dispatch.dispatcher[cog]())
+    """
+        Add all the cogs in the given list of available cogs
+    """
+
+    print("Hello from init_cogs()!")
+    print(cog_list)
+
+    bot.load_extension("cogs.daily_alert.py")
+
+
+    # for cog in cog_list:
+
+    #     bot.load_extension(cog)
+
+        # bot.add_cog(commands.Cog(cog))
 
 def dir_check(path):
 
@@ -247,9 +255,9 @@ async def on_message(msg):
 with open(settings.DISPATCHER_PATH, "r") as settings_file:
     data = json.load(settings_file)
 
-cogs_list = data["cogs"]
-
 init_cogs(sage, cogs_list)
+
+# sage.load_extension(DailyAlertCog)
 
 # Initializing the bot
 sage.run(settings.TOKEN)
