@@ -157,20 +157,16 @@ sage.remove_command("help")
 @sage.command()
 async def init_tasks(ctx):
 
-    max_role = ctx.message.author.roles[len(ctx.message.author.roles) - 1]
+    exalted = discord.utils.get(ctx.guild.roles, name="Exalted")
+    ascended = discord.utils.get(ctx.guild.roles, name="Ascended")
 
-    if ((max_role.name != "Exalted") or (max_role.name != "Ascended")):
-        await ctx.send("It seems that you do not have the required permissions to run this command...")
+    if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles)):
+        sage.loop.create_task(on_reset(ctx))
+        await ctx.send("I shall uphold the tasks that I have been assigned!")
         return
 
-    sage.loop.create_task(on_reset(ctx))
-    await ctx.send("I shall uphold the tasks that I have been assigned!")
-
-@sage.command()
-async def test(ctx):
-
-    print(ctx.message.guild.roles)
-    await ctx.send("Ping! %s" % ("<@&717101322268049489>"))
+    await ctx.send("It seems that you do not have the required permissions to run this command...")
+    return
 
 @sage.event
 async def on_guild_join(guild):
