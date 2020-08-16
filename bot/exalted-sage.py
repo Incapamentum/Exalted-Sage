@@ -168,6 +168,45 @@ async def init_tasks(ctx):
     await ctx.send("It seems that you do not have the required permissions to run this command...")
     return
 
+@sage.command()
+async def init_guild(ctx):
+    """
+        Generates a list of members by mapping their unique member mention ID
+        with their display names, and a list of roles by mapping their role
+        names with their unique role mention ID. Also creates a 'roles_mention'
+        that will hold an empty list
+    """
+
+    exalted = discord.utils.get(ctx.guild.roles, name="Exalted")
+    ascended = discord.utils.get(ctx.guild.roles, name="Ascended")
+    guild = ctx.guild
+
+    if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles)):
+
+        auric_oasis = {}
+        members_list = {}
+        roles_list = {}
+
+        for member in guild.members:
+            members_list[str(member)] = member.mention
+
+        for role in guild.roles:
+            roles_list[role.name] = role.mention
+
+        auric_oasis["members"] = members_list
+        auric_oasis["roles"] = roles_list
+        auric_oasis["role_mentions"] = []
+        auric_oasis["user_mentions"] = []
+
+        with open(AO_PATH, "w") as guild_file:
+            json.dump(auric_oasis, guild_file)
+
+        await ctx.send("I have obtained information regarding the guild!")
+        return
+
+    await ctx.send("It seems that you do not have the required permissions to run this command...")
+    return
+
 @sage.event
 async def on_guild_join(guild):
     """
