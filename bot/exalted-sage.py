@@ -159,7 +159,7 @@ async def init_tasks(ctx):
 
     max_role = ctx.message.author.roles[len(ctx.message.author.roles) - 1]
 
-    if ((max_role.name != "Exalted") or (max_role != "Ascended")):
+    if ((max_role.name != "Exalted") or (max_role.name != "Ascended")):
         await ctx.send("It seems that you do not have the required permissions to run this command...")
         return
 
