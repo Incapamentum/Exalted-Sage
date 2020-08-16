@@ -14,8 +14,9 @@ from discord.ext import commands
 from pathlib import Path
 from requests_futures.sessions import FuturesSession
 
-DAILY_LIST_PATH = "./data/daily_list.txt"
-DAILY_PATH = "./data/daily_achievements.json"
+DAILY_LIST_PATH = "./data/achievements/daily_list.txt"
+DAILY_PATH = "./data/achievements/daily_achievements.json"
+AO_PATH = "./data/guild/auric_oasis.json"
 
 def read_data(file_path):
     """
@@ -101,8 +102,26 @@ async def on_reset(ctx):
                         )
 
             if (report):
-                response = "Exalted! A daily achievement that is being monitored will appear tomorrow!"
-                await ctx.send(response, embed=embed_msg)
+
+                ping = ""
+
+                with open(AO_PATH, "r") as guild_file:
+                    auric_oasis = json.load(guild_file)
+
+                mentions = auric_oasis['role_mentions'] + auric_oasis['user_mentions']
+
+                for role in auric_oasis['roles']:
+
+                    if (role in mentions):
+                        ping += (auric_oasis['roles'][role] + ' ')
+
+                for member in auric_oasis['members']:
+
+                    if (member in mentions):
+                        ping += (auric_oasis['members'][member] + ' ')
+
+                response = "Attention! A daily achievement that is being monitored will appear tomorrow!\n"
+                await ctx.send(response + ping, embed=embed_msg)
                 return
 
             await ctx.send("Nothing to report...")
@@ -115,7 +134,7 @@ async def on_reset(ctx):
             sec = 59 - utc_now.second
 
             time = timedelta(hours=hour, minutes=minute, seconds=sec)
-            time_left = time.total_seconds()
+            time_left = time.total_seconds() + 60
 
         await asyncio.sleep(time_left)
 
@@ -133,77 +152,160 @@ def dir_check(path):
         os.mkdir(path)
 
 sage = commands.Bot(command_prefix=settings.PREFIX)
+sage.remove_command("help")
 
 @sage.command()
 async def init_tasks(ctx):
+
+    max_role = ctx.message.author.roles[len(ctx.message.author.roles) - 1]
+
+    if ((max_role.name != "Exalted") or (max_role != "Ascended")):
+        await ctx.send("It seems that you do not have the required permissions to run this command...")
+        return
+
     sage.loop.create_task(on_reset(ctx))
+    await ctx.send("I shall uphold the tasks that I have been assigned!")
 
-# @cumberlan.event
-# async def on_guild_join(guild):
-#     """
-#         Creates a dedicated directory for newly joined server, and adds it to a list.
-#         Also generates a list of members associated with the server.
-#     """
+@sage.command()
+async def test(ctx):
 
-#     GUILD_ID = settings.GUILDS_PATH + str(guild.id)
-#     MEMBER_PATH = GUILD_ID + "/members_list.json"
+    print(ctx.message.guild.roles)
+    await ctx.send("Ping! %s" % ("<@&717101322268049489>"))
 
-#     if not os.path.isdir(settings.GUILDS_PATH):
-#         os.mkdir(settings.GUILDS_PATH)
+@sage.event
+async def on_guild_join(guild):
+    """
+        Generates a list of members by mapping their unique member mention ID
+        with their display names, and a list of roles by mapping their role
+        names with their unique role mention ID. Also creates a 'roles_mention'
+        that will hold an empty list
+    """
 
-#     if not os.path.isdir(GUILD_ID):
-#         os.mkdir(GUILD_ID)
+    auric_oasis = {}
+    members_list = {}
+    roles_list = {}
 
-#     # Creates a guilds_list.json file with newly joined server info
-#     if not os.path.isfile(settings.GUILDS_LIST):
+    for member in guild.members:
+        members_list[str(member)] = member.mention
 
-#         guilds_list = {str(guild.id) : guild.name}
+    for role in guild.roles:
+        roles_list[role.name] = role.mention
 
-#         with open(settings.GUILDS_LIST, "w") as guilds_file:
-#             json.dump(guilds_list, guilds_file)
-#     # Modifies the guilds_list.json file with newly joined server info
-#     else:
+    auric_oasis["members"] = members_list
+    auric_oasis["roles"] = roles_list
+    auric_oasis["role_mentions"] = []
+    auric_oasis["user_mentions"] = []
 
-#         with open(settings.GUILDS_LIST, "w") as guilds_file:
-#             guilds_list = json.load(guilds_file)
+    with open(AO_PATH, "w") as guild_file:
+        json.dump(auric_oasis, guild_file)
 
-#         if str(guild.id) in guilds_list:
-#             return
+@sage.event
+async def on_member_join(member):
+    """
+        Updates the member list whenever a new member joins the server by
+        adding their unique member ID and their display name
+    """
 
-#         guilds_list[str(guild.id)] = guild.name
+    with open(AO_PATH, "r") as guild_file:
+        auric_oasis = json.load(guild_file)
 
-#         with open(settings.GUILDS_LIST, "w") as guilds_file:
-#             json.dump(guilds_list, guilds_file)
+    members_list = auric_oasis["members"]
+    members_list[str(member)] = member.mention
 
-#     # Generates a list of members belonging to the server
-#     member_list = {}
+    auric_oasis["members"] = members_list
 
-#     for member in guild.members:
+    with open(AO_PATH, "w") as guild_file:
+        json.dump(auric_oasis, guild_file)
 
-#         member_id = "<@!%s>" % (member.id)
-#         member_list[member_id] = member.display_name
+@sage.event
+async def on_guild_role_create(role):
+    """
+        Updates the roles_list with the newly created role
+    """
 
-#     with open(MEMBER_PATH, "w") as member_file:
-#         json.dump(member_list, member_file)
+    with open(AO_PATH, "r") as guild_file:
+        auric_oasis = json.load(guild_file)
 
-# @cumberlan.event
-# async def on_guild_remove(guild):
-#     """
-#         Removes all information associated with the server.
-#     """
+    roles_list = auric_oasis["roles"]
+    roles_list[role.name] = role.mention
 
-#     GUILD_ID = settings.GUILDS_PATH + str(guild.id)
+    auric_oasis["roles"] = roles_list
 
-#     with open(settings.GUILDS_LIST, "r") as guilds_file:
-#         guilds_list = json.load(guilds_file)
+    with open(AO_PATH, "w") as guild_file:
+        json.dump(auric_oasis, guild_file)
 
-#     if str(guild.id) in guilds_list:
-#         del guilds_list[str(guild.id)]
+@sage.event
+async def on_member_remove(member):
+    """
+        Updates the member list whenever a member leaves the server by
+        removing their information from the list
+    """
 
-#     with open(settings.GUILDS_LIST, "w") as guilds_file:
-#         json.dump(guilds_list, guilds_file)
+    with open(AO_PATH, "r") as guild_file:
+        auric_oasis = json.load(guild_file)
 
-#     shutil.rmtree(GUILD_ID)
+    members_list = auric_oasis["members"]
+    mentions_list = auric_oasis["user_mentions"]
+
+    if (str(member) in mentions_list):
+        mentions_list.remove(member.mention)
+        auric_oasis["user_mentions"] = mentions_list
+
+    del members_list[str(member)]
+
+    auric_oasis["members"] = members_list
+
+    with open(AO_PATH, "w") as guild_file:
+        json.dump(auric_oasis, guild_file)
+
+@sage.event
+async def on_guild_role_delete(role):
+    """
+    """
+
+    with open(AO_PATH, "r") as guild_file:
+        auric_oasis = json.load(guild_file)
+
+    roles_list = auric_oasis["roles"]
+    mentions_list = auric_oasis["role_mentions"]
+
+    if (role.name in mentions_list):
+
+        mentions_list.remove(role.name)
+        auric_oasis["role_mentions"] = mentions_list
+
+    del roles_list[role.mention]
+
+    auric_oasis["roles"] = roles_list
+
+    with open(AO_PATH, "w") as guild_file:
+        json.dump(auric_oasis, guild_file)
+
+@sage.event
+async def on_member_update(before, after):
+    """
+        Updates the member list whenever a member updates their profile, which
+        could be their status, activity, nickname, or roles
+    """
+
+    with open(AO_PATH, "r") as guild_file:
+        auric_oasis = json.load(guild_file)
+
+    members_list = auric_oasis["members"]
+    members_list[str(after)] = after.mention
+
+    auric_oasis["members"] = members_list
+
+    with open(AO_PATH, "w") as guild_file:
+        json.dump(auric_oasis, guild_file)
+
+@sage.event
+async def on_guild_remove(guild):
+    """
+        Removes all information associated with the server
+    """
+
+    os.remove(AO_PATH)
 
 # Does two important actions:
 #   1) Does a quick housekeeping action

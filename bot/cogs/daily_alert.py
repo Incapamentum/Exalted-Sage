@@ -5,10 +5,12 @@ import os
 from discord.ext import commands
 from requests_futures.sessions import FuturesSession
 
-DAILY_LIST_PATH = "data/daily_list.txt"
-DAILY_PATH = "data/daily_achievements.json"
+DAILY_LIST_PATH = "data/achievements/daily_list.txt"
+DAILY_PATH = "data/achievements/daily_achievements.json"
+AO_PATH = "data/guild/auric_oasis.json"
 
 INSUFF_ARGS = "Insufficient arguments!"
+NO_UNDERSTAND = "I do not understand what you are asking me to do."
 
 def setup(bot):
     """
@@ -135,7 +137,7 @@ class DailyAlertCog(commands.Cog):
                 else:
                     create_new(dailyToAdd, DAILY_LIST_PATH)
 
-                await ctx.send("Daily has been added to the watchlist!")
+                await ctx.send("Daily has been added to the Watchlist!")
                 return
 
             elif (args[0] == "remove"):
@@ -161,7 +163,7 @@ class DailyAlertCog(commands.Cog):
                     await ctx.send("Entry has been removed!")
 
                 else:
-                    await ctx.send("The watchlist is currently empty!")
+                    await ctx.send("The Watchlist is currently empty!")
 
 
             elif (args[0] == "display"):
@@ -186,6 +188,49 @@ class DailyAlertCog(commands.Cog):
 
                 await ctx.send(response, embed=embed_msg)
                 return
+
+            elif (args[0] == "notify"):
+
+                if (len(args) < 2):
+                    await ctx.send(INSUFF_ARGS)
+                    return
+
+                # How to make this so that only officers can use this?
+                if (args[1] == "role"):
+
+                    max_role = ctx.message.author.roles[len(ctx.message.author.roles) - 1]
+
+                    if ((max_role.name != "Exalted") or (max_role != "Ascended")):
+                        await ctx.send("It seems that you do not have the required permissions to run this command...")
+                        return
+
+                    with open(AO_PATH, "r") as guild_file:
+                        auric_oasis = json.load(guild_file)
+
+                    mentions_list = auric_oasis["role_mentions"]
+                    mentions_list.append(args[2])
+                    auric_oasis["role_mentions"] = mentions_list
+
+                    with open(AO_PATH, "w") as guild_file:
+                        json.dump(auric_oasis, guild_file)
+
+                    await ctx.send("This role will now be notified of any daily alerts!")
+                    return
+
+                elif (args[1] == "me"):
+
+                    with open(AO_PATH, "r") as guild_file:
+                        auric_oasis = json.load(guild_file)
+
+                    mentions_list = auric_oasis["user_mentions"]
+                    mentions_list.append(str(ctx.message.author))
+                    auric_oasis["user_mentions"] = mentions_list
+
+                    with open(AO_PATH, "w") as guild_file:
+                        json.dump(auric_oasis, guild_file)
+                    
+                    await ctx.send("You will now be notified of any daily alerts!")
+                    return
 
             else:
                 await ctx.send("I do not understand what you are asking me to do.")
