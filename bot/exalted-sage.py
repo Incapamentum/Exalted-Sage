@@ -17,10 +17,10 @@ from dotenv import load_dotenv
 from pathlib import Path
 from requests_futures.sessions import FuturesSession
 
-load_dotenv()
+# load_dotenv()
 
-MONGO_CONNECT = os.getenv("MONGO_URI")
-TOKEN = os.getenv("DISCORD_TOKEN")
+# MONGO_CONNECT = os.getenv("MONGO_URI")
+# TOKEN = os.getenv("DISCORD_TOKEN")
 
 # def obtain_description(achieve_id):
 
@@ -132,7 +132,7 @@ def init_cogs(bot, cog_list):
 
 # Connecting to the MongoDB cluster and accessing the Auric_Oasis
 # database
-mongo_client = pymongo.MongoClient(MONGO_CONNECT)
+mongo_client = pymongo.MongoClient(settings.MONGO_CONNECT)
 db = mongo_client.Auric_Oasis
 
 # Bot initialization
@@ -305,4 +305,4 @@ cogs = settings.DISPATCHER
 init_cogs(sage, cogs)
 
 # Initializing the bot
-sage.run(TOKEN)
+sage.run(settings.TOKEN)
