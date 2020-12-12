@@ -1,9 +1,11 @@
 import asyncio
 import discord
+import dns
 import dotenv
 import importlib
 import json
 import os
+import pymongo
 import random
 import re
 import settings
@@ -14,129 +16,105 @@ from discord.ext import commands
 from pathlib import Path
 from requests_futures.sessions import FuturesSession
 
-DAILY_LIST_PATH = "./data/achievements/daily_list.txt"
-DAILY_PATH = "./data/achievements/daily_achievements.json"
-AO_PATH = "./data/guild/auric_oasis.json"
+# def obtain_description(achieve_id):
 
-def read_data(file_path):
-    """
-        Returns a list of entries found within the .txt file
-        pointed at by the 'file_path' parameter
-    """
+#     session = FuturesSession()
 
-    data = []
+#     request = session.get("https://api.guildwars2.com/v2/achievements/" + str(achieve_id))
+#     request_result = request.result()
 
-    with open(file_path, "r") as f:
+#     result = json.loads(request_result.text)
 
-        while True:
-            line = f.readline()
+#     return result['requirement']
 
-            if not line:
-                break
+# async def on_reset(ctx):
 
-            data.append(line.strip())
+#     session = FuturesSession()
 
-    return data
+#     while True:
 
-def obtain_description(achieve_id):
+#         utc_now = datetime.utcnow()
 
-    session = FuturesSession()
+#         # Checks the watchlist of daily achievements and determines if it will
+#         # make an announcement about one being available or not
+#         if (utc_now.hour == 0):
 
-    request = session.get("https://api.guildwars2.com/v2/achievements/" + str(achieve_id))
-    request_result = request.result()
+#             embed_msg = discord.Embed(color=0xffee05)
+#             report = False
 
-    result = json.loads(request_result.text)
+#             request = session.get("https://api.guildwars2.com/v2/achievements/daily/tomorrow")
+#             request_result = request.result()
 
-    return result['requirement']
+#             result = json.loads(request_result.text)
 
-async def on_reset(ctx):
+#             # Obtains a list of the PVE daily achievements for tomorrow.
+#             # Each entry in the list is a dictionary
+#             pve_daily = result['pve']
 
-    session = FuturesSession()
+#             # Obtaining the list of dailies we are watching for
+#             # Each entry in the list is a Daily name
+#             daily_list = read_data(DAILY_LIST_PATH)
 
-    while True:
+#             # Obtaining the dictionary associated each Daily name with its
+#             # respective ID to be compared against the watchlist
+#             with open(DAILY_PATH, "r") as daily_file:
+#                 daily_achieves = json.load(daily_file)
 
-        utc_now = datetime.utcnow()
+#             daily_names = []
 
-        # Checks the watchlist of daily achievements and determines if it will
-        # make an announcement about one being available or not
-        if (utc_now.hour == 0):
+#             for entry in daily_list:
 
-            embed_msg = discord.Embed(color=0xffee05)
-            report = False
+#                 daily_id = daily_achieves[entry]
 
-            request = session.get("https://api.guildwars2.com/v2/achievements/daily/tomorrow")
-            request_result = request.result()
+#                 for daily in pve_daily:
 
-            result = json.loads(request_result.text)
+#                     if ((daily['id'] == daily_id) and (entry not in daily_names)):
 
-            # Obtains a list of the PVE daily achievements for tomorrow.
-            # Each entry in the list is a dictionary
-            pve_daily = result['pve']
+#                         report = True
+#                         daily_names.append(entry)
 
-            # Obtaining the list of dailies we are watching for
-            # Each entry in the list is a Daily name
-            daily_list = read_data(DAILY_LIST_PATH)
+#                         embed_msg.add_field(
+#                             name=entry,
+#                             value=obtain_description(daily_id),
+#                             inline=False
+#                         )
 
-            # Obtaining the dictionary associated each Daily name with its
-            # respective ID to be compared against the watchlist
-            with open(DAILY_PATH, "r") as daily_file:
-                daily_achieves = json.load(daily_file)
+#             if (report):
 
-            daily_names = []
+#                 ping = ""
 
-            for entry in daily_list:
+#                 with open(AO_PATH, "r") as guild_file:
+#                     auric_oasis = json.load(guild_file)
 
-                daily_id = daily_achieves[entry]
+#                 mentions = auric_oasis['role_mentions'] + auric_oasis['user_mentions']
 
-                for daily in pve_daily:
+#                 for role in auric_oasis['roles']:
 
-                    if ((daily['id'] == daily_id) and (entry not in daily_names)):
+#                     if (role in mentions):
+#                         ping += (auric_oasis['roles'][role] + ' ')
 
-                        report = True
-                        daily_names.append(entry)
+#                 for member in auric_oasis['members']:
 
-                        embed_msg.add_field(
-                            name=entry,
-                            value=obtain_description(daily_id),
-                            inline=False
-                        )
+#                     if (member in mentions):
+#                         ping += (auric_oasis['members'][member] + ' ')
 
-            if (report):
+#                 response = "Attention! A daily achievement that is being monitored will appear tomorrow!\n"
+#                 await ctx.send(response + ping, embed=embed_msg)
+#                 return
 
-                ping = ""
+#             await ctx.send("Nothing to report...")
 
-                with open(AO_PATH, "r") as guild_file:
-                    auric_oasis = json.load(guild_file)
+#             # Full 24hrs (86400) + 1min
+#             time_left = 86460
+#         else:
+#             hour = 23 - utc_now.hour
+#             minute = 59 - utc_now.minute
+#             sec = 59 - utc_now.second
 
-                mentions = auric_oasis['role_mentions'] + auric_oasis['user_mentions']
+#             time = timedelta(hours=hour, minutes=minute, seconds=sec)
+#             time_left = time.total_seconds() + 60
 
-                for role in auric_oasis['roles']:
-
-                    if (role in mentions):
-                        ping += (auric_oasis['roles'][role] + ' ')
-
-                for member in auric_oasis['members']:
-
-                    if (member in mentions):
-                        ping += (auric_oasis['members'][member] + ' ')
-
-                response = "Attention! A daily achievement that is being monitored will appear tomorrow!\n"
-                await ctx.send(response + ping, embed=embed_msg)
-                return
-
-            await ctx.send("Nothing to report...")
-
-            # Full 24hrs (86400) + 1min
-            time_left = 86460
-        else:
-            hour = 23 - utc_now.hour
-            minute = 59 - utc_now.minute
-            sec = 59 - utc_now.second
-
-            time = timedelta(hours=hour, minutes=minute, seconds=sec)
-            time_left = time.total_seconds() + 60
-
-        await asyncio.sleep(time_left)
+#         await asyncio.sleep(time_left)
 
 def init_cogs(bot, cog_list):
     """
@@ -146,193 +124,133 @@ def init_cogs(bot, cog_list):
     for cog in cog_list:
         bot.load_extension(settings.COGS_PATH.strip("./") + "." + cog)
 
-def dir_check(path):
+# Connecting to the MongoDB cluster and accessing the Auric_Oasis
+# database
+mongo_client = pymongo.MongoClient(settings.MONGO_CONNECT)
+db = mongo_client.Auric_Oasis
 
-    if not os.path.isdir(path):
-        os.mkdir(path)
-
+# Bot initialization
 sage = commands.Bot(command_prefix=settings.PREFIX)
 sage.remove_command("help")
 
-@sage.command()
-async def init_tasks(ctx):
+# @sage.command()
+# async def init_tasks(ctx):
 
-    exalted = discord.utils.get(ctx.guild.roles, name="Exalted")
-    ascended = discord.utils.get(ctx.guild.roles, name="Ascended")
+#     exalted = discord.utils.get(ctx.guild.roles, name="Exalted")
+#     ascended = discord.utils.get(ctx.guild.roles, name="Ascended")
 
-    if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles)):
-        sage.loop.create_task(on_reset(ctx))
-        await ctx.send("I shall uphold the tasks that I have been assigned!")
-        return
+#     if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles)):
+#         sage.loop.create_task(on_reset(ctx))
+#         await ctx.send("I shall uphold the tasks that I have been assigned!")
+#         return
 
-    await ctx.send("It seems that you do not have the required permissions to run this command...")
-    return
+#     await ctx.send("It seems that you do not have the required permissions to run this command...")
+#     return
 
 @sage.command()
 async def init_guild(ctx):
     """
-        Generates a list of members by mapping their unique member mention ID
-        with their display names, and a list of roles by mapping their role
-        names with their unique role mention ID. Also creates a 'roles_mention'
-        that will hold an empty list
+        Used to generate a database for the guild, filling it with roles that
+        exist in the guild
     """
 
+    creator = "Goose"
     exalted = discord.utils.get(ctx.guild.roles, name="Exalted")
     ascended = discord.utils.get(ctx.guild.roles, name="Ascended")
     guild = ctx.guild
 
-    if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles)):
+    if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles) or (creator == ctx.author.name)):
 
-        auric_oasis = {}
-        members_list = {}
-        roles_list = {}
+        if (db.roles.find_one({"Title" : "Auric Oasis Roles"}) is None):
 
-        for member in guild.members:
-            members_list[str(member)] = member.mention
+            roles_doc = {}
+            roles_list = {}
 
-        for role in guild.roles:
-            roles_list[role.name] = role.mention
+            roles_doc["Title"] = "Auric Oasis Roles"
 
-        auric_oasis["members"] = members_list
-        auric_oasis["roles"] = roles_list
-        auric_oasis["role_mentions"] = []
-        auric_oasis["user_mentions"] = []
+            # Collecting all roles in the guild
+            for role in guild.roles:
+                roles_list[role.name] = role.mention
 
-        with open(AO_PATH, "w") as guild_file:
-            json.dump(auric_oasis, guild_file)
+            roles_doc["roles"] = roles_list
 
-        await ctx.send("I have obtained information regarding the guild!")
-        return
+            db.roles.insert_one(roles_doc)
 
-    await ctx.send("It seems that you do not have the required permissions to run this command...")
-    return
+            await ctx.send("My database regarding the guild hierarchy has been initialized!")
+        
+        else:
+            await ctx.send("My database regarding the guild hierarchy does not need to be initialized.")
+
+    else:
+        await ctx.send("My apologies, but you are not authorized to issue this command.")
 
 @sage.event
 async def on_guild_join(guild):
     """
-        Generates a list of members by mapping their unique member mention ID
-        with their display names, and a list of roles by mapping their role
-        names with their unique role mention ID. Also creates a 'roles_mention'
-        that will hold an empty list
+        Obtains the list of all roles found in the server
     """
 
-    auric_oasis = {}
-    members_list = {}
+    roles_doc = {}
     roles_list = {}
 
-    for member in guild.members:
-        members_list[str(member)] = member.mention
+    roles_doc["Title"] = "Auric Oasis Roles"
 
+    # Collecting all roles in the guild
     for role in guild.roles:
         roles_list[role.name] = role.mention
 
-    auric_oasis["members"] = members_list
-    auric_oasis["roles"] = roles_list
-    auric_oasis["role_mentions"] = []
-    auric_oasis["user_mentions"] = []
+    roles_doc["roles"] = roles_list
 
-    with open(AO_PATH, "w") as guild_file:
-        json.dump(auric_oasis, guild_file)
+    # Inserting the 'roles' document to the Auric_Oasis database
+    db.roles.insert_one(roles_doc)
 
-@sage.event
-async def on_member_join(member):
-    """
-        Updates the member list whenever a new member joins the server by
-        adding their unique member ID and their display name
-    """
-
-    with open(AO_PATH, "r") as guild_file:
-        auric_oasis = json.load(guild_file)
-
-    members_list = auric_oasis["members"]
-    members_list[str(member)] = member.mention
-
-    auric_oasis["members"] = members_list
-
-    with open(AO_PATH, "w") as guild_file:
-        json.dump(auric_oasis, guild_file)
-
+# Figure out a nice way of updating the database
 @sage.event
 async def on_guild_role_create(role):
     """
-        Updates the roles_list with the newly created role
+        Updates the 'roles with the newly created role
     """
 
-    with open(AO_PATH, "r") as guild_file:
-        auric_oasis = json.load(guild_file)
+    roles_doc = db.roles.find_one({"Title" : "Auric Oasis Roles"})
 
-    roles_list = auric_oasis["roles"]
+    roles_list = roles_doc["roles"]
     roles_list[role.name] = role.mention
 
-    auric_oasis["roles"] = roles_list
-
-    with open(AO_PATH, "w") as guild_file:
-        json.dump(auric_oasis, guild_file)
+    db.roles.update_one({"Title" : "Auric Oasis Roles"}, {"$set": {"roles" : roles_list}})
 
 @sage.event
-async def on_member_remove(member):
+async def on_guild_role_update(before, after):
     """
-        Updates the member list whenever a member leaves the server by
-        removing their information from the list
+        Updates the 'roles' with the updated role
     """
 
-    with open(AO_PATH, "r") as guild_file:
-        auric_oasis = json.load(guild_file)
+    roles_doc = db.roles.find_one({"Title" : "Auric Oasis Roles"})
 
-    members_list = auric_oasis["members"]
-    mentions_list = auric_oasis["user_mentions"]
+    roles_list = roles_doc["roles"]
 
-    if (str(member) in mentions_list):
-        mentions_list.remove(member.mention)
-        auric_oasis["user_mentions"] = mentions_list
+    # Check to see the name of the updated role has not changed
+    if (after.name not in roles_list):
 
-    del members_list[str(member)]
+        # Removes the old role from roles_list
+        roles_list.pop(before.name, None)
 
-    auric_oasis["members"] = members_list
+        # Add the updated role to roles_list
+        roles_list[after.name] = after.mention
 
-    with open(AO_PATH, "w") as guild_file:
-        json.dump(auric_oasis, guild_file)
+        db.roles.update_one({"Title" : "Auric Oasis Roles"}, {"$set": {"roles" : roles_list}})
 
 @sage.event
 async def on_guild_role_delete(role):
     """
+        Updates the 'roles' by removing the deleted role
     """
 
-    with open(AO_PATH, "r") as guild_file:
-        auric_oasis = json.load(guild_file)
+    roles_doc = db.roles.find_one({"Title" : "Auric Oasis Roles"})
 
-    roles_list = auric_oasis["roles"]
-    mentions_list = auric_oasis["role_mentions"]
+    roles_list = roles_doc["roles"]
+    roles_list.pop(role.name, None)
 
-    if (role.name in mentions_list):
-
-        mentions_list.remove(role.name)
-        auric_oasis["role_mentions"] = mentions_list
-
-    del roles_list[role.mention]
-
-    auric_oasis["roles"] = roles_list
-
-    with open(AO_PATH, "w") as guild_file:
-        json.dump(auric_oasis, guild_file)
-
-@sage.event
-async def on_member_update(before, after):
-    """
-        Updates the member list whenever a member updates their profile, which
-        could be their status, activity, nickname, or roles
-    """
-
-    with open(AO_PATH, "r") as guild_file:
-        auric_oasis = json.load(guild_file)
-
-    members_list = auric_oasis["members"]
-    members_list[str(after)] = after.mention
-
-    auric_oasis["members"] = members_list
-
-    with open(AO_PATH, "w") as guild_file:
-        json.dump(auric_oasis, guild_file)
+    db.roles.update_one({"Title" : "Auric Oasis Roles"}, {"$set": {"roles" : roles_list}})
 
 @sage.event
 async def on_guild_remove(guild):
@@ -340,7 +258,8 @@ async def on_guild_remove(guild):
         Removes all information associated with the server
     """
 
-    os.remove(AO_PATH)
+    mongo_client.drop_database("Auric_Oasis")
+
 
 # Does two important actions:
 #   1) Does a quick housekeeping action
@@ -375,10 +294,9 @@ async def on_message(msg):
         return
 
 # Obtaining list of commands/cogs to include in the bot
-with open(settings.DISPATCHER_PATH, "r") as settings_file:
-    cogs = json.load(settings_file)
+cogs = settings.DISPATCHER
 
-init_cogs(sage, cogs['cogs'])
+init_cogs(sage, cogs)
 
 # Initializing the bot
 sage.run(settings.TOKEN)
