@@ -17,6 +17,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 from requests_futures.sessions import FuturesSession
 
+load_dotenv()
+
 MONGO_CONNECT = os.getenv("MONGO_URI")
 TOKEN = os.getenv("DISCORD_TOKEN")
 
