@@ -1,13 +1,11 @@
 import discord
-import json
-import os
 
 from discord.ext import commands
 from settings import PREFIX
 
 def setup(bot):
     """
-        Add this cog to the given bot
+        Add this cog to the bot
     """
 
     bot.add_cog(HelpCog(bot))

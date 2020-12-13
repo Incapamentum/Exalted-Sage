@@ -12,21 +12,31 @@ import settings
 import shutil
 
 from datetime import datetime, timedelta
-from discord.ext import commands
+from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from pathlib import Path
 from requests_futures.sessions import FuturesSession
 
-# def obtain_description(achieve_id):
+def get_id(daily_achieves, daily):
+    """
+        Returns the key/index corresponding to the given
+        daily achieve
+    """
 
-#     session = FuturesSession()
+    for i_d, val in daily_achieves.items():
+        if daily == val:
+            return i_d
 
-#     request = session.get("https://api.guildwars2.com/v2/achievements/" + str(achieve_id))
-#     request_result = request.result()
+def obtain_description(achieve_id):
 
-#     result = json.loads(request_result.text)
+    session = FuturesSession()
 
-#     return result['requirement']
+    request = session.get("https://api.guildwars2.com/v2/achievements/" + str(achieve_id))
+    request_result = request.result()
+
+    result = json.loads(request_result.text)
+
+    return result['requirement']
 
 # async def on_reset(ctx):
 
@@ -134,19 +144,73 @@ db = mongo_client.Auric_Oasis
 sage = commands.Bot(command_prefix=settings.PREFIX)
 sage.remove_command("help")
 
-# @sage.command()
-# async def init_tasks(ctx):
+@tasks.loop(seconds=45)
+async def on_reset():
 
-#     exalted = discord.utils.get(ctx.guild.roles, name="Exalted")
-#     ascended = discord.utils.get(ctx.guild.roles, name="Ascended")
+    broadcast_channel = sage.get_channel(int(settings.BROADCAST_CHANNEL))
+    session = FuturesSession()
 
-#     if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles)):
-#         sage.loop.create_task(on_reset(ctx))
-#         await ctx.send("I shall uphold the tasks that I have been assigned!")
-#         return
+    # This will be needed for later
+    utc_now = datetime.utcnow()
 
-#     await ctx.send("It seems that you do not have the required permissions to run this command...")
-#     return
+    embed_msg = discord.Embed(color=0xffee05)
+    repot = False
+
+    # This will definitely be needed for later
+    if (utc_now.hour == 0):
+
+        request = session.get("https://api.guildwars2.com/v2/achievements/daily/tomorrow")
+        request_result = request.result()
+
+        result = json.loads(request_result.text)
+
+        # Obtain PVE dailies that will be available tomorrow
+        # Each entry in this is a dictionary
+        pve_daily = result['pve']
+
+        # Obtaining the collection of daily achieves
+        dailyAchieve_doc = db.daily_achievements.find_one({"Title" : "List of Daily Achievements"})
+        daily_list = dailyAchieve_doc["achievements"]
+
+        # Obtaining the daily watchlist
+        watchlist_doc = db.daily_achievements.find_one({"Title" : "Daily Watchlist"})
+        watchlist = watchlist_doc["watchlist"]
+
+        if (watchlist):
+
+            for entry in watchlist:
+
+                daily_id = int(get_id(daily_list, entry))
+
+                for daily in pve_daily:
+
+                    if ((daily_id == daily['id'])):
+                        
+                        report = True
+
+                        embed_msg.add_field(
+                            name=entry,
+                            value=obtain_description(daily_id),
+                            inline=False
+                        )
+
+            if (report):
+
+                ping = ""
+
+                # Obtaining the notify list
+                roles_doc = db.roles.find_one({"Title" : "Auric Oasis Roles"})
+                notify_list = roles_doc["notify_list"]
+
+                for role in notify_list:
+
+                    ping += role + ' '
+
+                response = "Attention! A daily achievement that is being monitored will appear tomorrow!\n"
+                await broadcast_channel.send(response + ping, embed=embed_msg)
+                return
+
+            await broadcast_channel.send("Nothing to report...")
 
 @sage.command()
 async def init_guild(ctx):
@@ -274,6 +338,8 @@ async def on_ready():
     print(sage.user.name)
     print(sage.user.id)
     print("------")
+
+    on_reset.start()
 
     # Shows that the bot is doing a listening 'activity' for help
     helpActivity = discord.Activity(name = settings.PREFIX + "help", type = discord.ActivityType.listening)

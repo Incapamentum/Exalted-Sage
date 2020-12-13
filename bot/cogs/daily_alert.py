@@ -1,6 +1,5 @@
 import discord
 import json
-import os
 import pymongo
 import sys
 
