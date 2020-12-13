@@ -29,7 +29,7 @@ class HelpCog(commands.Cog):
 
            if (cmd == "daily-alert"):
 
-               embed = "```\nPossible arguments:\n\tclear-list    Clears the Daily Watchlist \n\tadd           Adds a Daily Achievement to the watchlist \n\tremove        Removes a Daily Achievement from the watchlist \n\tdisplay       Displays the list of Daily Achievements on the Watchlist \n\tnotify        Adds specific roles or yourself to be pinged for the Daily Watchlist\n```"
+               embed = "```\nPossible arguments:\n\tclear-list    Clears the Daily Watchlist \n\tadd-daily           Adds a daily to the Daily Watchlist \n\tremove-daily        Removes a daily from the Daily watchlist \n\tdisplay-watchlist       Displays the Daily Watchlist \n\tadd-notify        Add specified role to be pinged \n\tremove-notify        Remove specified role from being pinged \n\tdisplay-notify        Displays roles that will be notified```"
 
         else:
 
