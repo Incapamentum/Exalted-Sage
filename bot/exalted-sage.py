@@ -160,7 +160,7 @@ async def init_guild(ctx):
     ascended = discord.utils.get(ctx.guild.roles, name="Ascended")
     guild = ctx.guild
 
-    if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles) or (creator == ctx.author.name)):
+    if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles) or (ctx.author.name == creator)):
 
         if (db.roles.find_one({"Title" : "Auric Oasis Roles"}) is None):
 
@@ -174,6 +174,7 @@ async def init_guild(ctx):
                 roles_list[role.name] = role.mention
 
             roles_doc["roles"] = roles_list
+            roles_doc["notify_list"] = []
 
             db.roles.insert_one(roles_doc)
 
@@ -201,6 +202,7 @@ async def on_guild_join(guild):
         roles_list[role.name] = role.mention
 
     roles_doc["roles"] = roles_list
+    roles_doc["notify_list"] = []
 
     # Inserting the 'roles' document to the Auric_Oasis database
     db.roles.insert_one(roles_doc)
@@ -253,6 +255,7 @@ async def on_guild_role_delete(role):
 
     db.roles.update_one({"Title" : "Auric Oasis Roles"}, {"$set": {"roles" : roles_list}})
 
+# This is currently scuffed
 @sage.event
 async def on_guild_remove(guild):
     """
@@ -260,7 +263,6 @@ async def on_guild_remove(guild):
     """
 
     mongo_client.drop_database("Auric_Oasis")
-
 
 # Does two important actions:
 #   1) Does a quick housekeeping action

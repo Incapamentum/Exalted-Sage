@@ -13,6 +13,9 @@ from requests_futures.sessions import FuturesSession
 INSUFF_ARGS = "Insufficient arguments!"
 NO_UNDERSTAND = "I do not understand what you are asking me to do."
 
+mongo_client = pymongo.MongoClient(MONGO_CONNECT)
+db = mongo_client.Auric_Oasis
+
 def setup(bot):
     """
         Add this cog to the given bot
@@ -37,56 +40,26 @@ def tupToSentence(tup):
 
     return sentence
 
-# def update_data(entry_list, path):
-#     """
-#         Takes the given list of strings to write-thru the data
-#         in the file pointed at by the 'path' parameter
-#     """
+def get_id(daily_achieves, daily):
+    """
+        Returns the key/index corresponding to the given
+        daily achieve
+    """
 
-#     with open(path, "w") as daily_file:
+    for i_d, val in daily_achieves.items():
+        if daily == val:
+            return i_d
 
-#         for entry in entry_list:
-#             daily_file.write(entry + '\n')
+def obtain_description(achieve_id):
 
-# def create_new(entry, path):
-#     """
-#         Takes the given 'entry' and writes it to the file
-#         pointed at by the 'path' parameter
-#     """
+    session = FuturesSession()
 
-#     with open(path, "w") as daily_file:
-#         daily_file.write(entry + '\n')
+    request = session.get("https://api.guildwars2.com/v2/achievements/" + str(achieve_id))
+    request_result = request.result()
 
-# def read_data(file_path):
-#     """
-#         Returns a list of entries found within the .txt file
-#         pointed at by the 'file_path' parameter
-#     """
+    result = json.loads(request_result.text)
 
-#     data = []
-
-#     with open(file_path, "r") as f:
-        
-#         while True:
-#             line = f.readline()
-
-#             if not line:
-#                 break
-
-#             data.append(line.strip())
-
-#     return data
-
-# def obtain_description(achieve_id):
-
-#     session = FuturesSession()
-
-#     request = session.get("https://api.guildwars2.com/v2/achievements/" + str(achieve_id))
-#     request_result = request.result()
-
-#     result = json.loads(request_result.text)
-
-#     return result['requirement']
+    return result['requirement']
 
 class DailyAlertCog(commands.Cog):
     """
@@ -96,150 +69,197 @@ class DailyAlertCog(commands.Cog):
     @commands.command(name="daily-alert", help=" - Series of commands relating to the addition or removal of dailies to be alerted to!", pass_context = True)
     async def daily(self, ctx, *args):
         """
-            Some stuff in here
+            Collection of commands specific for 'daily-alert'
         """
 
-        if (args):
+        creator = "Goose"
+        exalted = discord.utils.get(ctx.guild.roles, name="Exalted")
+        ascended = discord.utils.get(ctx.guild.roles, name="Ascended")
 
-            if (args[0] == "clear-list"):
+        if ((exalted in ctx.author.roles) or (ascended in ctx.author.roles) or (ctx.author.name == creator)):
 
-                # if (os.path.isfile(DAILY_LIST_PATH)):
-                #     open(DAILY_LIST_PATH, "w").close()
+            if (args):
 
-                await ctx.send("Daily Watchlist has been cleared!")
+                # Obtaining daily achieves info
+                dailyAchieves_doc = db.daily_achievements.find_one({"Title" : "List of Daily Achievements"})
+                daily_list = dailyAchieves_doc["achievements"]
 
-            elif (args[0] == "add"):
+                # Obtaining watchlist info
+                watchlist_doc = db.daily_achievements.find_one({"Title" : "Daily Watchlist"})
+                watchlist = watchlist_doc["watchlist"]
 
-                if (len(args) < 2):
-                    await ctx.send(INSUFF_ARGS)
+                # Obtaining info on roles and notify
+                roles_doc = db.roles.find_one({"Title" : "Auric Oasis Roles"})
+                roles_list = roles_doc["roles"]
+                notify_list = roles_doc["notify_list"]
+
+                # Clears the watchlist
+                if (args[0] == "clear-list"):
+
+                    # Checks to see if the watchlist is empty or not
+                    if (not watchlist):
+                        await ctx.send("There is no Watchlist to clear!")
+                        return
+
+                    watchlist.clear()
+
+                    db.daily_achievements.update_one({"Title" : "Daily Watchlist"}, {"$set": {"watchlist" : watchlist}})
+
+                    await ctx.send("Daily Watchlist has been cleared!")
+
+                # If it is not present, inserts the daily to the watchlist
+                elif (args[0] == "add-daily"):
+
+                    if (len(args) < 2):
+                        await ctx.send(INSUFF_ARGS)
+                        return
+
+                    dailyToAdd = "Daily " + tupToSentence(args[1:])
+                    dailyToAdd = dailyToAdd.strip()
+
+                    # Check to see if the achieve is valid
+                    if (dailyToAdd not in daily_list.values()):
+                        await ctx.send("Cannot recognize this achievement!")
+                        return
+
+                    # Makes sure no repeat is being added to the watchlist
+                    if (dailyToAdd not in watchlist):
+
+                        watchlist.append(dailyToAdd)
+                        db.daily_achievements.update_one({"Title" : "Daily Watchlist"}, {"$set": {"watchlist": watchlist}})
+
+                        await ctx.send("%s has been added to the Watchlist!" % (dailyToAdd))
+                        return
+                    else:
+                        await ctx.send("Daily is already being monitored!")
+                        return
+                
+                elif (args[0] == "remove-daily"):
+
+                    if (len(args) < 2):
+                        await ctx.send(INSUFF_ARGS)
+                        return
+
+                    dailyToRemove = "Daily " + tupToSentence(args[1:])
+                    dailyToRemove = dailyToRemove.strip()
+
+                    # Check to see if the achieve is valid
+                    if (dailyToRemove not in daily_list.values()):
+                        await ctx.send("Cannot recognize this achievement!")
+
+                    if (watchlist):
+
+                        # Makes sure the achieve exists in the watchlist
+                        if (dailyToRemove in watchlist):
+
+                            watchlist.remove(dailyToRemove)
+                            db.daily_achievements.update_one({"Title" : "Daily Watchlist"}, {"$set": {"watchlist": watchlist}})
+
+                            await ctx.send("%s has been removed from the Watchlist!" % (dailyToRemove))
+                            return
+                        else:
+                            await ctx.send("This daily is not in the watchlist!")
+                            return
+
+                    else:
+                        await ctx.send("Nothing to remove from the watchlist!")
+                        return
+
+                # Displays the watchlist
+                elif (args[0] == "display-watchlist"):
+
+                    response = "Here is the list of dailies I am currently keeping track of..."
+                    embed_msg = discord.Embed(color=0xffee05)
+
+                    for entry in watchlist:
+
+                        daily_id = get_id(daily_list, entry)
+
+                        embed_msg.add_field(
+                            name=entry,
+                            value=obtain_description(daily_id),
+                            inline=False
+                        )
+
+                    await ctx.send(response, embed=embed_msg)
                     return
 
-                dailyToAdd = "Daily " + tupToSentence(args[1:])
-                dailyToAdd = dailyToAdd.strip()
+                # Adds a role to the notify list
+                elif (args[0] == "add-notify"):
 
-                print(dailyToAdd)
+                    if (len(args) < 2):
+                        await ctx.send(INSUFF_ARGS)
+                        return
 
-                # with open(DAILY_PATH, "r") as daily_file:
-                #     daily_achieve = json.load(daily_file)
+                    roleToAdd = tupToSentence(args[1:])
+                    roleToAdd = roleToAdd.strip()
 
-                # if (dailyToAdd not in daily_achieve):
-                #     await ctx.send("Cannot recognize the achievement!")
-                #     return
+                    # Makes sure role is valid within the guild, and not in the notify list
+                    if ((roleToAdd in roles_list.values()) and (roleToAdd not in notify_list)):
 
-                # if (os.path.isfile(DAILY_LIST_PATH)):
+                        notify_list.append(roleToAdd)
+                        db.roles.update_one({"Title" : "Auric Oasis Roles"}, {"$set": {"notify_list" : notify_list}})
 
-                #     dailyList = read_data(DAILY_LIST_PATH)
+                        await ctx.send("%s has been added to the notify list!" % (roleToAdd))
+                        return
 
-                #     if dailyToAdd not in dailyList:
-                #         dailyList.append(dailyToAdd)
-                #         update_data(dailyList, DAILY_LIST_PATH)                    
-                #     else:
-                #         await ctx.send("Entry already exists!")
-                #         return
+                    else:
+                        await ctx.send("Role either does not exist in the guild, or has already been added!")
+                        return
 
-                # else:
-                #     create_new(dailyToAdd, DAILY_LIST_PATH)
+                elif (args[0] == "remove-notify"):
 
-                await ctx.send("Daily has been added to the Watchlist!")
-                return
+                    if (len(args) < 2):
+                        await ctx.send(INSUFF_ARGS)
+                        return
 
-            elif (args[0] == "remove"):
+                    if (notify_list):
 
-                if (len(args) < 2):
-                    await ctx.send(INSUFF_ARGS)
+                        roleToRemove = tupToSentence(args[1:])
+                        roleToRemove = roleToRemove.strip()
+
+                        # Makes sure role is valid within the guild, and in the notify list
+                        if ((roleToRemove in roles_list.values()) and (roleToRemove in notify_list)):
+
+                            notify_list.remove(roleToRemove)
+                            db.roles.update_one({"Title" : "Auric Oasis Roles"}, {"$set": {"notify_list" : notify_list}})
+
+                            await ctx.send("%s has been removed from the notify list!" % (roleToRemove))
+                            return
+
+                        else:
+                            await ctx.send("Role either does not exist in the guild, or is not in the notify list!")
+                            return
+
+                    else:
+                        await ctx.send("Nothing to remove from the notify list!")
+                        return
+
+                elif (args[0] == "display-notify"):
+
+                    response = "Here is the list of roles I am tasked to notify..."
+                    embed_msg = discord.Embed(color=0xffee05)
+
+                    for role in notify_list:
+
+                        role_name = get_id(roles_list, role)
+
+                        embed_msg.add_field(
+                            name=role_name,
+                            value='\u200b',
+                            inline=False
+                        )
+
+                    await ctx.send(response, embed=embed_msg)
                     return
 
-                dailyToRemove = "Daily " + tupToSentence(args[1:])
-                dailyToRemove = dailyToRemove.strip()
-
-                # if (os.path.isfile(DAILY_LIST_PATH)):
-
-                #     dailyList = read_data(DAILY_LIST_PATH)
-
-                #     if dailyToRemove in dailyList:
-                #         dailyList.remove(dailyToRemove)
-                #         update_data(dailyList, DAILY_LIST_PATH)
-                #     else:
-                #         await ctx.send("Entry does not exist!")
-                #         return
-
-                #     await ctx.send("Entry has been removed!")
-
-                # else:
-                #     await ctx.send("The Watchlist is currently empty!")
-
-
-            # elif (args[0] == "display"):
-
-            #     with open(DAILY_PATH, "r") as daily_file:
-            #         daily_achieve = json.load(daily_file)
-
-            #     response = "Here is the list of daily achievements I am currently keeping track of..."
-            #     embed_msg = discord.Embed(color=0xffee05)
-
-            #     dailyList = read_data(DAILY_LIST_PATH)
-
-            #     for entry in dailyList:
-
-            #         daily_id = daily_achieve[entry]
-
-            #         embed_msg.add_field(
-            #             name=entry,
-            #             value=obtain_description(daily_id),
-            #             inline=False
-            #         )
-
-            #     await ctx.send(response, embed=embed_msg)
-            #     return
-
-            # elif (args[0] == "notify"):
-
-            #     if (len(args) < 2):
-            #         await ctx.send(INSUFF_ARGS)
-            #         return
-
-            #     # How to make this so that only officers can use this?
-            #     if (args[1] == "role"):
-
-            #         max_role = ctx.message.author.roles[len(ctx.message.author.roles) - 1]
-
-            #         if ((max_role.name != "Exalted") or (max_role != "Ascended")):
-            #             await ctx.send("It seems that you do not have the required permissions to run this command...")
-            #             return
-
-            #         with open(AO_PATH, "r") as guild_file:
-            #             auric_oasis = json.load(guild_file)
-
-            #         mentions_list = auric_oasis["role_mentions"]
-            #         mentions_list.append(args[2])
-            #         auric_oasis["role_mentions"] = mentions_list
-
-            #         with open(AO_PATH, "w") as guild_file:
-            #             json.dump(auric_oasis, guild_file)
-
-            #         await ctx.send("This role will now be notified of any daily alerts!")
-            #         return
-
-            #     elif (args[1] == "me"):
-
-            #         with open(AO_PATH, "r") as guild_file:
-            #             auric_oasis = json.load(guild_file)
-
-            #         mentions_list = auric_oasis["user_mentions"]
-            #         mentions_list.append(str(ctx.message.author))
-            #         auric_oasis["user_mentions"] = mentions_list
-
-            #         with open(AO_PATH, "w") as guild_file:
-            #             json.dump(auric_oasis, guild_file)
-                    
-            #         await ctx.send("You will now be notified of any daily alerts!")
-            #         return
-
+                else:
+                    await ctx.send("I do not understand what you are asking me to do!")
+                    return
+            
             else:
-                await ctx.send("I do not understand what you are asking me to do.")
+                await ctx.send(INSUFF_ARGS)
                 return
 
         else:
-
-            await ctx.send(INSUFF_ARGS)
-            return
+            await ctx.send("My apologies, but you are not authorized to issue this command.")
