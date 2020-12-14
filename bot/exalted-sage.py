@@ -38,95 +38,6 @@ def obtain_description(achieve_id):
 
     return result['requirement']
 
-# async def on_reset(ctx):
-
-#     session = FuturesSession()
-
-#     while True:
-
-#         utc_now = datetime.utcnow()
-
-#         # Checks the watchlist of daily achievements and determines if it will
-#         # make an announcement about one being available or not
-#         if (utc_now.hour == 0):
-
-#             embed_msg = discord.Embed(color=0xffee05)
-#             report = False
-
-#             request = session.get("https://api.guildwars2.com/v2/achievements/daily/tomorrow")
-#             request_result = request.result()
-
-#             result = json.loads(request_result.text)
-
-#             # Obtains a list of the PVE daily achievements for tomorrow.
-#             # Each entry in the list is a dictionary
-#             pve_daily = result['pve']
-
-#             # Obtaining the list of dailies we are watching for
-#             # Each entry in the list is a Daily name
-#             daily_list = read_data(DAILY_LIST_PATH)
-
-#             # Obtaining the dictionary associated each Daily name with its
-#             # respective ID to be compared against the watchlist
-#             with open(DAILY_PATH, "r") as daily_file:
-#                 daily_achieves = json.load(daily_file)
-
-#             daily_names = []
-
-#             for entry in daily_list:
-
-#                 daily_id = daily_achieves[entry]
-
-#                 for daily in pve_daily:
-
-#                     if ((daily['id'] == daily_id) and (entry not in daily_names)):
-
-#                         report = True
-#                         daily_names.append(entry)
-
-#                         embed_msg.add_field(
-#                             name=entry,
-#                             value=obtain_description(daily_id),
-#                             inline=False
-#                         )
-
-#             if (report):
-
-#                 ping = ""
-
-#                 with open(AO_PATH, "r") as guild_file:
-#                     auric_oasis = json.load(guild_file)
-
-#                 mentions = auric_oasis['role_mentions'] + auric_oasis['user_mentions']
-
-#                 for role in auric_oasis['roles']:
-
-#                     if (role in mentions):
-#                         ping += (auric_oasis['roles'][role] + ' ')
-
-#                 for member in auric_oasis['members']:
-
-#                     if (member in mentions):
-#                         ping += (auric_oasis['members'][member] + ' ')
-
-#                 response = "Attention! A daily achievement that is being monitored will appear tomorrow!\n"
-#                 await ctx.send(response + ping, embed=embed_msg)
-#                 return
-
-#             await ctx.send("Nothing to report...")
-
-#             # Full 24hrs (86400) + 1min
-#             time_left = 86460
-#         else:
-#             hour = 23 - utc_now.hour
-#             minute = 59 - utc_now.minute
-#             sec = 59 - utc_now.second
-
-#             time = timedelta(hours=hour, minutes=minute, seconds=sec)
-#             time_left = time.total_seconds() + 60
-
-#         await asyncio.sleep(time_left)
-
 def init_cogs(bot, cog_list):
     """
         Add all the cogs in the given list of available cogs
@@ -144,7 +55,7 @@ db = mongo_client.Auric_Oasis
 sage = commands.Bot(command_prefix=settings.PREFIX)
 sage.remove_command("help")
 
-@tasks.loop(seconds=45)
+@tasks.loop(minutes=50)
 async def on_reset():
 
     broadcast_channel = sage.get_channel(int(settings.BROADCAST_CHANNEL))
@@ -177,6 +88,8 @@ async def on_reset():
         watchlist = watchlist_doc["watchlist"]
 
         if (watchlist):
+
+            report = False
 
             for entry in watchlist:
 
