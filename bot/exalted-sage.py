@@ -55,7 +55,7 @@ db = mongo_client.Auric_Oasis
 sage = commands.Bot(command_prefix=settings.PREFIX)
 sage.remove_command("help")
 
-@tasks.loop(minutes=50)
+@tasks.loop(minutes=60)
 async def on_reset():
 
     broadcast_channel = sage.get_channel(int(settings.BROADCAST_CHANNEL))
