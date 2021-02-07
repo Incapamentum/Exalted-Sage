@@ -1,0 +1,455 @@
+{'id' : 437, 'name' : Daily Mists Guard Killer}
+{'id' : 500, 'name' : Daily Mystic Forger}
+{'id' : 946, 'name' : Daily WvW Master of Monuments}
+{'id' : 1837, 'name' : Daily Ascalon Lumberer}
+{'id' : 1838, 'name' : Daily Ascalon Forager}
+{'id' : 1839, 'name' : Daily Kryta Vista Viewer}
+{'id' : 1840, 'name' : Daily Completionist}
+{'id' : 1843, 'name' : Daily WvW Tower Capturer}
+{'id' : 1844, 'name' : Daily WvW Objective Defender}
+{'id' : 1845, 'name' : Daily WvW Keep Capturer}
+{'id' : 1846, 'name' : Daily WvW Invasion Defender}
+{'id' : 1847, 'name' : Daily WvW Caravan Disruptor}
+{'id' : 1848, 'name' : Daily WvW Veteran Creature Slayer}
+{'id' : 1849, 'name' : Daily WvW Land Claimer}
+{'id' : 1850, 'name' : Daily WvW Camp Capturer}
+{'id' : 1851, 'name' : Daily WvW World Ranker}
+{'id' : 1852, 'name' : Daily WvW Big Spender}
+{'id' : 1856, 'name' : Daily PvP Reward Earner}
+{'id' : 1857, 'name' : Daily PvP Rank Points}
+{'id' : 1861, 'name' : Daily PvP Player Kills}
+{'id' : 1872, 'name' : Daily The Long Way Around Minidungeon}
+{'id' : 1873, 'name' : Daily Forgotten Stream Minidungeon}
+{'id' : 1874, 'name' : Daily Goff's Loot Minidungeon}
+{'id' : 1875, 'name' : Daily Tears of Itlaocol Minidungeon}
+{'id' : 1876, 'name' : Daily Rebel's Seclusion Minidungeon}
+{'id' : 1877, 'name' : Daily Windy Cave Treasure Minidungeon}
+{'id' : 1878, 'name' : Daily Magellan's Memento Minidungeon}
+{'id' : 1879, 'name' : Daily Ship of Sorrows Minidungeon}
+{'id' : 1880, 'name' : Daily Grounded Minidungeon}
+{'id' : 1881, 'name' : Daily Don't Touch the Shiny Minidungeon}
+{'id' : 1882, 'name' : Daily Bad Neighborhood Minidungeon}
+{'id' : 1883, 'name' : Daily Forsaken Fortune Minidungeon}
+{'id' : 1884, 'name' : Daily Vexa's Lab Minidungeon}
+{'id' : 1885, 'name' : Daily Craze's Folly Jumping Puzzle}
+{'id' : 1886, 'name' : Daily Chaos Crystal Cavern Jumping Puzzle}
+{'id' : 1887, 'name' : Daily Portmatt's Lab Jumping Puzzle}
+{'id' : 1888, 'name' : Daily Goemm's Lab Jumping Puzzle}
+{'id' : 1889, 'name' : Daily Urmaug's Secret Jumping Puzzle}
+{'id' : 1890, 'name' : Daily Branded Mine Jumping Puzzle}
+{'id' : 1891, 'name' : Daily Behem Gauntlet Jumping Puzzle}
+{'id' : 1892, 'name' : Daily Collapsed Observatory Jumping Puzzle}
+{'id' : 1893, 'name' : Daily Antre of Adjournment Jumping Puzzle}
+{'id' : 1894, 'name' : Daily Skipping Stones Jumping Puzzle}
+{'id' : 1895, 'name' : Daily Shaman's Rookery Jumping Puzzle}
+{'id' : 1896, 'name' : Daily Shattered Ice Ruins Jumping Puzzle}
+{'id' : 1897, 'name' : Daily Scavenger's Chasm Jumping Puzzle}
+{'id' : 1898, 'name' : Daily Spelunker's Delve Jumping Puzzle}
+{'id' : 1899, 'name' : Daily Swashbuckler's Cove Jumping Puzzle}
+{'id' : 1900, 'name' : Daily Only Zuhl Jumping Puzzle}
+{'id' : 1901, 'name' : Daily Hidden Garden Jumping Puzzle}
+{'id' : 1902, 'name' : Daily Loreclaw Expanse Jumping Puzzle}
+{'id' : 1904, 'name' : Daily King Jalis's Refuge Jumping Puzzle}
+{'id' : 1905, 'name' : Daily Griffonrook Run Jumping Puzzle}
+{'id' : 1906, 'name' : Daily Grendich Gamble Jumping Puzzle}
+{'id' : 1907, 'name' : Daily Conundrum Cubed Jumping Puzzle}
+{'id' : 1908, 'name' : Daily Coddler's Cove Jumping Puzzle}
+{'id' : 1909, 'name' : Daily Hexfoundry Jumping Puzzle}
+{'id' : 1910, 'name' : Daily Fawcett's Bounty Jumping Puzzle}
+{'id' : 1912, 'name' : Daily Spekks's Lab Jumping Puzzle}
+{'id' : 1913, 'name' : Daily Dark Reverie Jumping Puzzle}
+{'id' : 1914, 'name' : Daily Crimson Plateau Jumping Puzzle}
+{'id' : 1915, 'name' : Daily Tribulation Caverns Jumping Puzzle}
+{'id' : 1916, 'name' : Daily Tribulation Rift Jumping Puzzle}
+{'id' : 1917, 'name' : Daily Under New Management Jumping Puzzle}
+{'id' : 1918, 'name' : Daily Vizier's Tower Jumping Puzzle}
+{'id' : 1919, 'name' : Daily Buried Archives Jumping Puzzle}
+{'id' : 1920, 'name' : Daily Wall Breach Blitz Jumping Puzzle}
+{'id' : 1923, 'name' : Daily Weyandt's Revenge Jumping Puzzle}
+{'id' : 1924, 'name' : Daily Crash Site Jumping Puzzle}
+{'id' : 1926, 'name' : Daily Demongrub Pits Jumping Puzzle}
+{'id' : 1927, 'name' : Daily Pig Iron Quarry Jumping Puzzle}
+{'id' : 1929, 'name' : Daily Morgan's Leap Jumping Puzzle}
+{'id' : 1930, 'name' : Daily Fire Elemental}
+{'id' : 1931, 'name' : Daily Maguuma Vista Viewer}
+{'id' : 1932, 'name' : Daily Orr Vista Viewer}
+{'id' : 1933, 'name' : Daily Great Jungle Wurm}
+{'id' : 1934, 'name' : Daily Inquest Golem Mark II}
+{'id' : 1935, 'name' : Daily Megadestroyer}
+{'id' : 1936, 'name' : Daily Shiverpeaks Vista Viewer}
+{'id' : 1937, 'name' : Daily Maguuma Wastes Vista Viewer}
+{'id' : 1938, 'name' : Daily Ascalon Vista Viewer}
+{'id' : 1939, 'name' : Daily Activity Participation}
+{'id' : 1940, 'name' : Daily Caledon Forest Event Completer}
+{'id' : 1941, 'name' : Daily Cursed Shore Event Completer}
+{'id' : 1942, 'name' : Daily Straits of Devastation Event Completer}
+{'id' : 1943, 'name' : Daily Gendarran Fields Event Completer}
+{'id' : 1944, 'name' : Daily Frostgorge Sound Event Completer}
+{'id' : 1945, 'name' : Daily Brisban Wildlands Event Completer}
+{'id' : 1946, 'name' : Daily Blazeridge Steppes Event Completer}
+{'id' : 1947, 'name' : Daily Sparkfly Fen Event Completer}
+{'id' : 1948, 'name' : Daily Bloodtide Coast Event Completer}
+{'id' : 1949, 'name' : Daily Southsun Cove Event Completer}
+{'id' : 1950, 'name' : Daily Mount Maelstrom Event Completer}
+{'id' : 1951, 'name' : Daily Metrica Province Event Completer}
+{'id' : 1952, 'name' : Daily Fields of Ruin Event Completer}
+{'id' : 1953, 'name' : Daily Wayfarer Foothills Event Completer}
+{'id' : 1954, 'name' : Daily Timberline Falls Event Completer}
+{'id' : 1955, 'name' : Daily Dry Top Event Completer}
+{'id' : 1956, 'name' : Daily Snowden Drifts Event Completer}
+{'id' : 1957, 'name' : Daily Lornar's Pass Event Completer}
+{'id' : 1958, 'name' : Daily Dredgehaunt Cliffs Event Completer}
+{'id' : 1959, 'name' : Daily Silverwastes Event Completer}
+{'id' : 1960, 'name' : Daily Harathi Hinterlands Event Completer}
+{'id' : 1961, 'name' : Daily Malchor's Leap Event Completer}
+{'id' : 1962, 'name' : Daily Iron Marches Event Completer}
+{'id' : 1963, 'name' : Daily Queensdale Event Completer}
+{'id' : 1964, 'name' : Daily Plains of Ashford Event Completer}
+{'id' : 1965, 'name' : Daily Kessex Hills Event Completer}
+{'id' : 1966, 'name' : Daily Fireheart Rise Event Completer}
+{'id' : 1967, 'name' : Daily Diessa Plateau Event Completer}
+{'id' : 1968, 'name' : Daily Shiverpeaks Lumberer}
+{'id' : 1969, 'name' : Daily Maguuma Jungle Miner}
+{'id' : 1970, 'name' : Daily Maguuma Jungle Lumberer}
+{'id' : 1971, 'name' : Daily Kryta Miner}
+{'id' : 1972, 'name' : Daily Kryta Lumberer}
+{'id' : 1973, 'name' : Daily Maguuma Jungle Forager}
+{'id' : 1974, 'name' : Daily Orr Forager}
+{'id' : 1975, 'name' : Daily Kryta Forager}
+{'id' : 1976, 'name' : Daily Orr Lumberer}
+{'id' : 1977, 'name' : Daily Orr Miner}
+{'id' : 1978, 'name' : Daily Maguuma Wastes Miner}
+{'id' : 1979, 'name' : Daily Maguuma Wastes Lumberer}
+{'id' : 1980, 'name' : Daily Maguuma Wastes Forager}
+{'id' : 1981, 'name' : Daily Ascalon Miner}
+{'id' : 1983, 'name' : Daily Shatterer}
+{'id' : 1984, 'name' : Daily Shiverpeaks Miner}
+{'id' : 1985, 'name' : Daily Shiverpeaks Forager}
+{'id' : 1989, 'name' : Daily Fractal}
+{'id' : 2022, 'name' : Daily Frozen Maw}
+{'id' : 2025, 'name' : Daily Shadow Behemoth}
+{'id' : 2026, 'name' : Daily Claw of Jormag}
+{'id' : 2153, 'name' : Daily Recommended Fractal—Scale 11}
+{'id' : 2166, 'name' : Daily Recommended Fractal—Scale 29}
+{'id' : 2171, 'name' : Daily Recommended Fractal—Scale 40}
+{'id' : 2229, 'name' : Daily Recommended Fractal—Scale 6}
+{'id' : 2238, 'name' : Daily Recommended Fractal—Scale 15}
+{'id' : 2239, 'name' : Daily Recommended Fractal—Scale 27}
+{'id' : 2244, 'name' : Daily Recommended Fractal—Scale 33}
+{'id' : 2245, 'name' : Daily Recommended Fractal—Scale 24}
+{'id' : 2247, 'name' : Daily Recommended Fractal—Scale 3}
+{'id' : 2266, 'name' : Daily Recommended Fractal—Scale 35}
+{'id' : 2297, 'name' : Daily Recommended Fractal—Scale 28}
+{'id' : 2308, 'name' : Daily Recommended Fractal—Scale 16}
+{'id' : 2309, 'name' : Daily Recommended Fractal—Scale 36}
+{'id' : 2316, 'name' : Daily Recommended Fractal—Scale 5}
+{'id' : 2327, 'name' : Daily Recommended Fractal—Scale 14}
+{'id' : 2330, 'name' : Daily Recommended Fractal—Scale 30}
+{'id' : 2337, 'name' : Daily Recommended Fractal—Scale 48}
+{'id' : 2363, 'name' : Daily Recommended Fractal—Scale 32}
+{'id' : 2377, 'name' : Daily Recommended Fractal—Scale 37}
+{'id' : 2394, 'name' : Daily Recommended Fractal—Scale 42}
+{'id' : 2405, 'name' : Daily Recommended Fractal—Scale 4}
+{'id' : 2422, 'name' : Daily Recommended Fractal—Scale 8}
+{'id' : 2467, 'name' : Daily Recommended Fractal—Scale 18}
+{'id' : 2473, 'name' : Daily Recommended Fractal—Scale 25}
+{'id' : 2477, 'name' : Daily Recommended Fractal—Scale 2}
+{'id' : 2492, 'name' : Daily Recommended Fractal—Scale 19}
+{'id' : 2533, 'name' : Daily Recommended Fractal—Scale 31}
+{'id' : 2560, 'name' : Daily Recommended Fractal—Scale 10}
+{'id' : 2591, 'name' : Daily Recommended Fractal—Scale 39}
+{'id' : 2592, 'name' : Daily Recommended Fractal—Scale 34}
+{'id' : 2597, 'name' : Daily Recommended Fractal—Scale 12}
+{'id' : 2598, 'name' : Daily Recommended Fractal—Scale 41}
+{'id' : 2696, 'name' : Daily League Participator—Veteran}
+{'id' : 2735, 'name' : Daily League Participator—Elite}
+{'id' : 2749, 'name' : Daily League Participator—Champion}
+{'id' : 2759, 'name' : Daily League Participator—Recruit}
+{'id' : 2816, 'name' : Daily PvP Matches Played in Unranked or Ranked Arena}
+{'id' : 2817, 'name' : Daily Top Stats}
+{'id' : 2889, 'name' : Daily Tier 2 Underground Facility}
+{'id' : 2890, 'name' : Daily Tier 3 Volcanic}
+{'id' : 2891, 'name' : Daily Adventure: Flying Circus}
+{'id' : 2892, 'name' : Daily Tier 4 Swampland}
+{'id' : 2893, 'name' : Daily Ascalonian Catacombs}
+{'id' : 2895, 'name' : Daily Tier 3 Thaumanova Reactor}
+{'id' : 2896, 'name' : Daily Tier 1 Urban Battleground}
+{'id' : 2897, 'name' : Daily Tier 3 Urban Battleground}
+{'id' : 2898, 'name' : Daily Tier 2 Aquatic Ruins}
+{'id' : 2899, 'name' : Daily Tier 2 Captain Mai Trin Boss}
+{'id' : 2900, 'name' : Daily Tier 1 Aquatic Ruins}
+{'id' : 2901, 'name' : Daily Citadel of Flame}
+{'id' : 2902, 'name' : Daily Tier 2 Uncategorized}
+{'id' : 2903, 'name' : Daily Tier 4 Molten Furnace}
+{'id' : 2905, 'name' : Daily Adventure: Drone Race}
+{'id' : 2907, 'name' : Daily Tier 2 Urban Battleground}
+{'id' : 2908, 'name' : Daily Tier 2 Volcanic}
+{'id' : 2909, 'name' : Daily Tier 2 Aetherblade}
+{'id' : 2910, 'name' : Daily Auric Basin Event Completer}
+{'id' : 2911, 'name' : Daily Tier 1 Volcanic}
+{'id' : 2912, 'name' : Daily Heart of Maguuma Forager}
+{'id' : 2914, 'name' : Daily Caudecus's Manor}
+{'id' : 2915, 'name' : Daily Adventure: Fallen Masks}
+{'id' : 2916, 'name' : Daily Tier 1 Snowblind}
+{'id' : 2917, 'name' : Daily Sorrow's Embrace}
+{'id' : 2918, 'name' : Daily Tier 3 Snowblind}
+{'id' : 2919, 'name' : Daily Adventure: Salvage Pit}
+{'id' : 2922, 'name' : Daily Adventure: Haywire Punch-o-Matic Battle}
+{'id' : 2923, 'name' : Daily Tier 4 Solid Ocean}
+{'id' : 2924, 'name' : Daily Dragon's Stand Event Completer}
+{'id' : 2925, 'name' : Daily Tier 3 Uncategorized}
+{'id' : 2926, 'name' : Daily Tier 3 Cliffside}
+{'id' : 2927, 'name' : Daily Tier 1 Aetherblade}
+{'id' : 2928, 'name' : Daily Tier 3 Aetherblade}
+{'id' : 2929, 'name' : Daily Tier 1 Underground Facility}
+{'id' : 2930, 'name' : Daily Tier 4 Cliffside}
+{'id' : 2931, 'name' : Daily Honor of the Waves}
+{'id' : 2932, 'name' : Daily Tier 4 Captain Mai Trin Boss}
+{'id' : 2934, 'name' : Daily Tier 3 Molten Boss}
+{'id' : 2935, 'name' : Daily Tier 1 Swampland}
+{'id' : 2936, 'name' : Daily Adventure: Tendril Torchers}
+{'id' : 2937, 'name' : Daily Heart of Maguuma Lumberer}
+{'id' : 2938, 'name' : Daily Ruined City of Arah}
+{'id' : 2939, 'name' : Daily Tier 4 Uncategorized}
+{'id' : 2940, 'name' : Daily Tier 1 Uncategorized}
+{'id' : 2941, 'name' : Daily Tier 4 Urban Battleground}
+{'id' : 2942, 'name' : Daily Adventure: The Floor Is Lava?}
+{'id' : 2944, 'name' : Daily Tier 3 Molten Furnace}
+{'id' : 2945, 'name' : Daily Verdant Brink Event Completer}
+{'id' : 2947, 'name' : Daily Tier 4 Underground Facility}
+{'id' : 2948, 'name' : Daily Tier 4 Aetherblade}
+{'id' : 2949, 'name' : Daily Tier 2 Snowblind}
+{'id' : 2950, 'name' : Daily Tier 3 Underground Facility}
+{'id' : 2952, 'name' : Daily Tier 4 Snowblind}
+{'id' : 2953, 'name' : Daily Crucible of Eternity}
+{'id' : 2954, 'name' : Daily Tier 1 Solid Ocean}
+{'id' : 2955, 'name' : Daily Tier 2 Molten Furnace}
+{'id' : 2956, 'name' : Daily Tier 4 Aquatic Ruins}
+{'id' : 2957, 'name' : Daily Heart of Maguuma Miner}
+{'id' : 2958, 'name' : Daily Tier 2 Cliffside}
+{'id' : 2959, 'name' : Daily Twilight Arbor}
+{'id' : 2960, 'name' : Daily Adventure: The Ley-Line Run}
+{'id' : 2961, 'name' : Daily Tier 2 Swampland}
+{'id' : 2962, 'name' : Daily Tier 3 Captain Mai Trin Boss}
+{'id' : 2964, 'name' : Daily Tier 3 Aquatic Ruins}
+{'id' : 2966, 'name' : Daily Tier 4 Molten Boss}
+{'id' : 2967, 'name' : Daily Tier 4 Thaumanova Reactor}
+{'id' : 2968, 'name' : Daily Tangled Depths Event Completer}
+{'id' : 2969, 'name' : Daily Adventure: Sanctum Scramble}
+{'id' : 2971, 'name' : Daily Tier 2 Solid Ocean}
+{'id' : 2972, 'name' : Daily Tier 3 Swampland}
+{'id' : 2973, 'name' : Daily Adventure: Beetle Feast}
+{'id' : 2975, 'name' : Daily Adventure: Bugs in the Branches}
+{'id' : 2976, 'name' : Daily Tier 1 Molten Furnace}
+{'id' : 2977, 'name' : Daily Tier 1 Cliffside}
+{'id' : 2978, 'name' : Daily Tier 1 Captain Mai Trin Boss}
+{'id' : 2979, 'name' : Daily Tier 1 Molten Boss}
+{'id' : 2980, 'name' : Daily Adventure: A Fungus Among Us}
+{'id' : 2981, 'name' : Daily Tier 1 Thaumanova Reactor}
+{'id' : 2983, 'name' : Daily Heart of Maguuma Vista Viewer}
+{'id' : 2984, 'name' : Daily Adventure: On Wings of Gold}
+{'id' : 2985, 'name' : Daily Tier 2 Molten Boss}
+{'id' : 2986, 'name' : Daily Tier 3 Solid Ocean}
+{'id' : 2987, 'name' : Daily Adventure: Shooting Gallery}
+{'id' : 2988, 'name' : Daily Adventure: Scrap Rifle Field Test}
+{'id' : 2989, 'name' : Daily Tier 4 Volcanic}
+{'id' : 2991, 'name' : Daily Tier 2 Thaumanova Reactor}
+{'id' : 3038, 'name' : Daily Tier 4 Chaos}
+{'id' : 3044, 'name' : Daily Tier 2 Chaos}
+{'id' : 3045, 'name' : Daily Tier 3 Chaos}
+{'id' : 3052, 'name' : Daily Bloodstone Fen Aerial Skill User}
+{'id' : 3055, 'name' : Daily Bloodstone Fen Rift Closer}
+{'id' : 3063, 'name' : Daily Tier 1 Chaos}
+{'id' : 3068, 'name' : Daily Bloodstone Fen Magic Gatherer}
+{'id' : 3083, 'name' : Daily Bloodstone Fen Ghostly Justiciar Killer}
+{'id' : 3106, 'name' : Daily Ember Bay Sloth or Drake}
+{'id' : 3108, 'name' : Daily Ember Bay Karka or Jade Construct}
+{'id' : 3132, 'name' : Daily Ember Bay Magic Gatherer}
+{'id' : 3135, 'name' : Daily Ember Bay Destroyer Boss or Wurm Boss}
+{'id' : 3151, 'name' : Daily Ember Bay Rock Tour}
+{'id' : 3172, 'name' : Daily Recommended Fractal—Scale 60}
+{'id' : 3175, 'name' : Daily Tier 3 Nightmare}
+{'id' : 3176, 'name' : Daily Bitterfrost Frontier Elixir Addiction}
+{'id' : 3177, 'name' : Daily Tier 4 Nightmare}
+{'id' : 3184, 'name' : Daily Recommended Fractal—Scale 66}
+{'id' : 3185, 'name' : Daily Recommended Fractal—Scale 54}
+{'id' : 3187, 'name' : Daily Recommended Fractal—Scale 68}
+{'id' : 3189, 'name' : Daily Recommended Fractal—Scale 65}
+{'id' : 3192, 'name' : Daily Recommended Fractal—Scale 58}
+{'id' : 3196, 'name' : Daily Tier 2 Nightmare}
+{'id' : 3197, 'name' : Daily Bitterfrost Frontier Berry Acquisition}
+{'id' : 3198, 'name' : Daily Recommended Fractal—Scale 61}
+{'id' : 3201, 'name' : Daily Recommended Fractal—Scale 67}
+{'id' : 3215, 'name' : Daily Recommended Fractal—Scale 64}
+{'id' : 3219, 'name' : Daily Recommended Fractal—Scale 69}
+{'id' : 3220, 'name' : Daily Bitterfrost Frontier Torch in the Ice}
+{'id' : 3222, 'name' : Daily Recommended Fractal—Scale 72}
+{'id' : 3226, 'name' : Daily Bitterfrost Frontier Magic Gatherer}
+{'id' : 3228, 'name' : Daily Recommended Fractal—Scale 59}
+{'id' : 3229, 'name' : Daily Tier 1 Nightmare}
+{'id' : 3230, 'name' : Daily Recommended Fractal—Scale 73}
+{'id' : 3237, 'name' : Daily Recommended Fractal—Scale 53}
+{'id' : 3238, 'name' : Daily Recommended Fractal—Scale 75}
+{'id' : 3305, 'name' : Daily Lake Doric: Like Clockwork}
+{'id' : 3337, 'name' : Daily Lake Doric: Magic Gatherer}
+{'id' : 3339, 'name' : Daily Lake Doric: A Peach a Day}
+{'id' : 3346, 'name' : Daily Lake Doric Bosses}
+{'id' : 3353, 'name' : Daily Lake Doric: The Best Defense}
+{'id' : 3409, 'name' : Daily Draconis Mons Destroyer Wyvern Boss}
+{'id' : 3413, 'name' : Daily Draconis Mons Event Completer}
+{'id' : 3415, 'name' : Daily Draconis Mons Cavern Tour}
+{'id' : 3416, 'name' : Daily Draconis Mons Unbound Magic Gatherer}
+{'id' : 3417, 'name' : Daily Draconis Mons Volcanic Diver}
+{'id' : 3419, 'name' : Daily Draconis Mons Fire Orchid Posy}
+{'id' : 3426, 'name' : Daily Draconis Mons Wurm Boss or Power Suit Boss}
+{'id' : 3432, 'name' : Daily Draconis Mons Spider Boss or Mushroom Boss}
+{'id' : 3438, 'name' : Daily Draconis Mons Druid Spirit Boss or Stonehead Boss}
+{'id' : 3449, 'name' : Daily PvP Rated Game Winner}
+{'id' : 3450, 'name' : Daily PvP Tournament Participator}
+{'id' : 3458, 'name' : Daily Tier 4 Shattered Observatory}
+{'id' : 3464, 'name' : Daily Tier 3 Shattered Observatory}
+{'id' : 3466, 'name' : Daily Siren's Landing: Shrine Surveyor}
+{'id' : 3478, 'name' : Daily Tier 2 Shattered Observatory}
+{'id' : 3479, 'name' : Daily Siren's Landing: Kingpin Killer}
+{'id' : 3483, 'name' : Daily Siren's Landing: Unbound Magic Collector}
+{'id' : 3488, 'name' : Daily Siren's Landing: Visit with a Stranger}
+{'id' : 3492, 'name' : Daily Siren's Landing: Oyster Farmer}
+{'id' : 3509, 'name' : Daily Tier 1 Shattered Observatory}
+{'id' : 3514, 'name' : Daily Siren's Landing: Gambler}
+{'id' : 3554, 'name' : Daily Vabbi Event Completer}
+{'id' : 3562, 'name' : Daily Vabbian Bounty Hunter}
+{'id' : 3589, 'name' : Daily Hound Master}
+{'id' : 3607, 'name' : Daily Demolisher}
+{'id' : 3626, 'name' : Daily Crystal Oasis Bounty Hunter}
+{'id' : 3661, 'name' : Daily Elon Riverlands Event Completer}
+{'id' : 3721, 'name' : Daily Desert Vista Viewer}
+{'id' : 3722, 'name' : Daily Elon Riverlands Bounty Hunter}
+{'id' : 3749, 'name' : Daily Desert Adventurer}
+{'id' : 3760, 'name' : Daily Desert Forager}
+{'id' : 3779, 'name' : Daily Desolation Bounty Hunter}
+{'id' : 3784, 'name' : Daily Desert Highlands Bounty Hunter}
+{'id' : 3791, 'name' : Daily Desolation Taskmaster}
+{'id' : 3792, 'name' : Daily Elon Riverlands Taskmaster}
+{'id' : 3793, 'name' : Daily Crystal Oasis Event Completer}
+{'id' : 3814, 'name' : Daily Desert Highlands Event Completer}
+{'id' : 3866, 'name' : Daily Desolation Event Completer}
+{'id' : 3880, 'name' : Daily Desert Lumberer}
+{'id' : 3888, 'name' : Daily Desert Miner}
+{'id' : 3957, 'name' : Daily Domain of Istan Bounty Hunter}
+{'id' : 3963, 'name' : Daily Domain of Istan Renown Heart Completer}
+{'id' : 3966, 'name' : Daily Domain of Istan Mordant Crescent Champion Slayer}
+{'id' : 3973, 'name' : Daily Tier 4 Twilight Oasis}
+{'id' : 3974, 'name' : Daily Domain of Istan Adventurer}
+{'id' : 3987, 'name' : Daily Domain of Istan Corpse Caravan Disruptor}
+{'id' : 4005, 'name' : Daily Domain of Istan Racer}
+{'id' : 4006, 'name' : Daily Tier 2 Twilight Oasis}
+{'id' : 4017, 'name' : Daily Domain of Istan Hidden Stash Hunter}
+{'id' : 4025, 'name' : Daily Domain of Istan Awakened Slayer}
+{'id' : 4028, 'name' : Daily Tier 1 Twilight Oasis}
+{'id' : 4030, 'name' : Daily Tier 3 Twilight Oasis}
+{'id' : 4094, 'name' : Daily Sandswept Isles Adventurer}
+{'id' : 4113, 'name' : Daily Sandswept Isles Inquest Slayer}
+{'id' : 4116, 'name' : Daily Sandswept Isles Racer}
+{'id' : 4118, 'name' : Daily Sandswept Isles Bounty Hunter}
+{'id' : 4128, 'name' : Daily Sandswept Isles Awakened Slayer}
+{'id' : 4138, 'name' : Daily Sandswept Isles Renown Heart Completer}
+{'id' : 4183, 'name' : Daily Kourna: Thorny Predicament}
+{'id' : 4189, 'name' : Daily Kourna: Shard Hoarder}
+{'id' : 4210, 'name' : Daily Tier 3 Deepstone}
+{'id' : 4218, 'name' : Daily Tier 2 Deepstone}
+{'id' : 4224, 'name' : Daily Tier 4 Deepstone}
+{'id' : 4239, 'name' : Daily Kourna: Plague Stopper}
+{'id' : 4244, 'name' : Daily Tier 1 Deepstone}
+{'id' : 4249, 'name' : Daily Kourna: Cannon Crasher}
+{'id' : 4260, 'name' : Daily Kourna: Bug Squasher}
+{'id' : 4267, 'name' : Daily Kourna: Volatile Magic Collector}
+{'id' : 4367, 'name' : Daily Jahai Bluffs Rift Event}
+{'id' : 4382, 'name' : Daily Jahai Bluffs Displaced Tower Jumping Puzzle}
+{'id' : 4391, 'name' : Daily Jahai Bluffs Inner Keep Completer}
+{'id' : 4399, 'name' : Daily Jahai Bluffs Branded Awakened Champions Defeater}
+{'id' : 4410, 'name' : Daily Jahai Bluffs Death-Branded Shatterer Battler}
+{'id' : 4422, 'name' : Daily Jahai Bluffs Tornado Ride}
+{'id' : 4431, 'name' : Daily Jahai Bluffs Bounty Hunter}
+{'id' : 4474, 'name' : Daily Racer: Lakeside Loop}
+{'id' : 4475, 'name' : Daily Racer: Tropic Valley Raceway}
+{'id' : 4478, 'name' : Daily Racer: Infernal Leap}
+{'id' : 4480, 'name' : Daily Racer: Ghostfire Run}
+{'id' : 4482, 'name' : Daily Rolling Racer}
+{'id' : 4484, 'name' : Daily Racer: Jormag's Fang}
+{'id' : 4494, 'name' : Daily Tier 4 Siren's Reef}
+{'id' : 4496, 'name' : Daily Tier 2 Siren's Reef}
+{'id' : 4526, 'name' : Daily Tier 3 Siren's Reef}
+{'id' : 4541, 'name' : Daily Thunderhead Peaks Branded Masses Collector}
+{'id' : 4551, 'name' : Daily Tier 1 Siren's Reef}
+{'id' : 4552, 'name' : Daily Thunderhead Peaks Hidden Dwarven-Treasure Hunter}
+{'id' : 4554, 'name' : Daily Thunderhead Peaks Branded Slayer}
+{'id' : 4565, 'name' : Daily Thunderhead Peaks Adventurer}
+{'id' : 4571, 'name' : Daily Thunderhead Peaks Legendary Slayer}
+{'id' : 4575, 'name' : Daily Thunderhead Peaks Tomb Raider}
+{'id' : 4602, 'name' : Daily Thunderhead Peaks Chest Hunter}
+{'id' : 4603, 'name' : Daily Thunderhead Peaks Renown Heart Completionist}
+{'id' : 4679, 'name' : Daily Dragonfall Melandru's Lost Domain Creature Slayer}
+{'id' : 4683, 'name' : Daily Dragonfall Champion Slayer}
+{'id' : 4696, 'name' : Daily Dragonfall Cocoon Crystallizer}
+{'id' : 4698, 'name' : Daily Dragonfall Olmakhan Base Builder}
+{'id' : 4702, 'name' : Daily Dragonfall Volatile Magic Collection}
+{'id' : 4703, 'name' : Daily Dragonfall Branded Slayer}
+{'id' : 4706, 'name' : Daily Eventful Dragonfall}
+{'id' : 4720, 'name' : Daily Dragonfall Mist Warden Base Builder}
+{'id' : 4727, 'name' : Daily Dragonfall Legendary Slayer}
+{'id' : 4732, 'name' : Daily Dragonfall Bridge Builder}
+{'id' : 4739, 'name' : Daily Dragonfall Burning Forest Creature Slayer}
+{'id' : 4743, 'name' : Daily Dragonfall Crystal Bloom Base Builder}
+{'id' : 4749, 'name' : Daily Mistborn Mote Collector}
+{'id' : 4751, 'name' : Daily Dragonfall Underworld Creature Slayer}
+{'id' : 4906, 'name' : Daily Grothmar Valley Vista Viewer}
+{'id' : 4907, 'name' : Daily Grothmar Concert Participant}
+{'id' : 4913, 'name' : Daily Grothmar Valley Blood Keep Assistant}
+{'id' : 4924, 'name' : Daily Grothmar Gauntlet Runner}
+{'id' : 4930, 'name' : Daily Grothmar Codebreaker}
+{'id' : 4934, 'name' : Daily Grothmar Ooze Pit Participant}
+{'id' : 4937, 'name' : Daily Grothmar Seeker}
+{'id' : 4945, 'name' : Daily Grothmar Effigy Lighter}
+{'id' : 4952, 'name' : Daily Grothmar Pepper Picker}
+{'id' : 4969, 'name' : Daily Grothmar Valley Field Assistant}
+{'id' : 4976, 'name' : Daily Grothmar Valley Racer}
+{'id' : 4977, 'name' : Daily Grothmar Doomlore Cleanser}
+{'id' : 5007, 'name' : Daily Fallen Hunter}
+{'id' : 5008, 'name' : Daily Trial of Koda}
+{'id' : 5009, 'name' : Daily Legendary Hunter}
+{'id' : 5013, 'name' : Daily Corrupted Spirit Cleansing}
+{'id' : 5015, 'name' : Daily Kodan Helping Paw}
+{'id' : 5024, 'name' : Daily Bjora Marches Champion Hunter}
+{'id' : 5025, 'name' : Daily Drakkar Victory}
+{'id' : 5032, 'name' : Daily Raven Sanctum Blessing}
+{'id' : 5037, 'name' : Daily Bjora Marches Event Completer}
+{'id' : 5045, 'name' : Daily Bjora Marches Treasure Hunter}
+{'id' : 5047, 'name' : Daily Storms of Winter Completion}
+{'id' : 5049, 'name' : Daily Puzzle Completer}
+{'id' : 5064, 'name' : Daily Sons of Svanir Hunter}
+{'id' : 5067, 'name' : Daily Bonus Rewards: Winter Wonderland}
+{'id' : 5068, 'name' : Daily Bonus Rewards: Bell Choir}
+{'id' : 5070, 'name' : Daily Bonus Rewards: Snowfall Sprint Race}
+{'id' : 5071, 'name' : Daily Bonus Rewards: Toypocalypse}
+{'id' : 5073, 'name' : Daily Bonus Rewards: Snowball Mayhem}
+{'id' : 5075, 'name' : Daily Bonus Rewards: Infinirarium and Secret Lair}
+{'id' : 5084, 'name' : Daily Essence Chest Looter}
+{'id' : 5251, 'name' : Daily Drizzlewood Coast Minesweeper}
+{'id' : 5256, 'name' : Daily Drizzlewood Coast Dominion Hunter}
+{'id' : 5257, 'name' : Daily Drizzlewood Coast Saboteur}
+{'id' : 5265, 'name' : Daily Drizzlewood Coast Speaker Hunter}
+{'id' : 5270, 'name' : Daily Drizzlewood Coast Caregiver}
+{'id' : 5279, 'name' : Daily Drizzlewood Coast Drop Hunter}
+{'id' : 5295, 'name' : Daily Drizzlewood Coast Salvager}
+{'id' : 5296, 'name' : Daily Drizzlewood Coast Siege of Wolf's Crossing}
+{'id' : 5299, 'name' : Daily Cold War Strike}
+{'id' : 5310, 'name' : Daily Drizzlewood Coast Donor}
+{'id' : 5330, 'name' : Daily Drizzlewood Coast Supply Protector}
+{'id' : 5344, 'name' : Daily Bonus Rewards: Hologram Stampede Gold}
+{'id' : 5345, 'name' : Daily Bonus Rewards: Hologram Stampede Silver}
+{'id' : 5346, 'name' : Daily Bonus Rewards: Hologram Stampede Bronze}
+{'id' : 5371, 'name' : Daily Drizzlewood Coast Rescuer}
+{'id' : 5388, 'name' : Daily Drizzlewood Coast Minesweeper}
+{'id' : 5400, 'name' : Daily Drizzlewood Coast Corrupted Hunter}
+{'id' : 5404, 'name' : Daily Drizzlewood Coast Conqueror}
+{'id' : 5425, 'name' : Daily Drizzlewood Coast Arena of the Wolverine}
