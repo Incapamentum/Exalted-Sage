@@ -1,5 +1,8 @@
 __pycache__/
 .vscode/*
 *.token
-# **/guild
 .env
+bin/
+obj/
+appsettings.json
+Properties/
