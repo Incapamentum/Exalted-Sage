@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -12,6 +14,16 @@ namespace bot
 
         static void Main(string[] args)
         {
+            // Setting up for the .env file
+            var root = Directory.GetCurrentDirectory();
+            var dotenv = Path.Combine(root, ".env");
+            DotEnv.Load(dotenv);
+
+            var config =
+                new ConfigurationBuilder()
+                    .AddEnvironmentVariables()
+                    .Build();
+
             new ExaltedSage().MainAsync().GetAwaiter().GetResult();
         }
 
@@ -26,8 +38,7 @@ namespace bot
 
         public async Task MainAsync()
         {
-            // Tokens should be considered secret data, and never hard-coded
-            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("token"));
+            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("TOKEN"));
             await _client.StartAsync();
 
             // Block program until it's closed

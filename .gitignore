@@ -6,3 +6,4 @@ bin/
 obj/
 appsettings.json
 Properties/
+.vs/
