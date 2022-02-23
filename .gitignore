@@ -5,5 +5,5 @@ __pycache__/
 bin/
 obj/
 appsettings.json
-Properties/
 .vs/
+/New/bot/bot.csproj.user

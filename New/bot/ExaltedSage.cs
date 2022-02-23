@@ -1,30 +1,27 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Discord;
+using Discord.WebSocket;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Discord;
-using Discord.WebSocket;
+
+using bot.Config;
 
 namespace bot
 {
     class ExaltedSage
     {
         private readonly DiscordSocketClient _client;
-
         static void Main(string[] args)
         {
-            // Setting up for the .env file
-            var root = Directory.GetCurrentDirectory();
-            var dotenv = Path.Combine(root, ".env");
-            DotEnv.Load(dotenv);
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile($"Config/appsettings.json", true, true)
+                .AddEnvironmentVariables();
 
-            var config =
-                new ConfigurationBuilder()
-                    .AddEnvironmentVariables()
-                    .Build();
+            var configurationRoot = builder.Build();
+            var appConfig = configurationRoot.GetSection(nameof(AppConfig)).Get<AppConfig>();
 
-            new ExaltedSage().MainAsync().GetAwaiter().GetResult();
+            new ExaltedSage().MainAsync(appConfig.Token).GetAwaiter().GetResult();
         }
 
         public ExaltedSage()
@@ -36,9 +33,9 @@ namespace bot
             _client.MessageReceived += MessageReceivedAsync;
         }
 
-        public async Task MainAsync()
+        public async Task MainAsync(string token)
         {
-            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("TOKEN"));
+            await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
 
             // Block program until it's closed
@@ -48,11 +45,10 @@ namespace bot
         private Task LogAsync(LogMessage log)
         {
             Console.WriteLine(log.ToString());
+
             return Task.CompletedTask;
         }
 
-        // Ready event indicates that the client has opened a
-        // connection and it is now safe to access the cache
         private Task ReadyAsync()
         {
             Console.WriteLine($"{_client.CurrentUser} is connected!");
@@ -60,11 +56,8 @@ namespace bot
             return Task.CompletedTask;
         }
 
-        // Not recommended way to write a bot - consider
-        // reading over the Commands Framework sample
         private async Task MessageReceivedAsync(SocketMessage message)
         {
-            // Bot should never respond to itself
             if (message.Author.Id == _client.CurrentUser.Id)
                 return;
 
