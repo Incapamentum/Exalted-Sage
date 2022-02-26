@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,14 +13,9 @@ namespace bot
         private readonly DiscordSocketClient _client;
         static void Main(string[] args)
         {
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile($"Config/appsettings.json", true, true)
-                .AddEnvironmentVariables();
+            var appConfig = new AppConfig();
 
-            var configurationRoot = builder.Build();
-            var appConfig = configurationRoot.GetSection(nameof(AppConfig)).Get<AppConfig>();
-
-            new ExaltedSage().MainAsync(appConfig.Token).GetAwaiter().GetResult();
+            new ExaltedSage().MainAsync(appConfig.settings.Token).GetAwaiter().GetResult();
         }
 
         public ExaltedSage()
