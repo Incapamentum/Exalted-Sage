@@ -4,27 +4,25 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using bot.Config;
+using bot.Services;
 
 namespace bot
 {
     class ExaltedSage
     {
         private readonly DiscordSocketClient _client;
-        static void Main(string[] args)
-        {
-            var appConfig = new AppConfig();
-
-            new ExaltedSage().MainAsync(appConfig.settings.Token).GetAwaiter().GetResult();
-        }
+        private readonly MessageService _messageService;
+        private readonly LogService _logService;
 
         public ExaltedSage()
         {
             _client = new DiscordSocketClient();
+            _messageService = new MessageService(_client);
+            _logService = new LogService(_client);
 
-            _client.Log += LogAsync;
+            _client.Log += _logService.LogAsync;
             _client.Ready += ReadyAsync;
-            _client.MessageReceived += MessageReceivedAsync;
+            _client.MessageReceived += _messageService.MessageReceivedAsync;
         }
 
         public async Task MainAsync(string token)
@@ -36,27 +34,13 @@ namespace bot
             await Task.Delay(Timeout.Infinite);
         }
 
-        private Task LogAsync(LogMessage log)
-        {
-            Console.WriteLine(log.ToString());
-
-            return Task.CompletedTask;
-        }
-
+        // The Ready event indicates that the client has opened a
+        // connection and it is now safe to access the cache
         private Task ReadyAsync()
         {
             Console.WriteLine($"{_client.CurrentUser} is connected!");
 
             return Task.CompletedTask;
-        }
-
-        private async Task MessageReceivedAsync(SocketMessage message)
-        {
-            if (message.Author.Id == _client.CurrentUser.Id)
-                return;
-
-            if (message.Content == "!ping")
-                await message.Channel.SendMessageAsync("pong!");
         }
     }
 }
