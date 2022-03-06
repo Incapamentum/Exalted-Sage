@@ -1,11 +1,4 @@
-﻿using Discord;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using bot.Config;
+﻿using bot.Config;
 
 namespace bot
 {
@@ -15,7 +8,10 @@ namespace bot
         {
             var appConfig = new AppConfig();
 
-            new ExaltedSage().MainAsync(appConfig.settings.Token).GetAwaiter().GetResult();
+            // Testing how to retrieve the specific guild ID
+            //Console.WriteLine(appConfig.settings.Guilds["Auric Oasis"]);
+
+            new ExaltedSage(appConfig.settings).MainAsync().GetAwaiter().GetResult();
         }
     }
 }
