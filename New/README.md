@@ -30,9 +30,9 @@ Explains how the application is structured.
 
 The application makes use of `Handlers` and `Services` (defined below) to function.
 
-**Handlers** - respond to specific internal requests and executes logic
+**Handlers** - responds to specific internal requests and executes logic, processing any data it receives
 
-**Services** - performs an action that has an effect outside of the application, or forms part of an operational process
+**Services** - provides actions that have an effect on the state of the application; forms part of an operational process
 
 ### Interfacing
 
