@@ -11,7 +11,7 @@ namespace bot.Config
         public AppConfig()
         {
             var config = new ConfigurationBuilder()
-                .AddJsonFile($"Config/appsettings.json")
+                .AddJsonFile($"Config/settings.json")
                 .Build();
 
             settings = config.GetSection(nameof(AppSettings)).Get<AppSettings>();        
