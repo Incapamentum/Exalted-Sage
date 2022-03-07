@@ -25,9 +25,9 @@ namespace bot
 
         // Handlers
         private readonly SlashCommandHandler _slashCommandHandler;
+        private readonly MessageHandler _messageHandler;
 
         // Services
-        private readonly MessageService _messageService;
         private readonly LogService _logService;
 
         public ExaltedSage(AppSettings settings)
@@ -37,11 +37,11 @@ namespace bot
 
             _client = new DiscordSocketClient();
             _slashCommandHandler = new SlashCommandHandler();
-            _messageService = new MessageService(_client, _guilds.Values.ToList());
+            _messageHandler = new MessageHandler(_client, _guilds.Values.ToList());
             _logService = new LogService(_client);
 
             _client.SlashCommandExecuted += _slashCommandHandler.SlashCommandExecute;
-            _client.MessageReceived += _messageService.MessageReceivedAsync;
+            _client.MessageReceived += _messageHandler.MessageReceivedAsync;
             _client.Log += _logService.LogAsync;
             _client.Ready += ReadyAsync;
         }
