@@ -2,6 +2,21 @@
 
 Currently, the application settings are handled via a `settings.json` file that is located in this directory. This file contains two objects: an `AppSettings` object and a `Commands` object. Both are discussed below.
 
+Sample view of the JSON file:
+
+```json
+{
+    "AppSettings": {
+        ...
+    },
+	"Commands": {
+        ...
+    }
+}
+```
+
+
+
 ## AppSettings
 
 This object contains some basic settings used in the configuration of the app, such as the secret token for both the Discord and MongoDB clients. In addition, it also supports a list of guilds that the bot is approved to interact in.
