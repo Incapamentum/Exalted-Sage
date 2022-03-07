@@ -4,6 +4,6 @@ __pycache__/
 .env
 bin/
 obj/
-appsettings.json
+settings.json
 .vs/
 /New/bot/bot.csproj.user
