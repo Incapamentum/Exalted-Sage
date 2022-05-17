@@ -1,5 +1,12 @@
-# This script aggregates all of the Daily achievements
-# into a daily_achievements.json file
+"""
+    Author: Incapamentum
+
+    File name: daily_achieve.py
+
+    Forms a mapping between the ID of the daily
+    achievement and its name, saving the object
+    to a JSON file for further processing
+"""
 
 import json
 import time
@@ -8,6 +15,7 @@ from requests_futures.sessions import FuturesSession
 
 session = FuturesSession()
 
+# Grabs the ID numbers of all available achievements
 request = session.get("https://api.guildwars2.com/v2/achievements")
 request_result = request.result()
 
@@ -17,8 +25,7 @@ daily_achieve = {}
 
 count = 0
 
-print(achieve_list[3304])
-
+# Collects all daily achievements
 for achieve in achieve_list:
 
     time.sleep(0.5)
