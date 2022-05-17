@@ -29,7 +29,7 @@ count = 0
 for achieve in achieve_list:
 
     time.sleep(0.5)
-    print("I'm still running! Count: %d" % (count + 1))
+    print(f'I\'m still running! Count: {count + 1}')
     count += 1
 
     request = session.get("https://api.guildwars2.com/v2/achievements/" + str(achieve))
