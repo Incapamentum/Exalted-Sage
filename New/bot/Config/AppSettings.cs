@@ -6,5 +6,6 @@ namespace bot.Config
     {
         public string Token { get; set; }
         public Dictionary<string, ulong> Guilds { get; set; }
+        public Dictionary<string, string> AuricOasisDatabase { get; set; }
     }
 }
