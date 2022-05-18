@@ -3,19 +3,22 @@ using MongoDB.Bson.Serialization.Attributes;
 
 #nullable enable
 
+using System.Collections.Generic;
+
 namespace bot.Models
 {
     /// <summary>
-    /// Model representative of the document titled 'Daily Watchlist'
+    /// Model representing the fixed structure of a doc belonging to the
+    /// Watchlist collection
     /// </summary>
-    public class DailyWatchList
+    public class WatchlistDoc
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("Title")]
-        public string DocTitle { get; set; } = null!;
+        [BsonElement("Title"]
+        public string DocName { get; set; } = null!;
 
         public string[] Watchlist { get; set; } = null!;
     }

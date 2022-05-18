@@ -1,22 +1,24 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System.Collections.Generic;
 
 #nullable enable
+
+using System.Collections.Generic;
 
 namespace bot.Models
 {
     /// <summary>
-    /// Model representative of the document titled 'List of Daily Achievements'
+    /// Model representing the fixed structure of a doc belonging to the
+    /// Achievements collection
     /// </summary>
-    public class ListOfDailies
+    public class AchievementsDoc
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
         [BsonElement("Title")]
-        public string DocTitle { get; set; } = null!;
+        public string DocName { get; set; } = null!;
 
         public string Date { get; set; } = null!;
 
