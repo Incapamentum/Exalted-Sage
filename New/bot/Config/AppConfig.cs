@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-using System;
-
 namespace bot.Config
 {
     public class AppConfig
