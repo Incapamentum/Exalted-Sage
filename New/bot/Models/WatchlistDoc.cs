@@ -17,7 +17,7 @@ namespace bot.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("Title"]
+        [BsonElement("Title")]
         public string DocName { get; set; } = null!;
 
         public string[] Watchlist { get; set; } = null!;
