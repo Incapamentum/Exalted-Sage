@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace bot.Config
+namespace Bot.Config
 {
     public class AppConfig
     {

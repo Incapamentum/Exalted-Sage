@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace bot.Config
+namespace Bot.Config
 {
     public class AppSettings
     {

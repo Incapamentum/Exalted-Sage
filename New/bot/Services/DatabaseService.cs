@@ -1,4 +1,4 @@
-﻿using bot.Models;
+﻿using Bot.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace bot.Services
+namespace Bot.Services
 {
     /// <summary>
     ///     Exposes the database as a service via public methods for retrieving specific

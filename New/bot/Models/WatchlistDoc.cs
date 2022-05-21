@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 using System.Collections.Generic;
 
-namespace bot.Models
+namespace Bot.Models
 {
     /// <summary>
     /// Model representing the fixed structure of a doc belonging to the

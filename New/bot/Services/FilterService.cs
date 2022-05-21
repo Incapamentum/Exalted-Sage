@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace bot.Services
+namespace Bot.Services
 {
     /// <summary>
     ///     Seems like the "standard" way of having this filter is through a database. Might

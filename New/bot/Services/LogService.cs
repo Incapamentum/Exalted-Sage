@@ -3,7 +3,7 @@ using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 
-namespace bot.Services
+namespace Bot.Services
 {
     public class LogService
     {

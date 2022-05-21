@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace bot.Handlers
+namespace Bot.Handlers
 {
     /// <summary>
     ///     Handler class that executes the specific slash command that was invoked
