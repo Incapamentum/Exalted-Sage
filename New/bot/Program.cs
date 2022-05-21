@@ -1,6 +1,6 @@
-﻿using bot.Config;
+﻿using Bot.Config;
 
-namespace bot
+namespace Bot
 {
     class Program
     {
