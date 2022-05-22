@@ -8,11 +8,21 @@ using System.Threading.Tasks;
 
 namespace Bot.Services
 {
-    public class HttpService
+    /// <summary>
+    ///     Exposes specific methods that perform HTTP requests in retrieving
+    ///     data.
+    /// </summary>
+    public static class HttpService
     {
-        public static async Task<JObject> GetTomorrowsDailies()
+        /// <summary>
+        ///     Performs an HTTP request in retrieving the daily achievement 
+        ///     IDs for tomorrow
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<List<int>> GetTomorrowsDailiesId()
         {
             HttpClient client = new();
+            List<int> tomorrowsIds = new();
 
             HttpResponseMessage response;
             response = await client.GetAsync("https://api.guildwars2.com/v2/achievements/daily/tomorrow");
@@ -32,7 +42,14 @@ namespace Bot.Services
             string responseBody = await response.Content.ReadAsStringAsync();
             JObject json = JObject.Parse(responseBody);
 
-            return json;
+            var pveResult = json["pve"];
+
+            foreach(var item in pveResult.Children())
+            {
+                tomorrowsIds.Add(item["id"].Value<int>());
+            }
+
+            return tomorrowsIds;
         }
     }
 }
