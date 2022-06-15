@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace bot.Handlers
+using Bot.Services;
+
+namespace Bot.Handlers
 {
     /// <summary>
     ///     Handler class that parses message contents
@@ -12,7 +14,6 @@ namespace bot.Handlers
         private readonly DiscordSocketClient _client;
         private readonly List<ulong> _guildIds;
 
-        // THis might end up requiring usage of the Database service (maybe?)
         public MessageHandler(DiscordSocketClient client, List<ulong> guildIds)
         {
             _client = client;
