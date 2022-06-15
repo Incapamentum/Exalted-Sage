@@ -8,18 +8,20 @@ namespace Bot.Services
 {
     /// <summary>
     ///     Exposes a database as a service to the program via public methods
-    ///     in the retrieval of stored documents
+    ///     in the retrieval of stored documents.
     /// </summary>
     public static class DatabaseService
     {
         /// <summary>
         ///     Establishes a connection to the MongoDB cluster
-        ///     specified by the URI string
+        ///     specified by the URI string.
         /// </summary>
         /// <param name="connectionUri">
-        ///     The URI string to connect to the MongoDB service
+        ///     The URI string to connect to the MongoDB service.
         /// </param>
-        /// <returns></returns>
+        /// <returns>
+        ///     A client interface connection to the MongoDB cluster.
+        /// </returns>
         public static MongoClient EstablishConnection(string connectionUri)
         {
             MongoClient client = null;
@@ -32,13 +34,13 @@ namespace Bot.Services
         }
 
         /// <summary>
-        ///     Retrieves a collection of daily achievements
+        ///     Retrieves a collection of daily achievements. No guarantees of something being returned.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
         /// </param>
         /// <returns>
-        ///     A {achievementID, achivementName} pairing of daily PVE achievements
+        ///     A {achievementID, achivementName} pairing of daily PVE achievements.
         /// </returns>
         public static async Task<Dictionary<int, string>> GetDailyPveAchievements(MongoClient client)
         {
@@ -60,7 +62,7 @@ namespace Bot.Services
         }
 
         /// <summary>
-        ///     Retrieves the watchlist of daily PVE achievements
+        ///     Retrieves the watchlist of daily PVE achievements. No guarantees of something being returned.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
@@ -68,7 +70,7 @@ namespace Bot.Services
         /// <returns>
         ///     A list of strings of the daily PVE achievement watchlist
         /// </returns>
-        public static async Task<string[]> GetPveDailyWatchlist(MongoClient client)
+        public static async Task<List<string>> GetDailyPveWatchlist(MongoClient client)
         {
             string[] dailyWatchlist = null;
             MongoCollectionBase<WatchlistDoc> watchlistCollection;
@@ -84,7 +86,7 @@ namespace Bot.Services
 
             dailyWatchlist = dailyWatch.Watchlist;
 
-            return dailyWatchlist;
+            return dailyWatchlist.ToList();
         }
     }
 }
