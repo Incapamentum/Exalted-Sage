@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bot.Services
@@ -19,7 +17,7 @@ namespace Bot.Services
         ///     IDs for tomorrow
         /// </summary>
         /// <returns></returns>
-        public static async Task<List<int>> GetTomorrowsDailiesId()
+        public static async Task<List<int>> GetTomorrowsPveDailiesId()
         {
             HttpClient client = new();
             List<int> tomorrowsIds = new();
