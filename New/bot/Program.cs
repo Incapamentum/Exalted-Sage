@@ -11,7 +11,7 @@ namespace Bot
             // Testing how to retrieve the specific guild ID
             //Console.WriteLine(appConfig.settings.Guilds["Auric Oasis"]);
 
-            new ExaltedSage(appConfig.settings).MainAsync().GetAwaiter().GetResult();
+            new ExaltedSage(appConfig).MainAsync().GetAwaiter().GetResult();
         }
     }
 }
