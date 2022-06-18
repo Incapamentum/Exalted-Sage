@@ -12,7 +12,7 @@ namespace Bot.Config
                 .AddJsonFile($"Config/settings.json")
                 .Build();
 
-            settings = config.GetSection(nameof(AppSettings)).Get<AppSettings>();        
+            settings = config.GetSection(ReleaseMode.Mode).Get<AppSettings>();
         }
     }
 }
