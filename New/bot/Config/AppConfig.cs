@@ -4,7 +4,8 @@ namespace Bot.Config
 {
     public class AppConfig
     {
-        public AppSettings settings;
+        public DiscordSettings discordSettings;
+        public DatabaseSettings databaseSettings;
 
         public AppConfig()
         {
@@ -12,7 +13,8 @@ namespace Bot.Config
                 .AddJsonFile($"Config/settings.json")
                 .Build();
 
-            settings = config.GetSection(ReleaseMode.Mode).Get<AppSettings>();
+            discordSettings = config.GetSection(ReleaseMode.Mode).Get<DiscordSettings>();
+            databaseSettings = config.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
         }
     }
 }
