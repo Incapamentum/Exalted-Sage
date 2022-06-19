@@ -1,5 +1,10 @@
 __pycache__/
 .vscode/*
 *.token
-# **/guild
 .env
+bin/
+obj/
+settings.json
+.vs/
+/New/bot/bot.csproj.user
+/Data
