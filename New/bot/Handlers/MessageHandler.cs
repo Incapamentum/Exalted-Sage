@@ -19,10 +19,12 @@ namespace Bot.Handlers
     public class MessageHandler
     {
         private readonly DiscordSocketClient _client;
+        private readonly List<ulong> _guildIds;
 
         public MessageHandler(DiscordSocketClient client)
         {
             _client = client;
+            _guildIds = guildIds;
         }
 
         public async Task MessageReceivedAsync(SocketMessage message)

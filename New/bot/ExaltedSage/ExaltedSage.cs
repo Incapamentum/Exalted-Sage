@@ -18,6 +18,7 @@ namespace Bot
     class ExaltedSage
     {
         // These are app specific
+        private readonly Dictionary<string, ulong> _guilds;
         private readonly string _token;
 
         // Client interfaces
@@ -116,9 +117,9 @@ namespace Bot
                     };
 
                     foreach (string achieveName in upcomingPveDailies)
-                    {
+        {
                         var achieveId = AchievementHelper.AchievementGetdFromName(achieveName, dailyPveAchievements);
-                        
+
                         // Valid ID check
                         if (achieveId != 0)
                         {
@@ -127,16 +128,16 @@ namespace Bot
                             embed.AddField(achieveName, desc);
                         }
                         else
-                        {
+            {
                             continue;
                         }
                     }
 
                     // Broadcast the embedded message
                     await broadcastChannel.SendMessageAsync(embed: embed.Build());
-                }
+            }
                 else
-                {
+            {
                     await broadcastChannel.SendMessageAsync("Nothing to report...");
                 }
             }
