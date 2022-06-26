@@ -10,7 +10,7 @@ namespace Bot.Models
     /// Model representing the fixed structure of a doc belonging to the
     /// Watchlist collection
     /// </summary>
-    public class WatchlistDoc
+    internal class WatchlistDoc
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

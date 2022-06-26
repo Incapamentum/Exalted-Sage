@@ -11,7 +11,7 @@ namespace Bot.Models
     /// Model representing the fixed structure of a doc belonging to the
     /// Achievements collection
     /// </summary>
-    public class AchievementDoc
+    internal class AchievementDoc
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
