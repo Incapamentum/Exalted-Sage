@@ -10,7 +10,7 @@ namespace Bot.Services
     ///     Exposes a database as a service to the program via public methods
     ///     in the retrieval of stored documents.
     /// </summary>
-    public static class DatabaseService
+    internal static class DatabaseService
     {
         /// <summary>
         ///     Establishes a connection to the MongoDB cluster
@@ -22,7 +22,7 @@ namespace Bot.Services
         /// <returns>
         ///     A client interface connection to the MongoDB cluster.
         /// </returns>
-        public static MongoClient EstablishConnection(string connectionUri)
+        internal static MongoClient EstablishConnection(string connectionUri)
         {
             MongoClient client = null;
 
@@ -42,7 +42,7 @@ namespace Bot.Services
         /// <returns>
         ///     A {achievementID, achivementName} pairing of daily PVE achievements.
         /// </returns>
-        public static async Task<Dictionary<int, string>> GetDailyPveAchievements(MongoClient client)
+        internal static async Task<Dictionary<int, string>> GetDailyPveAchievements(MongoClient client)
         {
             Dictionary<int, string> dailyAchievements = null;
             MongoCollectionBase<AchievementDoc> achievementCollection;
@@ -70,7 +70,7 @@ namespace Bot.Services
         /// <returns>
         ///     A list of strings of the daily PVE achievement watchlist
         /// </returns>
-        public static async Task<List<string>> GetDailyPveWatchlist(MongoClient client)
+        internal static async Task<List<string>> GetDailyPveWatchlist(MongoClient client)
         {
             string[] dailyWatchlist = null;
             MongoCollectionBase<WatchlistDoc> watchlistCollection;
@@ -87,6 +87,65 @@ namespace Bot.Services
             dailyWatchlist = dailyWatch.Watchlist;
 
             return dailyWatchlist.ToList();
+        }
+
+        /// <summary>
+        ///     Retrieves a doc of type Response.
+        /// </summary>
+        /// <param name="client">
+        ///     The MongoDB client connection to cluster.
+        /// </param>
+        /// <param name="responseType">
+        ///     The title of the Response doc to look for.
+        /// </param>
+        /// <returns>
+        ///     A list of strings representing response callbacks the bot makes.
+        /// </returns>
+        internal static async Task<List<string>> GetResponses(MongoClient client, string responseType)
+        {
+            string[] responses = null;
+            MongoCollectionBase<ResponseDoc> responseCollection;
+
+            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
+
+            responseCollection = database.GetCollection<ResponseDoc>("responses")
+                as MongoCollectionBase<ResponseDoc>;
+
+            var builder = Builders<ResponseDoc>.Filter;
+            var filter = builder.Eq("Title", responseType);
+            var responseList = await responseCollection.Find(filter).FirstOrDefaultAsync();
+
+            responses = responseList.Responses;
+
+            return responses.ToList();
+        }
+
+        /// <summary>
+        ///     Retrieves a collection of channels to broadcast messages to.
+        /// </summary>
+        /// <param name="client">
+        ///     The MongoDB client connection to cluster.
+        /// </param>
+        /// <returns>
+        ///     A {string, ulong} mapping of channnels to broadcast to.
+        /// </returns>
+        internal static async Task<Dictionary<string, ulong>> GetBroadcastChannels(MongoClient client)
+        {
+            Dictionary<string, ulong> broadcastChannels = null;
+            MongoCollectionBase<ChannelsDoc> channelsCollection;
+
+            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
+
+            channelsCollection = database.GetCollection<ChannelsDoc>("channels")
+                as MongoCollectionBase<ChannelsDoc>;
+
+            var builder = Builders<ChannelsDoc>.Filter;
+            var filter = builder.Eq("Title", "Broadcast Channels");
+            var broadcastList = await channelsCollection.Find(filter).FirstOrDefaultAsync();
+
+            broadcastChannels = broadcastList.Channels;
+
+            return broadcastChannels;
         }
     }
 }
