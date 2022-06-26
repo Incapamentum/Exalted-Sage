@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bot.Helpers
 {
-    public static class AchievementHelper
+    internal static class AchievementHelper
     {
         /// <summary>
         ///     Collects the names of achievements from their respective IDs.
