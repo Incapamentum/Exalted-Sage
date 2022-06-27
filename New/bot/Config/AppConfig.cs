@@ -2,10 +2,10 @@
 
 namespace Bot.Config
 {
-    public class AppConfig
+    internal class AppConfig
     {
-        public DiscordSettings discordSettings;
-        public DatabaseSettings databaseSettings;
+        internal DiscordSettings discordSettings;
+        internal DatabaseSettings databaseSettings;
 
         public AppConfig()
         {
