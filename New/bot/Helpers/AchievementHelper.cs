@@ -74,7 +74,7 @@ namespace Bot.Helpers
         /// <returns>
         ///     The ID of the named achievement if found, 0 otherwise.
         /// </returns>
-        internal static int AchievementGetdFromName(string name, Dictionary<int, string> achievements)
+        internal static int AchievementGetIdFromName(string name, Dictionary<int, string> achievements)
         {
             foreach (int id in achievements.Keys)
             {
