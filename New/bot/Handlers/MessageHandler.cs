@@ -1,4 +1,6 @@
 ﻿using Discord.WebSocket;
+using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,39 +11,61 @@ namespace Bot.Handlers
     /// <summary>
     ///     Handler class that parses messages
     /// </summary>
-    
-    // This will have to be overhauled:
-    //      [ ] Origin of guild should no longer be tracked due to bot being
-    //          independent of that
-    //      [ ] It may need access to the database to pull phrases/sentences from
-    //      [ ] Unsure if the bot will ever crash upon receiving a message, but be
-    //          mindful of such behavior in the end
     public class MessageHandler
     {
-        private readonly DiscordSocketClient _client;
-        private readonly List<ulong> _guildIds;
+        private readonly DiscordSocketClient _discordClient;
+        private readonly MongoClient _mongoClient;
 
-        public MessageHandler(DiscordSocketClient client)
+        public MessageHandler(DiscordSocketClient discordClient, MongoClient mongoClient)
         {
-            _client = client;
-            _guildIds = guildIds;
+            _discordClient = discordClient;
+            _mongoClient = mongoClient;
         }
 
         public async Task MessageReceivedAsync(SocketMessage message)
         {
+            var selfId = _discordClient.CurrentUser.Id;
+
             // Bot shouldn't process any messages it sends
-            if (message.Author.Id == _client.CurrentUser.Id)
+            if (message.Author.Id == selfId)
                 return;
 
-            var originChannel = message.Channel as SocketGuildChannel;
-            var originGuild = originChannel.Guild.Id;
+            var content = message.Content.ToLower();
+            var rand = new Random(16);
+            var mentioned = new List<SocketUser>(message.MentionedUsers);
 
-            // Ignore all messages that are not from the list of approved guilds
-            //if (_guildIds.Contains(originGuild))
-            //{
-            //    // This should contain stuff for shitposting purposes, probably
-            //    await message.Channel.SendMessageAsync("Message ID: " + message.Id.ToString());
-            //}
+            // Some of these execution paths could be made compact into the form
+            // of a function, i.e.
+            //
+            //      var response
+            //      var index
+            //      await message
+            //
+            // are all the same implementation  
+
+            // Respond with an appropriate message dealing with Tarir
+            if (content.Contains("tarir") && rand.NextDouble() < 0.25)
+            {
+                var response = await DatabaseService.GetResponses(_mongoClient, "Tarir Responses");
+                var index = rand.Next(response.Count);
+
+                await message.Channel.SendMessageAsync(response[index]);
+            }
+
+            // Respond with an appropriate message if pinged
+            if (mentioned.Count > 0)
+            {
+                foreach (var user in mentioned)
+                {
+                    if (user.Id == selfId)
+                    {
+                        var response = await DatabaseService.GetResponses(_mongoClient, "Egg Bearer Responses");
+                        var index = rand.Next(response.Count);
+
+                        await message.Channel.SendMessageAsync(response[index]);
+                    }
+                }
+            }
         }
     }
 }

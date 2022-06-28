@@ -32,10 +32,6 @@ namespace Bot
         // Services
         private readonly LogService _logService;
 
-        // Plugins
-        // NOTE: this might have to be expanded into a list, maybe?
-        //private readonly DailyAlertPlugin _daPlugin;
-
         public ExaltedSage(AppConfig settings)
         {
             _token = settings.discordSettings.Token;
@@ -47,10 +43,11 @@ namespace Bot
 
             //_slashCommandHandler = new SlashCommandHandler();
             //_messageHandler = new MessageHandler(_discordClient, _guilds.Values.ToList(), _dbService);
+            _messageHandler = new MessageHandler(_discordClient, _mongoClient);
             _logService = new LogService(_discordClient);
 
             //_discordClient.SlashCommandExecuted += _slashCommandHandler.SlashCommandExecute;
-            //_discordClient.MessageReceived += _messageHandler.MessageReceivedAsync;
+            _discordClient.MessageReceived += _messageHandler.MessageReceivedAsync;
             _discordClient.Log += _logService.LogAsync;
 
             _discordClient.Ready += ReadyAsync;
@@ -59,7 +56,6 @@ namespace Bot
         /// <summary>
         ///     Main execution point of the bot
         /// </summary>
-        /// <returns></returns>
         public async Task MainAsync()
         {
             await _discordClient.LoginAsync(TokenType.Bot, _token);
@@ -86,10 +82,14 @@ namespace Bot
         /// </summary>
         private async Task OnServerReset()
         {
-            // This should be saved in the settings.json(?) file
-            // Perhaps make this into a different file?
-            var broadcastChannel = _discordClient.GetChannel(720690834638372949)
-                as SocketTextChannel;
+            ulong channelId = 0;
+
+            if (ReleaseMode.Mode == "ProdSettings")
+                channelId = await ChannelHelper.GetChannelId(_mongoClient, "broadcast", "bot-channel");
+            else
+                channelId = 720690834638372949;
+
+            var broadcastChannel = _discordClient.GetChannel(channelId) as SocketTextChannel;
             var utcNow = DateTime.UtcNow;
 
             if (utcNow.Hour == 0)
@@ -102,7 +102,6 @@ namespace Bot
                 List<string> dailyPveNames = new();
                 List<string> upcomingPveDailies = new();
 
-                // Note: will this always be empty?
                 dailyPveNames = AchievementHelper.AchievementNamesFromIds(tomorrowPveDailiesId, dailyPveAchievements);
                 upcomingPveDailies = AchievementHelper.AchievementsSetToAppear(dailyPveNames, dailyPveWatchlist);
 
@@ -117,8 +116,8 @@ namespace Bot
                     };
 
                     foreach (string achieveName in upcomingPveDailies)
-        {
-                        var achieveId = AchievementHelper.AchievementGetdFromName(achieveName, dailyPveAchievements);
+                    {
+                        var achieveId = AchievementHelper.AchievementGetIdFromName(achieveName, dailyPveAchievements);
 
                         // Valid ID check
                         if (achieveId != 0)
@@ -128,16 +127,16 @@ namespace Bot
                             embed.AddField(achieveName, desc);
                         }
                         else
-            {
+                        {
                             continue;
                         }
                     }
 
                     // Broadcast the embedded message
                     await broadcastChannel.SendMessageAsync(embed: embed.Build());
-            }
+                }
                 else
-            {
+                {
                     await broadcastChannel.SendMessageAsync("Nothing to report...");
                 }
             }
