@@ -4,7 +4,6 @@ using Discord.WebSocket;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +17,6 @@ namespace Bot
     class ExaltedSage
     {
         // These are app specific
-        private readonly Dictionary<string, ulong> _guilds;
         private readonly string _token;
 
         // Client interfaces
@@ -68,8 +66,10 @@ namespace Bot
         private Task ReadyAsync()
         {
             var period = new TimeSpan(1, 0, 0);
+            //var period = new TimeSpan(0, 0, 10);
+            PeriodicAsync(period);
 
-            PeriodicAsync(OnServerReset, period);
+            //PeriodicAsync(OnServerReset, period);
 
             Console.WriteLine($"{_discordClient.CurrentUser} is online!");
 
@@ -145,21 +145,16 @@ namespace Bot
         /// <summary>
         ///     Wrapper class that periodically calls the async task.
         /// </summary>
-        /// <param name="action">
-        ///     The async task to be called.
+        /// <param name="period">
+        ///     The period of time to execute the task at.
         /// </param>
-        /// <param name="interval">
-        ///     The time interval to call the task.
-        /// </param>
-        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task PeriodicAsync(Func<Task> action, TimeSpan interval,
-            CancellationToken cancellationToken = default)
-        {
-            using var timer = new PeriodicTimer(interval);
-            while (await timer.WaitForNextTickAsync(cancellationToken))
+        private async Task PeriodicAsync(TimeSpan period)
+        { 
+            while (true)
             {
-                await action();                
+                await OnServerReset();
+                await Task.Delay(period);
             }
         }
     }
