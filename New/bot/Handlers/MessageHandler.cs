@@ -28,10 +28,17 @@ namespace Bot.Handlers
         {
             string response = null;
 
+            var allowableChannels = await DatabaseService.GetGeneralChannels(_mongoClient);
+
             var selfId = _discordClient.CurrentUser.Id;
+            var channelId = message.Channel.Id;
 
             // Bot shouldn't process any messages it sends
             if (message.Author.Id == selfId)
+                return;
+
+            // Bot is only allowed to send messages in the allowable list
+            if (!allowableChannels.ContainsValue(channelId))
                 return;
 
             var content = message.Content.ToLower();
