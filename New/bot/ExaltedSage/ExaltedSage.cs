@@ -40,7 +40,6 @@ namespace Bot
                 settings.databaseSettings.ConnectionUri);
 
             //_slashCommandHandler = new SlashCommandHandler();
-            //_messageHandler = new MessageHandler(_discordClient, _guilds.Values.ToList(), _dbService);
             _messageHandler = new MessageHandler(_discordClient, _mongoClient);
             _logService = new LogService(_discordClient);
 
