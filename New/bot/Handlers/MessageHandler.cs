@@ -1,6 +1,7 @@
 ﻿using Discord.WebSocket;
 using MongoDB.Driver;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -34,21 +35,22 @@ namespace Bot.Handlers
                 return;
 
             var content = message.Content.ToLower();
+            var contentStrings = content.Split(' ').ToList();
             var mentioned = new List<SocketUser>(message.MentionedUsers);
             var chance = RandomHelper.rand.NextDouble();
 
             // Respond with an appropriate message dealing with Tarir
-            if (content.Contains("tarir") && chance < 0.25)
+            if (contentStrings.Contains("tarir") && chance < 0.25)
             {
                 response = await RandomResponse("Tarir Responses");
             }
             // Respond with an appropriate message dealing with Auric Basin
-            else if (content.Contains("auric basin") && chance < 0.25)
+            else if ((content.Contains("auric basin") || contentStrings.Contains("ab")) && chance < 0.25)
             {
                 response = await RandomResponse("Auric Basin Responses");
             }
             // Respond with an appropriate message if pinged
-            else if (mentioned.Count > 0 && chance < 0.25)
+            else if (mentioned.Count > 0)
             {
                 foreach (var user in mentioned)
                 {
