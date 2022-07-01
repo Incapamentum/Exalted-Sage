@@ -42,6 +42,11 @@ namespace Bot.Handlers
             {
                 response = await RandomResponse("Tarir Responses");
             }
+            // Respond with an appropriate message dealing with Auric Basin
+            else if (content.Contains("auric basin") && chance < 0.25)
+            {
+                response = await RandomResponse("Auric Basin Responses");
+            }
             // Respond with an appropriate message if pinged
             else if (mentioned.Count > 0 && chance < 0.25)
             {
@@ -49,7 +54,7 @@ namespace Bot.Handlers
                 {
                     if (user.Id == selfId)
                     {
-                        response = await RandomResponse("Egg Bearer Responses");
+                        response = await RandomResponse("Gilded Responses");
                     }
                 }
             }
