@@ -68,7 +68,7 @@ namespace Bot.Handlers
                 }
             }
             // Cursed responses
-            else if (chance < 0.05)
+            else if (chance < 0.01)
             {
                 response = await RandomResponse("UwU Responses");
             }
