@@ -1,10 +1,10 @@
 ﻿using Discord.WebSocket;
 using MongoDB.Driver;
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Bot.Config;
 using Bot.Helpers;
 using Bot.Services;
 
@@ -27,20 +27,29 @@ namespace Bot.Handlers
         public async Task MessageReceivedAsync(SocketMessage message)
         {
             string response = null;
+            ulong channelId;
 
             var allowableChannels = await DatabaseService.GetGeneralChannels(_mongoClient);
 
             var selfId = _discordClient.CurrentUser.Id;
-            var channelId = message.Channel.Id;
+
+            // Debugging purposes
+            if (ReleaseMode.Mode == "DevSettings")
+                channelId = 720690834638372949;
+            else
+                channelId = message.Channel.Id;
 
             // Bot shouldn't process any messages it sends
             if (message.Author.Id == selfId)
                 return;
 
-            // Bot is only allowed to send messages in the allowable list
-            if (!allowableChannels.ContainsValue(channelId))
+            // In production, bot is only allowed to send messages
+            // in the allowable list
+            if (!allowableChannels.ContainsValue(channelId) && ReleaseMode.Mode == "ProdSettings")
                 return;
 
+            // Grabbing the actual message then converting to a list of strings.
+            // Also grabbing a list of mentioned users. Null if none are mentioned.
             var content = message.Content.ToLower();
             var contentStrings = content.Split(' ').ToList();
             var mentioned = new List<SocketUser>(message.MentionedUsers);
