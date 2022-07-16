@@ -26,6 +26,7 @@ namespace Bot
         // Handlers
         //private readonly SlashCommandHandler _slashCommandHandler;
         private readonly MessageHandler _messageHandler;
+        private readonly VoiceHandler _voiceHandler;
 
         // Services
         private readonly LogService _logService;
@@ -41,10 +42,13 @@ namespace Bot
 
             //_slashCommandHandler = new SlashCommandHandler();
             _messageHandler = new MessageHandler(_discordClient, _mongoClient);
+            _voiceHandler = new VoiceHandler(_discordClient, _mongoClient);
+
             _logService = new LogService(_discordClient);
 
             //_discordClient.SlashCommandExecuted += _slashCommandHandler.SlashCommandExecute;
             _discordClient.MessageReceived += _messageHandler.MessageReceivedAsync;
+            _discordClient.UserVoiceStateUpdated += _voiceHandler.VoiceStateChangeAsync;
             _discordClient.Log += _logService.LogAsync;
 
             _discordClient.Ready += ReadyAsync;

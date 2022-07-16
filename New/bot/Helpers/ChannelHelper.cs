@@ -45,5 +45,18 @@ namespace Bot.Helpers
 
             return chanId;
         }
+
+        internal static string GetChannelNameFromId(ulong id, Dictionary<string, ulong> channels)
+        {
+            foreach (var pair in channels)
+            {
+                if (pair.Value == id)
+                {
+                    return pair.Key;
+                }
+            }
+
+            return null;
+        }
     }
 }
