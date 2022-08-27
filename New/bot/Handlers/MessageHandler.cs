@@ -77,9 +77,9 @@ namespace Bot.Handlers
                 }
             }
             // Cursed responses
-            else if (chance < 0.01)
+            else if (chance < 0.005)
             {
-                response = await RandomResponse("UwU Responses");
+                response = await RandomResponse("Grab Bag Responses");
             }
 
             if (response != null)
