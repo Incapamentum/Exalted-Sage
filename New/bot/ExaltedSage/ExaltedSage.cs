@@ -1,5 +1,6 @@
 ﻿using Discord;
-using Discord.Net;
+using Discord.Net.WebSockets;
+using Discord.Net.Udp;
 using Discord.WebSocket;
 using MongoDB.Driver;
 using System;
@@ -21,6 +22,7 @@ namespace Bot
 
         // Client interfaces
         private readonly DiscordSocketClient _discordClient;
+        private readonly DiscordSocketConfig _discordConfig;
         private readonly MongoClient _mongoClient;
 
         // Handlers
@@ -36,7 +38,8 @@ namespace Bot
             _token = settings.discordSettings.Token;
 
             // Initializing member variables
-            _discordClient = new DiscordSocketClient();
+            _discordConfig = GenerateConfig();
+            _discordClient = new DiscordSocketClient(_discordConfig);
             _mongoClient = DatabaseService.EstablishConnection(
                 settings.databaseSettings.ConnectionUri);
 
@@ -47,8 +50,13 @@ namespace Bot
             _logService = new LogService(_discordClient);
 
             //_discordClient.SlashCommandExecuted += _slashCommandHandler.SlashCommandExecute;
+            // Message events
             _discordClient.MessageReceived += _messageHandler.MessageReceivedAsync;
+            _discordClient.MessageDeleted += _messageHandler.MessageDeletedAsync;
+
+            // Voice channel events
             _discordClient.UserVoiceStateUpdated += _voiceHandler.VoiceStateChangeAsync;
+
             _discordClient.Log += _logService.LogAsync;
 
             _discordClient.Ready += ReadyAsync;
@@ -159,6 +167,21 @@ namespace Bot
                 await OnServerReset();
                 await Task.Delay(period);
             }
+        }
+
+        private DiscordSocketConfig GenerateConfig()
+        {
+            // Everything will be set to their default values unless otherwise
+            // set explicitly
+            DiscordSocketConfig config = new DiscordSocketConfig
+            {
+                MessageCacheSize = 512,
+
+                WebSocketProvider = DefaultWebSocketProvider.Instance,
+                UdpSocketProvider = DefaultUdpSocketProvider.Instance
+            };
+
+            return config;
         }
     }
 }
