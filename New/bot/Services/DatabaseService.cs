@@ -169,7 +169,7 @@ namespace Bot.Services
 
         internal static async Task<Dictionary<string, ulong>> GetEventVoiceChannels(MongoClient client)
         {
-            Dictionary <string, ulong> eventVoiceChannels = null;
+            Dictionary<string, ulong> eventVoiceChannels = null;
             MongoCollectionBase<ChannelsDoc> channelsCOllection;
 
             var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
