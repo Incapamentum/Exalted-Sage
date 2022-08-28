@@ -185,5 +185,24 @@ namespace Bot.Services
 
             return eventVoiceChannels;
         }
+
+        internal static async Task<Dictionary<string, ulong>> GetSupervisedChannels(MongoClient client)
+        {
+            Dictionary<string, ulong> supervisedChannels = null;
+            MongoCollectionBase<ChannelsDoc> channelsCollection;
+
+            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
+
+            channelsCollection = database.GetCollection<ChannelsDoc>("channels")
+                as MongoCollectionBase<ChannelsDoc>;
+
+            var builder = Builders<ChannelsDoc>.Filter;
+            var filter = builder.Eq("Title", "Supervised Channels");
+            var generalList = await channelsCollection.Find(filter).FirstOrDefaultAsync();
+
+            supervisedChannels = generalList.Channels;
+
+            return supervisedChannels;
+        }
     }
 }
