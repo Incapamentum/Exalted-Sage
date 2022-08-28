@@ -1,5 +1,7 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -86,6 +88,64 @@ namespace Bot.Handlers
             {
                 await message.Channel.SendMessageAsync(response);
             }
+        }
+
+        /// <summary>
+        ///     Currently keeps track of messages deleted only in supervised channels.
+        ///     Upon message deletion, creates an embedded message to publish to the
+        ///     indicated broadcast channel.
+        /// </summary>
+        /// <param name="message">
+        ///     Cacheable copy of the deleted message. Not guaranteed to actually
+        ///     be cached.
+        /// </param>
+        /// <param name="channel">
+        ///     Cacheable copy of the channel from which the message was deleted
+        ///     from. Not guaranteed to actually be cached.
+        /// </param>
+        /// <returns>
+        ///     None.
+        /// </returns>
+        public async Task MessageDeletedAsync(Cacheable<IMessage, UInt64> message,
+                                              Cacheable<IMessageChannel, UInt64> channel)
+        {
+            ulong broadcastId = 0;
+            string channelName = "Unknown";
+
+            // Make sure caches are valid
+            if (!message.HasValue && !channel.HasValue)
+                return;
+
+            if (ReleaseMode.Mode == "DevSettings")
+                broadcastId = 1013185367924547654;
+            else
+                broadcastId = await ChannelHelper.GetChannelId(_mongoClient, "broadcast", "bot-alerts");
+
+            var broadcastChannel = _discordClient.GetChannel(broadcastId)
+                as SocketTextChannel;
+
+            // Ensure deleted message was from a supervised channel
+            var supervisedCollection = await DatabaseService.GetSupervisedChannels(_mongoClient);
+            var supervisedIds = supervisedCollection.Values.ToList();
+
+            if (supervisedIds.Contains(channel.Id))
+                channelName = channel.Value.Name;
+
+            // Process
+            var user = message.Value.Author;
+            var content = message.Value.Content;
+
+            var embed = new EmbedBuilder
+            {
+                Title = "Trade Message Deleted",
+                Description = $"A message in {channelName} has been deleted.",
+                Color = 0xffc805
+            };
+
+            embed.AddField("Author", user);
+            embed.AddField("Message", content);
+
+            await broadcastChannel.SendMessageAsync(embed: embed.Build());
         }
 
         /// <summary>

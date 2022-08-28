@@ -36,6 +36,9 @@ namespace Bot.Helpers
                 case "broadcast":
                     channels = await DatabaseService.GetBroadcastChannels(client);
                     break;
+                case "supervised":
+                    channels = await DatabaseService.GetSupervisedChannels(client);
+                    break;
             }
 
             if (channels != null)
