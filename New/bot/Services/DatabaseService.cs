@@ -88,7 +88,7 @@ namespace Bot.Services
         }
 
         /// <summary>
-        ///     Retrieves a collection of channels to broadcast messages to.
+        ///     Retrieves the collection of channels to broadcast messages to.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
@@ -104,6 +104,15 @@ namespace Bot.Services
             return broadcastDoc.Channels;
         }
 
+        /// <summary>
+        ///     Retrieves the collection of general channels.
+        /// </summary>
+        /// <param name="client">
+        ///     The MongoDB client connection to cluster.
+        /// </param>
+        /// <returns>
+        ///     A [string, ulong] mapping of general channels.
+        /// </returns>
         internal static async Task<Dictionary<string, ulong>> GetGeneralChannels(MongoClient client)
         {
             var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
@@ -112,6 +121,15 @@ namespace Bot.Services
             return generalDoc.Channels;
         }
 
+        /// <summary>
+        ///     Retrieves the collection of event voice channels.
+        /// </summary>
+        /// <param name="client">
+        ///     The MongoDB client connecton to cluster.
+        /// </param>
+        /// <returns>
+        ///     A [string, ulong] mapping of event voice channels.
+        /// </returns>
         internal static async Task<Dictionary<string, ulong>> GetEventVoiceChannels(MongoClient client)
         {
             var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
@@ -120,6 +138,15 @@ namespace Bot.Services
             return vcDoc.Channels;
         }
 
+        /// <summary>
+        ///     Retrieves the collection of supervised channels.
+        /// </summary>
+        /// <param name="client">
+        ///     The MongoDB client connection to cluster.
+        /// </param>
+        /// <returns>
+        ///     A [string, ulong] mapping of supervised channels.
+        /// </returns>
         internal static async Task<Dictionary<string, ulong>> GetSupervisedChannels(MongoClient client)
         {
             var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
