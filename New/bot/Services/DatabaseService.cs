@@ -44,21 +44,10 @@ namespace Bot.Services
         /// </returns>
         internal static async Task<Dictionary<int, string>> GetDailyPveAchievements(MongoClient client)
         {
-            Dictionary<int, string> dailyAchievements = null;
-            MongoCollectionBase<AchievementDoc> achievementCollection;
+            var achievementCollection = GrabCollection<AchievementDoc>(client, "achievements");
+            var dailyAchieves = await GrabDocument(achievementCollection, "Daily Achievements");
 
-            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
-
-            achievementCollection = database.GetCollection<AchievementDoc>("achievements")
-                as MongoCollectionBase<AchievementDoc>;
-
-            var builder = Builders<AchievementDoc>.Filter;
-            var filter = builder.Eq("Title", "Daily Achievements");
-            var dailyAchieves = await achievementCollection.Find(filter).FirstOrDefaultAsync();
-
-            dailyAchievements = dailyAchieves.Achievements;
-
-            return dailyAchievements;
+            return dailyAchieves.Achievements;
         }
 
         /// <summary>
@@ -72,21 +61,10 @@ namespace Bot.Services
         /// </returns>
         internal static async Task<List<string>> GetDailyPveWatchlist(MongoClient client)
         {
-            string[] dailyWatchlist = null;
-            MongoCollectionBase<WatchlistDoc> watchlistCollection;
+            var watchlistCollection = GrabCollection<WatchlistDoc>(client, "watchlists");
+            var watchlistDoc = await GrabDocument(watchlistCollection, "Daily Watchlist");
 
-            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
-
-            watchlistCollection = database.GetCollection<WatchlistDoc>("watchlists")
-                as MongoCollectionBase<WatchlistDoc>;
-
-            var builder = Builders<WatchlistDoc>.Filter;
-            var filter = builder.Eq("Title", "Daily Watchlist");
-            var dailyWatch = await watchlistCollection.Find(filter).FirstOrDefaultAsync();
-
-            dailyWatchlist = dailyWatch.Watchlist;
-
-            return dailyWatchlist.ToList();
+            return watchlistDoc.Watchlist.ToList();
         }
 
         /// <summary>
@@ -103,21 +81,10 @@ namespace Bot.Services
         /// </returns>
         internal static async Task<List<string>> GetResponses(MongoClient client, string responseType)
         {
-            string[] responses = null;
-            MongoCollectionBase<ResponseDoc> responseCollection;
+            var responseCollection = GrabCollection<ResponseDoc>(client, "responses");
+            var responseDoc = await GrabDocument(responseCollection, responseType);
 
-            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
-
-            responseCollection = database.GetCollection<ResponseDoc>("responses")
-                as MongoCollectionBase<ResponseDoc>;
-
-            var builder = Builders<ResponseDoc>.Filter;
-            var filter = builder.Eq("Title", responseType);
-            var responseList = await responseCollection.Find(filter).FirstOrDefaultAsync();
-
-            responses = responseList.Responses;
-
-            return responses.ToList();
+            return responseDoc.Responses.ToList();
         }
 
         /// <summary>
@@ -131,78 +98,84 @@ namespace Bot.Services
         /// </returns>
         internal static async Task<Dictionary<string, ulong>> GetBroadcastChannels(MongoClient client)
         {
-            Dictionary<string, ulong> broadcastChannels = null;
-            MongoCollectionBase<ChannelsDoc> channelsCollection;
+            var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
+            var broadcastDoc = await GrabDocument(channelsCollection, "Broadcast Channels");
 
-            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
-
-            channelsCollection = database.GetCollection<ChannelsDoc>("channels")
-                as MongoCollectionBase<ChannelsDoc>;
-
-            var builder = Builders<ChannelsDoc>.Filter;
-            var filter = builder.Eq("Title", "Broadcast Channels");
-            var broadcastList = await channelsCollection.Find(filter).FirstOrDefaultAsync();
-
-            broadcastChannels = broadcastList.Channels;
-
-            return broadcastChannels;
+            return broadcastDoc.Channels;
         }
 
         internal static async Task<Dictionary<string, ulong>> GetGeneralChannels(MongoClient client)
         {
-            Dictionary<string, ulong> generalChannels = null;
-            MongoCollectionBase<ChannelsDoc> channelsCollection;
+            var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
+            var generalDoc = await GrabDocument(channelsCollection, "General Channels");
 
-            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
-
-            channelsCollection = database.GetCollection<ChannelsDoc>("channels")
-                as MongoCollectionBase<ChannelsDoc>;
-
-            var builder = Builders<ChannelsDoc>.Filter;
-            var filter = builder.Eq("Title", "General Channels");
-            var generalList = await channelsCollection.Find(filter).FirstOrDefaultAsync();
-
-            generalChannels = generalList.Channels;
-
-            return generalChannels;
+            return generalDoc.Channels;
         }
 
         internal static async Task<Dictionary<string, ulong>> GetEventVoiceChannels(MongoClient client)
         {
-            Dictionary<string, ulong> eventVoiceChannels = null;
-            MongoCollectionBase<ChannelsDoc> channelsCOllection;
+            var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
+            var vcDoc = await GrabDocument(channelsCollection, "Event Voice Channels");
 
-            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
-
-            channelsCOllection = database.GetCollection<ChannelsDoc>("channels")
-                as MongoCollectionBase<ChannelsDoc>;
-
-            var builder = Builders<ChannelsDoc>.Filter;
-            var filter = builder.Eq("Title", "Event Voice Channels");
-            var generalList = await channelsCOllection.Find(filter).FirstOrDefaultAsync();
-
-            eventVoiceChannels = generalList.Channels;            
-
-            return eventVoiceChannels;
+            return vcDoc.Channels;
         }
 
         internal static async Task<Dictionary<string, ulong>> GetSupervisedChannels(MongoClient client)
         {
-            Dictionary<string, ulong> supervisedChannels = null;
-            MongoCollectionBase<ChannelsDoc> channelsCollection;
+            var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
+            var supervisedDoc = await GrabDocument(channelsCollection, "Supervised Channels");
+
+            return supervisedDoc.Channels;
+        }
+
+        /// <summary>
+        ///     Generic helper function in the retrieval of collections
+        ///     from the same database.
+        /// </summary>
+        /// <typeparam name="TModel">
+        ///     The model type.
+        /// </typeparam>
+        /// <param name="client">
+        ///     The client connection to the Mongo database.
+        /// </param>
+        /// <param name="type">
+        ///     The name of the collection to retrieve.
+        /// </param>
+        /// <returns></returns>
+        private static MongoCollectionBase<TModel> GrabCollection<TModel>(MongoClient client, string type)
+        {
+            MongoCollectionBase<TModel> collection;
 
             var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
 
-            channelsCollection = database.GetCollection<ChannelsDoc>("channels")
-                as MongoCollectionBase<ChannelsDoc>;
+            collection = database.GetCollection<TModel>(type) as MongoCollectionBase<TModel>;
 
-            var builder = Builders<ChannelsDoc>.Filter;
-            var filter = builder.Eq("Title", "Supervised Channels");
-            var generalList = await channelsCollection.Find(filter).FirstOrDefaultAsync();
+            return collection;
+        }
 
-            supervisedChannels = generalList.Channels;
+        /// <summary>
+        ///     Generic helper function in the retrieval of a
+        ///     specified document within the collection.
+        /// </summary>
+        /// <typeparam name="TModel">
+        ///     The type of model/doc.
+        /// </typeparam>
+        /// <param name="collection">
+        ///     The Mongo collection to look for the doc in.
+        /// </param>
+        /// <param name="title">
+        ///     The title of the doc to look for.
+        /// </param>
+        /// <returns></returns>
+        private static async Task<TModel> GrabDocument<TModel>(MongoCollectionBase<TModel> collection, string title)
+        {
+            TModel doc;
 
-            return supervisedChannels;
+            var builder = Builders<TModel>.Filter;
+            var filter = builder.Eq("Title", title);
+            doc = await collection.Find(filter).FirstOrDefaultAsync();
+
+            return doc;
         }
     }
 }
