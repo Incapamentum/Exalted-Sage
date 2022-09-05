@@ -20,20 +20,44 @@ namespace Bot.Handlers
         private readonly DiscordSocketClient _discordClient;
         private readonly MongoClient _mongoClient;
 
+        /// <summary>
+        ///     Handles specific event-driven processes triggered by
+        ///     messages.
+        /// </summary>
+        /// <param name="discordClient">
+        ///     The SocketClient interface to interact with Discord.
+        /// </param>
+        /// <param name="mongoClient">
+        ///     The MongoClient interface that accesses collections
+        ///     from the database.
+        /// </param>
         public MessageHandler(DiscordSocketClient discordClient, MongoClient mongoClient)
         {
             _discordClient = discordClient;
             _mongoClient = mongoClient;
         }
 
+        /// <summary>
+        ///     Triggered whenever a message is sent by a user, therefore being
+        ///     received by the bot. Processing depends on the origin of the
+        ///     message.
+        /// </summary>
+        /// <param name="message">
+        ///     The received message.
+        /// </param>
+        /// <returns>
+        ///     None.
+        /// </returns>
         public async Task MessageReceivedAsync(SocketMessage message)
         {
             string response = null;
             ulong channelId;
 
-            var allowableChannels = await DatabaseService.GetGeneralChannels(_mongoClient);
-
             var selfId = _discordClient.CurrentUser.Id;
+
+            // Bot shouldn't process any messages it sends
+            if (message.Author.Id == selfId)
+                return;
 
             // Debugging purposes
             if (ReleaseMode.Mode == "DevSettings")
@@ -41,53 +65,13 @@ namespace Bot.Handlers
             else
                 channelId = message.Channel.Id;
 
-            // Bot shouldn't process any messages it sends
-            if (message.Author.Id == selfId)
-                return;
-
-            // In production, bot is only allowed to send messages
-            // in the allowable list
+            var allowableChannels = await DatabaseService.GetGeneralChannels(_mongoClient);           
+            
+            // Don't process the message if origin channel is not whitelisted.
             if (!allowableChannels.ContainsValue(channelId) && ReleaseMode.Mode == "ProdSettings")
                 return;
 
-            // Grabbing the actual message then converting to a list of strings.
-            // Also grabbing a list of mentioned users. Null if none are mentioned.
-            var content = message.Content.ToLower();
-            var contentStrings = content.Split(' ').ToList();
-            var mentioned = new List<SocketUser>(message.MentionedUsers);
-            var chance = RandomHelper.rand.NextDouble();
-
-            // Respond with an appropriate message dealing with Tarir
-            if (contentStrings.Contains("tarir") && chance < 0.25)
-            {
-                response = await RandomResponse("Tarir Responses");
-            }
-            // Respond with an appropriate message dealing with Auric Basin
-            else if ((content.Contains("auric basin") || contentStrings.Contains("ab")) && chance < 0.25)
-            {
-                response = await RandomResponse("Auric Basin Responses");
-            }
-            // Respond with an appropriate message if pinged
-            else if (mentioned.Count > 0)
-            {
-                foreach (var user in mentioned)
-                {
-                    if (user.Id == selfId)
-                    {
-                        response = await RandomResponse("Gilded Responses");
-                    }
-                }
-            }
-            // Cursed responses
-            else if (chance < 0.005)
-            {
-                response = await RandomResponse("Grab Bag Responses");
-            }
-
-            if (response != null)
-            {
-                await message.Channel.SendMessageAsync(response);
-            }
+            await ProcessMessageResponse(message, selfId);
         }
 
         /// <summary>
@@ -168,6 +152,85 @@ namespace Bot.Handlers
             randomResponse = responses[index];
 
             return randomResponse;
+        }
+
+        /// <summary>
+        ///     Process the received message by extracting data from it, which is used
+        ///     in determining which response the bot will reply with.
+        /// </summary>
+        /// <param name="message">
+        ///     The SocketMessage that the bot received.
+        /// </param>
+        /// <param name="botId">
+        ///     The UID of the bot.
+        /// </param>
+        private async Task ProcessMessageResponse(SocketMessage message, ulong botId)
+        {
+            string response = null;
+
+            var content = message.Content.ToLower();
+            var contentStrings = content.Split(' ').ToList();
+            var mentioned = new List<SocketUser>(message.MentionedUsers);
+
+            if (BotWasPinged(mentioned, botId))
+            {
+                response = await RandomResponse("Gilded Responses");
+            }
+            else if (MessageContainsSubstring(contentStrings, "tarir"))
+            {
+                response = await RandomResponse("Tarir Responses");
+            }
+            else if (MessageContainsSubstring(contentStrings, "auric basin", "ab"))
+            {
+                response = await RandomResponse("Auric Basin Responses");
+            }
+            else if (RandomHelper.rand.NextDouble() < 0.005)
+            {
+                response = await RandomResponse("Grab Bag Responses");
+            }
+
+            if (response != null)
+            {
+                await message.Channel.SendMessageAsync(response);
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether the bot was mentioned given a list of
+        ///     users mentioned in a message.
+        /// </summary>
+        /// <param name="mentionedUsers">
+        ///     A list of SocketUsers obtained from a message.
+        /// </param>
+        /// <param name="botId">
+        ///     The UID of the bot.
+        /// </param>
+        /// <returns></returns>
+        private Boolean BotWasPinged(List<SocketUser> mentionedUsers, ulong botId)
+        {
+            if (mentionedUsers.Count > 0)
+            {
+                foreach (var user in mentionedUsers)
+                {
+                    if (user.Id == botId)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        private Boolean MessageContainsSubstring(List<String> contentStrings, params string[] substrings)
+        {
+            var chance = RandomHelper.rand.NextDouble();
+
+            foreach (var substring in substrings)
+            {
+                if (contentStrings.Contains(substring) && chance < 0.25)
+                    return true;
+            }
+
+            return false;
         }
     }
 }
