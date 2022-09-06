@@ -90,16 +90,20 @@ namespace Bot.Handlers
         /// <returns>
         ///     None.
         /// </returns>
+        /// <remarks>
+        ///     NOTE: 
+        /// </remarks>
         public async Task MessageDeletedAsync(Cacheable<IMessage, UInt64> message,
                                               Cacheable<IMessageChannel, UInt64> channel)
         {
             ulong broadcastId = 0;
-            string channelName = "Unknown";
+            //string channelName = "Unknown";
 
             // Make sure caches are valid
             if (!message.HasValue && !channel.HasValue)
                 return;
 
+            // Debugging purposes
             if (ReleaseMode.Mode == "DevSettings")
                 broadcastId = 1013185367924547654;
             else
@@ -108,28 +112,17 @@ namespace Bot.Handlers
             var broadcastChannel = _discordClient.GetChannel(broadcastId)
                 as SocketTextChannel;
 
-            // Ensure deleted message was from a supervised channel
+            // Alot of the below can probably be condensed into a single function
             var supervisedCollection = await DatabaseService.GetSupervisedChannels(_mongoClient);
             var supervisedIds = supervisedCollection.Values.ToList();
 
-            if (supervisedIds.Contains(channel.Id))
-                channelName = channel.Value.Name;
+            // Ensure deleted message was from a supervised channel
+            if (!supervisedIds.Contains(channel.Id))
+                return;
 
-            // Process
-            var user = message.Value.Author;
-            var content = message.Value.Content;
+            var msg = message.Value as SocketMessage;
 
-            var embed = new EmbedBuilder
-            {
-                Title = "Trade Message Deleted",
-                Description = $"A message in {channelName} has been deleted.",
-                Color = 0xffc805
-            };
-
-            embed.AddField("Author", user);
-            embed.AddField("Message", content);
-
-            await broadcastChannel.SendMessageAsync(embed: embed.Build());
+            await ProcessMessageDeletion(msg, broadcastChannel, supervisedIds);
         }
 
         /// <summary>
@@ -196,6 +189,51 @@ namespace Bot.Handlers
         }
 
         /// <summary>
+        ///     Processes the deleted message by creating an embed object to build
+        ///     and post on a specific broadcast channel.
+        /// </summary>
+        /// <param name="msg">
+        ///     The deleted message to process.
+        /// </param>
+        /// <param name="broadcast">
+        ///     The channel to broadcast the embed object to.
+        /// </param>
+        /// <param name="supervisedList">
+        ///     The list of channel IDs under supervision.
+        /// </param>
+        /// <returns>
+        ///     None.
+        /// </returns>
+        private static async Task ProcessMessageDeletion(SocketMessage msg, SocketTextChannel broadcast,
+                                                         List<ulong> supervisedList)
+        {
+            // Obtain information regarding the message deletion
+            var user = msg.Author;
+            var content = msg.Content;
+            var channel = msg.Channel;
+
+            var embed = new EmbedBuilder
+            {
+                Description = $"A message in #{channel.Id} has been deleted.",
+                Color = 0xffc805
+            };
+
+            embed.AddField("Author", user);
+            embed.AddField("Message", content);
+
+            if (TradeChannelOrigin(supervisedList, channel.Id))
+            {
+                embed.WithTitle("Trade Message Deleted");
+            }
+            else
+            {
+                embed.WithTitle("Message Deleted");
+            }
+
+            await broadcast.SendMessageAsync(embed: embed.Build());
+        }
+
+        /// <summary>
         ///     Determines whether the bot was mentioned given a list of
         ///     users mentioned in a message.
         /// </summary>
@@ -206,7 +244,7 @@ namespace Bot.Handlers
         ///     The UID of the bot.
         /// </param>
         /// <returns></returns>
-        private Boolean BotWasPinged(List<SocketUser> mentionedUsers, ulong botId)
+        private static Boolean BotWasPinged(List<SocketUser> mentionedUsers, ulong botId)
         {
             if (mentionedUsers.Count > 0)
             {
@@ -220,7 +258,7 @@ namespace Bot.Handlers
             return false;
         }
 
-        private Boolean MessageContainsSubstring(List<String> contentStrings, params string[] substrings)
+        private static Boolean MessageContainsSubstring(List<String> contentStrings, params string[] substrings)
         {
             var chance = RandomHelper.rand.NextDouble();
 
@@ -229,6 +267,33 @@ namespace Bot.Handlers
                 if (contentStrings.Contains(substring) && chance < 0.25)
                     return true;
             }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Determines if the channel from which a message originated from
+        ///     came from a trade channel
+        /// </summary>
+        /// <param name="channelIds">
+        ///     The list of trade channel IDs.
+        /// </param>
+        /// <param name="channelId">
+        ///     The ID of the channel origin for the message.
+        /// </param>
+        /// <returns>
+        ///     True if message originated from a trade channel, false
+        ///     otherwise.
+        /// </returns>
+        /// <remarks>
+        ///     NOTE: This function could probably be further generalized to be
+        ///     applicable towards any subset of channels if it ever gets that
+        ///     way.
+        /// </remarks>
+        private static Boolean TradeChannelOrigin(List<ulong> channelIds, ulong channelId)
+        {
+            if (channelIds.Contains(channelId))
+                return true;
 
             return false;
         }
