@@ -258,6 +258,19 @@ namespace Bot.Handlers
             return false;
         }
 
+        /// <summary>
+        ///     Checks to see if the passed split message contents contain any
+        ///     of the passed substrings.
+        /// </summary>
+        /// <param name="contentStrings">
+        ///     The split message contents.
+        /// </param>
+        /// <param name="substrings">
+        ///     The list of substrings to check against.
+        /// </param>
+        /// <returns>
+        ///     True if message contains any of the substrings, false otherwise.
+        /// </returns>
         private static Boolean MessageContainsSubstring(List<String> contentStrings, params string[] substrings)
         {
             var chance = RandomHelper.rand.NextDouble();
