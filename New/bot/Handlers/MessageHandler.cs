@@ -244,7 +244,7 @@ namespace Bot.Handlers
         ///     The UID of the bot.
         /// </param>
         /// <returns></returns>
-        private static Boolean BotWasPinged(List<SocketUser> mentionedUsers, ulong botId)
+        private static bool BotWasPinged(List<SocketUser> mentionedUsers, ulong botId)
         {
             if (mentionedUsers.Count > 0)
             {
@@ -271,7 +271,7 @@ namespace Bot.Handlers
         /// <returns>
         ///     True if message contains any of the substrings, false otherwise.
         /// </returns>
-        private static Boolean MessageContainsSubstring(List<String> contentStrings, params string[] substrings)
+        private static bool MessageContainsSubstring(List<String> contentStrings, params string[] substrings)
         {
             var chance = RandomHelper.rand.NextDouble();
 
@@ -303,7 +303,7 @@ namespace Bot.Handlers
         ///     applicable towards any subset of channels if it ever gets that
         ///     way.
         /// </remarks>
-        private static Boolean TradeChannelOrigin(List<ulong> channelIds, ulong channelId)
+        private static bool TradeChannelOrigin(List<ulong> channelIds, ulong channelId)
         {
             if (channelIds.Contains(channelId))
                 return true;
