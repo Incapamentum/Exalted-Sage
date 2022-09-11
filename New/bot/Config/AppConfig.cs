@@ -4,8 +4,8 @@ namespace Bot.Config
 {
     internal class AppConfig
     {
-        internal DiscordSettings discordSettings;
-        internal DatabaseSettings databaseSettings;
+        internal Settings settings;
+        //internal DatabaseSettings databaseSettings;
 
         public AppConfig()
         {
@@ -13,8 +13,8 @@ namespace Bot.Config
                 .AddJsonFile($"Config/settings.json")
                 .Build();
 
-            discordSettings = config.GetSection(ReleaseMode.Mode).Get<DiscordSettings>();
-            databaseSettings = config.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
+            settings = config.GetSection(ReleaseMode.Mode).Get<Settings>();
+            //databaseSettings = config.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
         }
     }
 }
