@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Bot.Config;
+
 namespace Bot.Services
 {
     /// <summary>
@@ -12,6 +14,17 @@ namespace Bot.Services
     /// </summary>
     internal static class DatabaseService
     {
+        static string dbName;
+
+        /// <summary>
+        ///     
+        /// </summary>
+        /// <param name="name"></param>
+        internal static void SetDatabaseName(string name)
+        {
+            dbName = name;
+        }
+
         /// <summary>
         ///     Establishes a connection to the MongoDB cluster
         ///     specified by the URI string.
@@ -173,7 +186,7 @@ namespace Bot.Services
         {
             MongoCollectionBase<TModel> collection;
 
-            var database = client.GetDatabase("Auric_Oasis") as MongoDatabaseBase;
+            var database = client.GetDatabase(dbName) as MongoDatabaseBase;
 
             collection = database.GetCollection<TModel>(type) as MongoCollectionBase<TModel>;
 
