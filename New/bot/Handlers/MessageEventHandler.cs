@@ -13,9 +13,9 @@ using Bot.Services;
 namespace Bot.Handlers
 {
     /// <summary>
-    ///     Handler class that parses messages
+    ///     Handles any message-related events.
     /// </summary>
-    public class MessageHandler
+    public class MessageEventHandler
     {
         private readonly DiscordSocketClient _discordClient;
         private readonly MongoClient _mongoClient;
@@ -31,7 +31,7 @@ namespace Bot.Handlers
         ///     The MongoClient interface that accesses collections
         ///     from the database.
         /// </param>
-        public MessageHandler(DiscordSocketClient discordClient, MongoClient mongoClient)
+        public MessageEventHandler(DiscordSocketClient discordClient, MongoClient mongoClient)
         {
             _discordClient = discordClient;
             _mongoClient = mongoClient;
