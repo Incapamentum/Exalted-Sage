@@ -117,7 +117,7 @@ namespace Bot.Handlers
             var supervisedIds = supervisedCollection.Values.ToList();
 
             // Ensure deleted message was from a supervised channel
-            if (!supervisedIds.Contains(channel.Id) && ReleaseMode.Mode == "ProdSettings")
+            if (!supervisedIds.Contains(channel.Id))
                 return;
 
             var msg = message.Value as SocketMessage;
@@ -214,7 +214,7 @@ namespace Bot.Handlers
 
             var embed = new EmbedBuilder
             {
-                Description = $"A message in <#{channel.Id}> has been deleted.",
+                Description = $"A message in #{channel.Id} has been deleted.",
                 Color = 0xffc805
             };
 
