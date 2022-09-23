@@ -50,9 +50,6 @@ namespace Bot.Handlers
         /// </returns>
         public async Task MessageReceivedAsync(SocketMessage message)
         {
-            string response = null;
-            ulong channelId;
-
             var selfId = _discordClient.CurrentUser.Id;
 
             // Bot shouldn't process any messages it sends
@@ -60,18 +57,30 @@ namespace Bot.Handlers
                 return;
 
             // Debugging purposes
-            if (ReleaseMode.Mode == "DevSettings")
-                channelId = 720690834638372949;
+            if (ReleaseMode.Mode == "ProdSettings")
+            {
+                // Cast to TextChannel before category ID can be obtained
+                var chan = message.Channel as SocketTextChannel;
+                var catId = chan.Category.Id;
+
+                // Invokes the correct method based on category origin
+                switch (catId)
+                {
+                    // Guild category
+                    case 716050945615855777:
+                        await ProcessMessageResponse(message, selfId);
+                        break;
+                    // Not sure what to put here
+                    default:
+                        Console.WriteLine("Empty default!");
+                        break;
+                }
+            }
             else
-                channelId = message.Channel.Id;
-
-            var allowableChannels = await DatabaseService.GetGeneralChannels(_mongoClient);           
-            
-            // Don't process the message if origin channel is not whitelisted.
-            if (!allowableChannels.ContainsValue(channelId) && ReleaseMode.Mode == "ProdSettings")
-                return;
-
-            await ProcessMessageResponse(message, selfId);
+            {
+                // Need to test something? Put it in here.
+                await ProcessMessageResponse(message, selfId);
+            }
         }
 
         /// <summary>
@@ -96,33 +105,42 @@ namespace Bot.Handlers
         public async Task MessageDeletedAsync(Cacheable<IMessage, UInt64> message,
                                               Cacheable<IMessageChannel, UInt64> channel)
         {
-            ulong broadcastId = 0;
-            //string channelName = "Unknown";
-
             // Make sure caches are valid
             if (!message.HasValue && !channel.HasValue)
                 return;
 
-            // Debugging purposes
-            if (ReleaseMode.Mode == "DevSettings")
-                broadcastId = 1013185367924547654;
-            else
-                broadcastId = await ChannelHelper.GetChannelId(_mongoClient, "broadcast", "bot-alerts");
-
-            var broadcastChannel = _discordClient.GetChannel(broadcastId)
-                as SocketTextChannel;
-
-            // Alot of the below can probably be condensed into a single function
-            var supervisedCollection = await DatabaseService.GetSupervisedChannels(_mongoClient);
-            var supervisedIds = supervisedCollection.Values.ToList();
-
-            // Ensure deleted message was from a supervised channel
-            if (!supervisedIds.Contains(channel.Id) && ReleaseMode.Mode == "ProdSettings")
-                return;
-
             var msg = message.Value as SocketMessage;
 
-            await ProcessMessageDeletion(msg, broadcastChannel, supervisedIds);
+            // Debugging purposes
+            if (ReleaseMode.Mode == "ProdSettings")
+            {
+                var broadcastId = await DatabaseService.GetAdminAlertChannel(_mongoClient);
+                var broadcastChannel = _discordClient.GetChannel(broadcastId)
+                    as SocketTextChannel;
+
+                // Cast to TextChannel before category ID can be obtained
+                var chan = channel.Value as SocketTextChannel;
+                var catId = chan.Category.Id;
+
+                // Invokes the correct method based on category origin
+                switch (catId)
+                {
+                    // Tradeing House
+                    case 716046889442738178:
+                        await ProcessTradeMessageDeletion(msg, broadcastChannel);
+                        break;
+                    default:
+                        Console.WriteLine("Empty default!");
+                        break;
+                }
+
+            }
+            else
+            {
+                var broadcastChannel = _discordClient.GetChannel(1013185367924547654)
+                    as SocketTextChannel;
+                // Need to test something? Put it in here.
+            }
         }
 
         /// <summary>
@@ -160,6 +178,14 @@ namespace Bot.Handlers
         private async Task ProcessMessageResponse(SocketMessage message, ulong botId)
         {
             string response = null;
+
+            var chanId = message.Channel.Id;
+
+            var approvedChannels = await DatabaseService.GetCategoryTextChannels(_mongoClient, "Guild");
+            var approvedChannelsId = approvedChannels.Values.ToList();
+
+            if (!approvedChannelsId.Contains(chanId) && ReleaseMode.Mode == "ProdSettings")
+                return;
 
             var content = message.Content.ToLower();
             var contentStrings = content.Split(' ').ToList();
@@ -204,8 +230,49 @@ namespace Bot.Handlers
         /// <returns>
         ///     None.
         /// </returns>
-        private static async Task ProcessMessageDeletion(SocketMessage msg, SocketTextChannel broadcast,
-                                                         List<ulong> supervisedList)
+        //private static async Task ProcessMessageDeletion(SocketMessage msg, SocketTextChannel broadcast,
+        //                                                 List<ulong> supervisedList)
+        //{
+        //    // Obtain information regarding the message deletion
+        //    var user = msg.Author;
+        //    var content = msg.Content;
+        //    var channel = msg.Channel;
+
+        //    var embed = new EmbedBuilder
+        //    {
+        //        Description = $"A message in <#{channel.Id}> has been deleted.",
+        //        Color = 0xffc805
+        //    };
+
+        //    embed.AddField("Author", user);
+        //    embed.AddField("Message", content);
+
+        //    if (TradeChannelOrigin(supervisedList, channel.Id))
+        //    {
+        //        embed.WithTitle("Trade Message Deleted");
+        //    }
+        //    else
+        //    {
+        //        embed.WithTitle("Message Deleted");
+        //    }
+
+        //    await broadcast.SendMessageAsync(embed: embed.Build());
+        //}
+
+        /// <summary>
+        ///     Processes a message deleted in a trade channel by building an embed
+        ///     object to then build -> broadcast to an alerts channel.
+        /// </summary>
+        /// <param name="msg">
+        ///     The deleted message to process.
+        /// </param>
+        /// <param name="broadcast">
+        ///     The channel to broadcast the embed object to.
+        /// </param>
+        /// <returns>
+        ///     None.
+        /// </returns>
+        private static async Task ProcessTradeMessageDeletion(SocketMessage msg, SocketTextChannel broadcast)
         {
             // Obtain information regarding the message deletion
             var user = msg.Author;
@@ -221,14 +288,7 @@ namespace Bot.Handlers
             embed.AddField("Author", user);
             embed.AddField("Message", content);
 
-            if (TradeChannelOrigin(supervisedList, channel.Id))
-            {
-                embed.WithTitle("Trade Message Deleted");
-            }
-            else
-            {
-                embed.WithTitle("Message Deleted");
-            }
+            embed.WithTitle("Trade Message Deleted");
 
             await broadcast.SendMessageAsync(embed: embed.Build());
         }

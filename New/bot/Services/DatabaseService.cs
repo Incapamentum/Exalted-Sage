@@ -46,6 +46,13 @@ namespace Bot.Services
             return client;
         }
 
+        internal static async Task<ulong> GetAdminAlertChannel(MongoClient client)
+        {
+            var channels = await GetCategoryTextChannels(client, "admin-tools");
+
+            return channels["bot-alerts"];
+        }
+
         /// <summary>
         ///     Retrieves a collection of daily achievements. No guarantees of something being returned.
         /// </summary>
@@ -98,6 +105,22 @@ namespace Bot.Services
             var responseDoc = await GrabDocument(responseCollection, responseType);
 
             return responseDoc.Responses.ToList();
+        }
+
+        internal static async Task<Dictionary<string, ulong>> GetCategoryTextChannels(MongoClient client, string catName)
+        {
+            var categoryCollection = GrabCollection<CategoryDoc>(client, "categories");
+            var cat = await GrabDocument(categoryCollection, catName);
+
+            return cat.TextChannels;
+        }
+
+        internal static async Task<Dictionary<string, ulong>> GetCategoryVoiceChannels(MongoClient client, string catName)
+        {
+            var categoryCollection = GrabCollection<CategoryDoc>(client, "categories");
+            var cat = await GrabDocument(categoryCollection, catName);
+
+            return cat.VoiceChannels;
         }
 
         /// <summary>
@@ -207,11 +230,11 @@ namespace Bot.Services
         ///     The title of the doc to look for.
         /// </param>
         /// <returns></returns>
-        private static async Task<TModel> GrabDocument<TModel>(MongoCollectionBase<TModel> collection, string title)
+        private static async Task<TDoc> GrabDocument<TDoc>(MongoCollectionBase<TDoc> collection, string title)
         {
-            TModel doc;
+            TDoc doc;
 
-            var builder = Builders<TModel>.Filter;
+            var builder = Builders<TDoc>.Filter;
             var filter = builder.Eq("Title", title);
             doc = await collection.Find(filter).FirstOrDefaultAsync();
 
