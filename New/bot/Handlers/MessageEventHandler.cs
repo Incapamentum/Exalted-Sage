@@ -70,9 +70,8 @@ namespace Bot.Handlers
                     case 716050945615855777:
                         await ProcessMessageResponse(message, selfId);
                         break;
-                    // Not sure what to put here
+
                     default:
-                        Console.WriteLine("Empty default!");
                         break;
                 }
             }
@@ -129,8 +128,8 @@ namespace Bot.Handlers
                     case 716046889442738178:
                         await ProcessTradeMessageDeletion(msg, broadcastChannel);
                         break;
+
                     default:
-                        Console.WriteLine("Empty default!");
                         break;
                 }
 
