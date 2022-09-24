@@ -28,7 +28,7 @@ namespace Bot
         // Handlers
         //private readonly SlashCommandHandler _slashCommandHandler;
         private readonly MessageEventHandler _messageHandler;
-        private readonly VoiceHandler _voiceHandler;
+        private readonly VoiceEventHandler _voiceHandler;
 
         // Services
         private readonly LogService _logService;
@@ -46,7 +46,7 @@ namespace Bot
 
             //_slashCommandHandler = new SlashCommandHandler();
             _messageHandler = new MessageEventHandler(_discordClient, _mongoClient);
-            _voiceHandler = new VoiceHandler(_discordClient, _mongoClient);
+            _voiceHandler = new VoiceEventHandler(_discordClient, _mongoClient);
 
             _logService = new LogService(_discordClient);
 
