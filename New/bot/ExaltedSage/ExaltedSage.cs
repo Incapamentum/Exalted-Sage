@@ -27,25 +27,26 @@ namespace Bot
 
         // Handlers
         //private readonly SlashCommandHandler _slashCommandHandler;
-        private readonly MessageHandler _messageHandler;
-        private readonly VoiceHandler _voiceHandler;
+        private readonly MessageEventHandler _messageHandler;
+        private readonly VoiceEventHandler _voiceHandler;
 
         // Services
         private readonly LogService _logService;
 
-        public ExaltedSage(AppConfig settings)
+        public ExaltedSage(AppConfig appSettings)
         {
-            _token = settings.discordSettings.Token;
+            _token = appSettings.settings.Token;
+            DatabaseService.SetDatabaseName(appSettings.settings.DatabaseName);
 
             // Initializing member variables
             _discordConfig = GenerateConfig();
             _discordClient = new DiscordSocketClient(_discordConfig);
             _mongoClient = DatabaseService.EstablishConnection(
-                settings.databaseSettings.ConnectionUri);
+                appSettings.settings.ConnectionUri);
 
             //_slashCommandHandler = new SlashCommandHandler();
-            _messageHandler = new MessageHandler(_discordClient, _mongoClient);
-            _voiceHandler = new VoiceHandler(_discordClient, _mongoClient);
+            _messageHandler = new MessageEventHandler(_discordClient, _mongoClient);
+            _voiceHandler = new VoiceEventHandler(_discordClient, _mongoClient);
 
             _logService = new LogService(_discordClient);
 
