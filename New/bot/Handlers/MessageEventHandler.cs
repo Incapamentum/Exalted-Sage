@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using NLog;
 using MongoDB.Driver;
 using System;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace Bot.Handlers
     {
         private readonly DiscordSocketClient _discordClient;
         private readonly MongoClient _mongoClient;
+
+        private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         /// <summary>
         ///     Handles specific event-driven processes triggered by
@@ -55,6 +58,10 @@ namespace Bot.Handlers
             // Bot shouldn't process any messages it sends
             if (message.Author.Id == selfId)
                 return;
+
+            //AppLogService.Logger.Info("Test...");
+            Logger.Info("Message received!");
+            Logger.Info("Channel origin: " + message.Channel.Name);
 
             // Debugging purposes
             if (ReleaseMode.Mode == "ProdSettings")
