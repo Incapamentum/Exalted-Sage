@@ -1,4 +1,5 @@
 ﻿using Discord.WebSocket;
+using NLog;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace Bot.Handlers
         private readonly DiscordSocketClient _discordClient;
         private readonly MongoClient _mongoClient;
 
+        private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public VoiceEventHandler(DiscordSocketClient discordClient, MongoClient mongoClient)
         {
             _discordClient = discordClient;
@@ -34,6 +37,8 @@ namespace Bot.Handlers
             // Check: a previous state is unavailable
             if (previousVc == null)
                 return;
+
+            Logger.Info("VC state has changed!");
 
             // Debugging purposes
             if (ReleaseMode.Mode == "ProdSettings")
