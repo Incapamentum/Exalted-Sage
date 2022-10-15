@@ -1,5 +1,6 @@
 ﻿using Bot.Models;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -166,6 +167,7 @@ namespace Bot.Services
         /// <returns>
         ///     A [string, ulong] mapping of event voice channels.
         /// </returns>
+        [Obsolete("Method no longer being used.")]
         internal static async Task<Dictionary<string, ulong>> GetEventVoiceChannels(MongoClient client)
         {
             var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
