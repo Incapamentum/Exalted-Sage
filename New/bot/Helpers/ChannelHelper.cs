@@ -12,46 +12,45 @@ namespace Bot.Helpers
     internal static class ChannelHelper
     {
         /// <summary>
-        /// 
+        ///     Retrieves
         /// </summary>
         /// <param name="client">
-        ///     The MongoDB client connection to cluster.
+        ///     The MongoDB client connection to the cluster.
         /// </param>
-        /// <param name="type">
-        ///     The channel type.
+        /// <param name="docName">
+        ///     Name of the doc to look up.
         /// </param>
-        /// <param name="name">
-        ///     The channel name.
+        /// <param name="channelType">
+        ///     Whether the channel is a text or voice channel.
+        /// </param>
+        /// <param name="channelName">
+        ///     The name of the channel to look up their ID.
         /// </param>
         /// <returns>
-        ///     The ID of the channel specified by its type and name.
+        ///     The ulong ID of the channel to look for.
         /// </returns>
-        /// <remarks>
-        ///     THIS WILL HAVE TO BE WRITTEN OUT
-        /// </remarks>
-        internal static async Task<ulong> GetChannelId(MongoClient client, string type, string name)
+        internal static async Task<ulong> GetChannelId(MongoClient client,
+            string docName, string channelType, string channelName)
         {
             Dictionary<string, ulong> channels = null;
             ulong chanId = 0;
 
-            switch (type)
+            switch (channelType)
             {
-                case "broadcast":
-                    channels = await DatabaseService.GetBroadcastChannels(client);
+                case "text":
+                    channels = await DatabaseService.GetCategoryTextChannels(client, docName);
                     break;
-                case "supervised":
-                    channels = await DatabaseService.GetSupervisedChannels(client);
+                case "voice":
+                    channels = await DatabaseService.GetCategoryVoiceChannels(client, docName);
                     break;
             }
 
-            if (channels != null)
-            {
-                chanId = channels[name];
-            }
+            chanId = channels[channelName];
 
             return chanId;
         }
 
+        [Obsolete("Still seeing how this will ultimately fit")]
         internal static string GetChannelNameFromId(ulong id, Dictionary<string, ulong> channels)
         {
             foreach (var pair in channels)

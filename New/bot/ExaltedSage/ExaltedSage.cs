@@ -97,13 +97,14 @@ namespace Bot
             ulong channelId = 0;
 
             if (ReleaseMode.Mode == "ProdSettings")
-                channelId = await ChannelHelper.GetChannelId(_mongoClient, "broadcast", "bot-channel");
+                channelId = await ChannelHelper.GetChannelId(_mongoClient, "Guild", "text", "bot-channel");
             else
                 channelId = 720690834638372949;
 
             var broadcastChannel = _discordClient.GetChannel(channelId) as SocketTextChannel;
             var utcNow = DateTime.UtcNow;
 
+            // TODO: this may require some clean-up.
             if (utcNow.Hour == 0)
             {
                 // Different collections to filter results from

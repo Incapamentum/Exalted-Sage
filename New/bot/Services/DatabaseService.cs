@@ -47,7 +47,7 @@ namespace Bot.Services
             return client;
         }
 
-        [Obsolete("Better off to be supported in a separate, helper class vs" +
+        [Obsolete("Better off to be supported in a separate, helper class vs " +
             "in this class.")]
         internal static async Task<ulong> GetAdminAlertChannel(MongoClient client)
         {
