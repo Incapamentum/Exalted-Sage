@@ -59,9 +59,7 @@ namespace Bot.Handlers
             if (message.Author.Id == selfId)
                 return;
 
-            //AppLogService.Logger.Info("Test...");
-            Logger.Info("Message received!");
-            Logger.Info("Channel origin: " + message.Channel.Name);
+            Logger.Info("Message received! Channel origin: " + message.Channel.Name);
 
             // Debugging purposes
             if (ReleaseMode.Mode == "ProdSettings")
@@ -139,7 +137,6 @@ namespace Bot.Handlers
                     default:
                         break;
                 }
-
             }
             else
             {
