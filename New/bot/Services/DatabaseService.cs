@@ -55,7 +55,8 @@ namespace Bot.Services
         }
 
         /// <summary>
-        ///     Retrieves a collection of daily achievements. No guarantees of something being returned.
+        ///     Accesses the 'achievements' collection in the database to retrieve
+        ///     a (ID, name) mapping of all (currently) possible daily PvE achievements.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
@@ -72,7 +73,9 @@ namespace Bot.Services
         }
 
         /// <summary>
-        ///     Retrieves the watchlist of daily PVE achievements. No guarantees of something being returned.
+        ///     Accesses the 'watchlist' collection in the database to retrieve
+        ///     a list of a subset of daily PvE achievements. This subset corresponds
+        ///     to dailies meant to watch out for.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
@@ -89,7 +92,9 @@ namespace Bot.Services
         }
 
         /// <summary>
-        ///     Retrieves a doc of type Response.
+        ///     Accesses the 'responses' collection in the database to retrieve
+        ///     a list of responses. Each doc in this collection corresponds with
+        ///     a particular type.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
@@ -133,6 +138,9 @@ namespace Bot.Services
         /// <returns>
         ///     A {string, ulong} mapping of channnels to broadcast to.
         /// </returns>
+        /// 
+        [Obsolete("Collection 'channels' will soon be deprecated." +
+            "Will be removed in a future build.")]
         internal static async Task<Dictionary<string, ulong>> GetBroadcastChannels(MongoClient client)
         {
             var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
@@ -150,6 +158,9 @@ namespace Bot.Services
         /// <returns>
         ///     A [string, ulong] mapping of general channels.
         /// </returns>
+        /// 
+        [Obsolete("Collection 'channels' will soon be deprecated." +
+            "Will be removed in a future build.")]
         internal static async Task<Dictionary<string, ulong>> GetGeneralChannels(MongoClient client)
         {
             var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
@@ -167,7 +178,8 @@ namespace Bot.Services
         /// <returns>
         ///     A [string, ulong] mapping of event voice channels.
         /// </returns>
-        [Obsolete("Method no longer being used.")]
+        [Obsolete("Collection 'channels' will soon be deprecated." +
+            "Will be removed in a future build.")]
         internal static async Task<Dictionary<string, ulong>> GetEventVoiceChannels(MongoClient client)
         {
             var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
@@ -185,6 +197,9 @@ namespace Bot.Services
         /// <returns>
         ///     A [string, ulong] mapping of supervised channels.
         /// </returns>
+        /// 
+        [Obsolete("Collection 'channels' will soon be deprecated." +
+            "Will be removed in a future build.")]
         internal static async Task<Dictionary<string, ulong>> GetSupervisedChannels(MongoClient client)
         {
             var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
