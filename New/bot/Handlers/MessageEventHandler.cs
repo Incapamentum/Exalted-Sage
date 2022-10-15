@@ -59,7 +59,7 @@ namespace Bot.Handlers
             if (message.Author.Id == selfId)
                 return;
 
-            Logger.Info("Message received! Channel origin: " + message.Channel.Name);
+            //Logger.Info("Message received! Channel origin: " + message.Channel.Name);
 
             // Debugging purposes
             if (ReleaseMode.Mode == "ProdSettings")
@@ -73,6 +73,8 @@ namespace Bot.Handlers
                 {
                     // Guild category
                     case 716050945615855777:
+                        Logger.Info("Processing a message with following origin: "
+                            + message.Channel.Name + " in " + chan.Category.Name);
                         await ProcessMessageResponse(message, selfId);
                         break;
 
@@ -114,6 +116,9 @@ namespace Bot.Handlers
             if (!message.HasValue && !channel.HasValue)
                 return;
 
+            Logger.Info("Message cache state: " + message.HasValue);
+            Logger.Info("Channel cache state: " + channel.HasValue);
+
             var msg = message.Value as SocketMessage;
 
             // Debugging purposes
@@ -133,6 +138,7 @@ namespace Bot.Handlers
                 {
                     // Tradeing House
                     case 716046889442738178:
+                        Logger.Info("Processing deleted message.");
                         await ProcessTradeMessageDeletion(msg, broadcastChannel);
                         break;
 
@@ -145,6 +151,8 @@ namespace Bot.Handlers
             {
                 var broadcastChannel = _discordClient.GetChannel(1013185367924547654)
                     as SocketTextChannel;
+
+                await ProcessTradeMessageDeletion(msg, broadcastChannel);
                 // Need to test something? Put it in here.
             }
         }
