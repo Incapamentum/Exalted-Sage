@@ -26,6 +26,9 @@ namespace Bot.Helpers
         /// <returns>
         ///     The ID of the channel specified by its type and name.
         /// </returns>
+        /// <remarks>
+        ///     THIS WILL HAVE TO BE WRITTEN OUT
+        /// </remarks>
         internal static async Task<ulong> GetChannelId(MongoClient client, string type, string name)
         {
             Dictionary<string, ulong> channels = null;
