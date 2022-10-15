@@ -47,6 +47,8 @@ namespace Bot.Services
             return client;
         }
 
+        [Obsolete("Better off to be supported in a separate, helper class vs" +
+            "in this class.")]
         internal static async Task<ulong> GetAdminAlertChannel(MongoClient client)
         {
             var channels = await GetCategoryTextChannels(client, "admin-tools");
@@ -113,6 +115,21 @@ namespace Bot.Services
             return responseDoc.Responses.ToList();
         }
 
+        /// <summary>
+        ///     Accesses the 'categories' collection in the database to retrieve
+        ///     the (name, ID) mapping of the text channels found within the
+        ///     category.
+        /// </summary>
+        /// <param name="client">
+        ///     The MongoDB client connection to the cluster.
+        /// </param>
+        /// <param name="catName">
+        ///     The name of the category doc to access.
+        /// </param>
+        /// <returns>
+        ///     A (string, ulong) mapping of the text channels found in the specified
+        ///     category.
+        /// </returns>
         internal static async Task<Dictionary<string, ulong>> GetCategoryTextChannels(MongoClient client, string catName)
         {
             var categoryCollection = GrabCollection<CategoryDoc>(client, "categories");
@@ -121,6 +138,21 @@ namespace Bot.Services
             return cat.TextChannels;
         }
 
+        /// <summary>
+        ///     Accesses the 'categories' collection in the database to retrieve
+        ///     the (name, ID) mapping of the voice channels found within the
+        ///     category.
+        /// </summary>
+        /// <param name="client">
+        ///     The MongoDB client connection to the cluster.
+        /// </param>
+        /// <param name="catName">
+        ///     The name of the category doc to access.
+        /// </param>
+        /// <returns>
+        ///     A (string, ulong) mapping of the voice channels found in the specified
+        ///     category.
+        /// </returns>
         internal static async Task<Dictionary<string, ulong>> GetCategoryVoiceChannels(MongoClient client, string catName)
         {
             var categoryCollection = GrabCollection<CategoryDoc>(client, "categories");
