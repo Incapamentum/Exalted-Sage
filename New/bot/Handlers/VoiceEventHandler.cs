@@ -71,13 +71,15 @@ namespace Bot.Handlers
 
             // Debugging purposes
             if (ReleaseMode.Mode == "ProdSettings")
-                defaultName = ChannelHelper.GetChannelNameFromId(vcId, vcs);
+                defaultName = ChannelHelper.GetChannelName(vcId, vcs);
             else
                 defaultName = "General";
 
             // Check: only change if name is not default and no users in channel
             if (vc.Name != defaultName && vc.ConnectedUsers.Count == 0)
             {
+                Logger.Info($"Voice Channel {vc.Name} will default to {defaultName}.");
+
                 await vc.ModifyAsync(x =>
                 {
                     x.Name = defaultName;
