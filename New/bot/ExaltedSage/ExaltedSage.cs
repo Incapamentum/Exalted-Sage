@@ -78,10 +78,7 @@ namespace Bot
         private Task ReadyAsync()
         {
             var period = new TimeSpan(1, 0, 0);
-            //var period = new TimeSpan(0, 0, 10);
             PeriodicAsync(period);
-
-            //PeriodicAsync(OnServerReset, period);
 
             Console.WriteLine($"{_discordClient.CurrentUser} is online!");
 
