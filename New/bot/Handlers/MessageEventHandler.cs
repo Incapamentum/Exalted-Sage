@@ -77,6 +77,7 @@ namespace Bot.Handlers
                         break;
 
                     default:
+                        Logger.Info("No processing will be done! (No supported category)");
                         break;
                 }
             }
@@ -104,7 +105,7 @@ namespace Bot.Handlers
         ///     None.
         /// </returns>
         /// <remarks>
-        ///     NOTE: 
+        ///     NOTE: fix later (maybe)
         /// </remarks>
         public async Task MessageDeletedAsync(Cacheable<IMessage, UInt64> message,
                                               Cacheable<IMessageChannel, UInt64> channel)
@@ -118,7 +119,8 @@ namespace Bot.Handlers
             // Debugging purposes
             if (ReleaseMode.Mode == "ProdSettings")
             {
-                var broadcastId = await DatabaseService.GetAdminAlertChannel(_mongoClient);
+                var broadcastId = await ChannelHelper.GetChannelId(_mongoClient, "admin-tools",
+                    "text", "bot-alerts");
                 var broadcastChannel = _discordClient.GetChannel(broadcastId)
                     as SocketTextChannel;
 
@@ -135,6 +137,7 @@ namespace Bot.Handlers
                         break;
 
                     default:
+                        Logger.Info("No processing will be done! (No supported category)");
                         break;
                 }
             }
@@ -178,13 +181,21 @@ namespace Bot.Handlers
         /// <param name="botId">
         ///     The UID of the bot.
         /// </param>
+        /// 
+        /// <remarks>
+        ///     Try and avoid the bot to respond to certain channels. We don't want that.
+        /// </remarks>
         private async Task ProcessMessageResponse(SocketMessage message, ulong botId)
         {
             string response = null;
 
             var chanId = message.Channel.Id;
 
+            // TODO: the number of channels to be removed may end up growing depending
+            // on the total number of channels in the doc.
             var approvedChannels = await DatabaseService.GetCategoryTextChannels(_mongoClient, "Guild");
+            approvedChannels.Remove("bot-channel");
+
             var approvedChannelsId = approvedChannels.Values.ToList();
 
             if (!approvedChannelsId.Contains(chanId) && ReleaseMode.Mode == "ProdSettings")
@@ -216,51 +227,6 @@ namespace Bot.Handlers
                 await message.Channel.SendMessageAsync(response);
             }
         }
-
-        /// <summary>
-        ///     Processes the deleted message by creating an embed object to build
-        ///     and post on a specific broadcast channel.
-        /// </summary>
-        /// <param name="msg">
-        ///     The deleted message to process.
-        /// </param>
-        /// <param name="broadcast">
-        ///     The channel to broadcast the embed object to.
-        /// </param>
-        /// <param name="supervisedList">
-        ///     The list of channel IDs under supervision.
-        /// </param>
-        /// <returns>
-        ///     None.
-        /// </returns>
-        //private static async Task ProcessMessageDeletion(SocketMessage msg, SocketTextChannel broadcast,
-        //                                                 List<ulong> supervisedList)
-        //{
-        //    // Obtain information regarding the message deletion
-        //    var user = msg.Author;
-        //    var content = msg.Content;
-        //    var channel = msg.Channel;
-
-        //    var embed = new EmbedBuilder
-        //    {
-        //        Description = $"A message in <#{channel.Id}> has been deleted.",
-        //        Color = 0xffc805
-        //    };
-
-        //    embed.AddField("Author", user);
-        //    embed.AddField("Message", content);
-
-        //    if (TradeChannelOrigin(supervisedList, channel.Id))
-        //    {
-        //        embed.WithTitle("Trade Message Deleted");
-        //    }
-        //    else
-        //    {
-        //        embed.WithTitle("Message Deleted");
-        //    }
-
-        //    await broadcast.SendMessageAsync(embed: embed.Build());
-        //}
 
         /// <summary>
         ///     Processes a message deleted in a trade channel by building an embed

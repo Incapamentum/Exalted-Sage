@@ -12,7 +12,7 @@ namespace Bot.Helpers
     internal static class ChannelHelper
     {
         /// <summary>
-        ///     Retrieves
+        ///     Retrieves the ID of the named channel.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to the cluster.
