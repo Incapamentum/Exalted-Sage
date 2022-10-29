@@ -75,6 +75,10 @@ namespace Bot.Handlers
             else
                 defaultName = "General";
 
+            // Check: is the VC valid?
+            if (defaultName is null)
+                return;
+
             // Check: only change if name is not default and no users in channel
             if (vc.Name != defaultName && vc.ConnectedUsers.Count == 0)
             {
