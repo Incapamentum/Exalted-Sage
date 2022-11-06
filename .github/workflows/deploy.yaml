@@ -14,9 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Upload Files
-        uses: sand4rt/ftp-deployer@v1.5
+        uses: Creepios/sftp-action@v1.0.4
         with:
-          sftp: true
           host: ${{ secrets.SFTP_HOST }}
           port: 23
           username: ${{ secrets.SFTP_USER }}
