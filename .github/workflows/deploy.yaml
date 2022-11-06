@@ -20,8 +20,10 @@ jobs:
           cache: 'pip'
       - run: pip install -r ./Scripts/sftp/requirements.txt
       - name: Download Artifact
-        uses: actions/download-artifact@v3
+        uses: dawidd6/action-download-artifact@v2
         with:
+          workflow: dotnet.yaml
+          workflow_conclusion: success
           name: Exalted-Sage
       - name: Upload Files
         env:
