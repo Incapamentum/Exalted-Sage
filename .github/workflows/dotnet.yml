@@ -23,6 +23,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./New/bot/bot.csproj
     - name: Build
-      run: dotnet build ./New/bot/bot.csproj --no-restore
+      run: dotnet build ./New/bot/bot.csproj --configuration Release --no-restore
 #     - name: Test
 #       run: dotnet test --no-build --verbosity normal
