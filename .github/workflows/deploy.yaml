@@ -20,5 +20,5 @@ jobs:
           port: 23
           username: ${{ secrets.SFTP_USER }}
           password: ${{ secrets.SFTP_PASS }}
-          localPath: "./New/bot/bin/Release/net5.0/"
+          localPath: "./New/bot/bin/Release/net5.0/*"
           remotePath: "./"
