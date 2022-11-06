@@ -1,14 +1,14 @@
 import os
 import pysftp
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 # Grabbing environment vars
-SFTP_HOST = os.getenv("SFTP_HOST")
-SFTP_USER = os.getenv("SFTP_USER")
-SFTP_PASS = os.getenv("SFTP_PASS")
+SFTP_HOST = os.getenv("host")
+SFTP_USER = os.getenv("username")
+SFTP_PASS = os.getenv("password")
 
 cnopts = pysftp.CnOpts()
 cnopts.hostkeys = None
