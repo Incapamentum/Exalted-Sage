@@ -16,5 +16,5 @@ cnopts.hostkeys = None
 with pysftp.Connection(host=SFTP_HOST, username=SFTP_USER, password=SFTP_PASS, port=23, cnopts=cnopts) as conn:
 
     # Upload build files (will have to be changed later)
-    conn.put_d("C:/Workspaces/Visual-Studio/Exalted-Sage/New/bot/bin/x64\Release/net5.0", "./")
+    conn.put_d("./New/bot/bin/Releases/net5.0/", "./")
 
