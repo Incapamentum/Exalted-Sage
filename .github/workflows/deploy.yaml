@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Upload Files
-        uses: Creepios/sftp-action@v1.0.4
+        uses: Creepios/sftp-action@v1.0.3
         with:
           host: "{{ secrets.SFTP_HOST }}"
           port: 23
