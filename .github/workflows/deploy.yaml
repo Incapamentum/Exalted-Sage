@@ -14,11 +14,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Upload Files
-        uses: Creepios/sftp-action@v1.0.3
+        uses: sand4rt/ftp-deployer@v1.5
         with:
-          host: "{{ secrets.SFTP_HOST }}"
+          sftp: true
+          host: ${{ secrets.SFTP_HOST }}
           port: 23
-          username: "{{ secrets.SFTP_USER }}"
-          password: "{{ secrets.SFTP_PASS }}"
+          username: ${{ secrets.SFTP_USER }}
+          password: ${{ secrets.SFTP_PASS }}
           localPath: "./New/bot/bin/Release/net5.0/"
           remotePath: "./"
