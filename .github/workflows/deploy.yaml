@@ -12,13 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-#       - uses: actions/checkout@v3
-#       - name: Setup Python Env
-#         uses: actions/setup-python@v4
-#         with:
-#           python-version: '3.10'
-#           cache: 'pip'
-#       - run: pip install -r ./Scripts/sftp/requirements.txt
       - name: Download Artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -35,10 +28,4 @@ jobs:
           password: ${{ secrets.SFTP_PASS }}
           localPath: "build/"
           remotePath: "/"
-#       - name: Upload Files
-#         env:
-#           host: ${{ secrets.SFTP_HOST }}
-#           username: ${{ secrets.SFTP_USER }}
-#           password: ${{ secrets.SFTP_PASS }}
-#         run: python ./Scripts/sftp/build_upload.py
           
