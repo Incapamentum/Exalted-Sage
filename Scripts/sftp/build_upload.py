@@ -1,10 +1,6 @@
 import os
 import pysftp
 
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
 # Grabbing environment vars
 SFTP_HOST = os.getenv("host")
 SFTP_USER = os.getenv("username")
@@ -14,7 +10,7 @@ cnopts = pysftp.CnOpts()
 cnopts.hostkeys = None
 
 # DEBUG
-print(os.getcwd())
+print(f'Current directory: {os.getcwd()}')
 
 with pysftp.Connection(host=SFTP_HOST, username=SFTP_USER, password=SFTP_PASS, port=23, cnopts=cnopts) as conn:
 
