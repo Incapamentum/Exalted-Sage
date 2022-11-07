@@ -18,8 +18,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore /New/bot/bot.csproj
+    - name: Restore Dependencies
+      run: dotnet restore ./New/bot/bot.csproj
     - name: Build
       run: dotnet build /New/bot/bot.csproj --configuration Release --no-restore
     - name: Archive Build
