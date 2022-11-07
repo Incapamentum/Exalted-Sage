@@ -25,7 +25,7 @@ jobs:
           workflow: dotnet.yml
           workflow_conclusion: success
           name: Exalted-Sage
-          path: ./build/
+          path: build/
       - name: Upload Files
         env:
           host: ${{ secrets.SFTP_HOST }}
