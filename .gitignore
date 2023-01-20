@@ -2,6 +2,7 @@ __pycache__/
 .vscode/*
 *.token
 .env
+.venv/
 bin/
 obj/
 settings.json
