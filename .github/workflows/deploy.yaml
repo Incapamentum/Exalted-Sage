@@ -7,16 +7,14 @@ on:
       - completed
 
 jobs:
-  deploy:
-
+  on-success:
     runs-on: ubuntu-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Download Artifact
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: dotnet.yml
-          workflow_conclusion: success
+          workflow: dotnet-build.yaml
           name: Exalted-Sage
           path: build/
       - name: Upload Files
@@ -29,5 +27,9 @@ jobs:
           remote_path: "/"
           sftp_only: true
           password: ${{ secrets.SFTP_PASS }}
-          
-          
+  
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'Unable to deploy - build failed'
