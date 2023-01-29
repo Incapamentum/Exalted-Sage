@@ -78,7 +78,8 @@ namespace Bot
         private Task ReadyAsync()
         {
             var period = new TimeSpan(1, 0, 0);
-            PeriodicAsync(period);
+
+            PeriodicAsync(OnServerReset, period);
 
             Console.WriteLine($"{_discordClient.CurrentUser} is online!");
 
@@ -93,7 +94,7 @@ namespace Bot
         {
             ulong channelId = 0;
 
-            if (ReleaseMode.Mode == "ProdSettings")
+            if (ReleaseMode.Mode == "Prod")
                 channelId = await ChannelHelper.GetChannelId(_mongoClient, "Guild", "text", "bot-channel");
             else
                 channelId = 720690834638372949;
@@ -155,16 +156,21 @@ namespace Bot
         /// <summary>
         ///     Wrapper class that periodically calls the async task.
         /// </summary>
-        /// <param name="period">
-        ///     The period of time to execute the task at.
+        /// <param name="action">
+        ///     The async task to call
         /// </param>
-        /// <returns></returns>
-        private async Task PeriodicAsync(TimeSpan period)
-        { 
-            while (true)
+        /// <param name="interval">
+        ///     The time period to invoke the action
+        /// </param>
+        /// <param name="cancellationToken"></param>
+        /// 
+        private static async Task PeriodicAsync(Func<Task> action, TimeSpan interval,
+            CancellationToken cancellationToken = default)
+        {
+            using var timer = new PeriodicTimer(interval);
+            while (await timer.WaitForNextTickAsync(cancellationToken))
             {
-                await OnServerReset();
-                await Task.Delay(period);
+                await action();
             }
         }
 
