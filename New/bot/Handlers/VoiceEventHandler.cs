@@ -41,7 +41,7 @@ namespace Bot.Handlers
             Logger.Info("VC state has changed!");
 
             // Debugging purposes
-            if (ReleaseMode.Mode == "ProdSettings")
+            if (ReleaseMode.Mode == "Prod")
             {
                 var catId = previousVc.Category.Id;
 
@@ -70,7 +70,7 @@ namespace Bot.Handlers
             var vcs = await DatabaseService.GetCategoryVoiceChannels(_mongoClient, "lfg-events");
 
             // Debugging purposes
-            if (ReleaseMode.Mode == "ProdSettings")
+            if (ReleaseMode.Mode == "Prod")
                 defaultName = ChannelHelper.GetChannelName(vcId, vcs);
             else
                 defaultName = "General";

@@ -62,7 +62,7 @@ namespace Bot.Handlers
             //Logger.Info("Message received! Channel origin: " + message.Channel.Name);
 
             // Debugging purposes
-            if (ReleaseMode.Mode == "ProdSettings")
+            if (ReleaseMode.Mode == "Prod")
             {
                 // Cast to TextChannel before category ID can be obtained
                 var chan = message.Channel as SocketTextChannel;
@@ -122,7 +122,7 @@ namespace Bot.Handlers
             var msg = message.Value as SocketMessage;
 
             // Debugging purposes
-            if (ReleaseMode.Mode == "ProdSettings")
+            if (ReleaseMode.Mode == "Prod")
             {
                 var broadcastId = await ChannelHelper.GetChannelId(_mongoClient, "admin-tools",
                     "text", "bot-alerts");
@@ -206,7 +206,7 @@ namespace Bot.Handlers
 
             var approvedChannelsId = approvedChannels.Values.ToList();
 
-            if (!approvedChannelsId.Contains(chanId) && ReleaseMode.Mode == "ProdSettings")
+            if (!approvedChannelsId.Contains(chanId) && ReleaseMode.Mode == "Prod")
                 return;
 
             var content = message.Content.ToLower();
