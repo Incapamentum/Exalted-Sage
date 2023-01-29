@@ -3,7 +3,7 @@
 - [Developing Exalted Sage](#developing-exalted-sage)
   - [Development Environment and Toolchains](#development-environment-and-toolchains)
   - [Resource Settings](#resource-settings)
-- Logging Practices & Guidelines
+- [Logging Practices & Guidelines](#logging-practices-&-guidelines)
 
 ## Developing Exalted Sage
 
