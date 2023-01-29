@@ -11,9 +11,9 @@
             get
             {
                 #if DEBUG
-                    return "DevSettings";
+                    return "Dev";
                 #else
-                    return "ProdSettings";
+                    return "Prod";
                 #endif
             }
         }
