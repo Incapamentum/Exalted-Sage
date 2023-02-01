@@ -13,16 +13,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.400
     - name: Restore Dependencies
       run: dotnet restore ./New/bot/bot.csproj
+    - name: Grab SHA
+      id: commit
+      uses: pr-mpt/actions-commit-hash@v2
     - name: Build
-      # uses: pr-mpt/actions-commit-hash@v2
-      run: dotnet build ./New/bot/bot.csproj --configuration Release --version-suffix ${{ github.sha }} --no-restore
+      run: dotnet build ./New/bot/bot.csproj --configuration Release --version-suffix ${{ steps.commit.outputs.short }} --no-restore
     - name: Archive Build
       uses: actions/upload-artifact@v3
       with:
