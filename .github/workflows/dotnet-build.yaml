@@ -22,7 +22,7 @@ jobs:
       run: dotnet restore ./New/bot/bot.csproj
     - name: Build
       # uses: pr-mpt/actions-commit-hash@v2
-      run: dotnet build ./New/bot/bot.csproj --configuration Release --version-suffix ${{ github.event.workflow_run.head_sha }} --no-restore
+      run: dotnet build ./New/bot/bot.csproj --configuration Release --version-suffix ${{ github.sha }} --no-restore
     - name: Archive Build
       uses: actions/upload-artifact@v3
       with:
