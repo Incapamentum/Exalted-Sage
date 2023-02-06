@@ -169,12 +169,12 @@ namespace Bot.Services
             return cat.Roles;
         }
 
-        internal static async Task<ulong> GetAscendedRoleId(MongoClient client)
+        internal static async Task<Tuple<ulong, ulong>> GetLeadershipIds(MongoClient client)
         {
             var categoryCollection = GrabCollection<RolesDoc>(client, "roles");
             var cat = await GrabDocument(categoryCollection, "Guild Role IDs");
 
-            return cat.Roles["Ascended"];
+            return Tuple.Create(cat.Roles["Exalted"], cat.Roles["Ascended"]);
         }
 
         /// <summary>
