@@ -169,6 +169,14 @@ namespace Bot.Services
             return cat.Roles;
         }
 
+        internal static async Task<ulong> GetAscendedRoleId(MongoClient client)
+        {
+            var categoryCollection = GrabCollection<RolesDoc>(client, "roles");
+            var cat = await GrabDocument(categoryCollection, "Guild Role IDs");
+
+            return cat.Roles["Ascended"];
+        }
+
         /// <summary>
         ///     Retrieves the collection of channels to broadcast messages to.
         /// </summary>
