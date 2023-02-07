@@ -161,6 +161,22 @@ namespace Bot.Services
             return cat.VoiceChannels;
         }
 
+        internal static async Task<Dictionary<string, ulong>> GetCategoryServerRoles(MongoClient client, string catName)
+        {
+            var categoryCollection = GrabCollection<RolesDoc>(client, "roles");
+            var cat = await GrabDocument(categoryCollection, catName);
+
+            return cat.Roles;
+        }
+
+        internal static async Task<Tuple<ulong, ulong>> GetLeadershipIds(MongoClient client)
+        {
+            var categoryCollection = GrabCollection<RolesDoc>(client, "roles");
+            var cat = await GrabDocument(categoryCollection, "Guild Role IDs");
+
+            return Tuple.Create(cat.Roles["Exalted"], cat.Roles["Ascended"]);
+        }
+
         /// <summary>
         ///     Retrieves the collection of channels to broadcast messages to.
         /// </summary>
