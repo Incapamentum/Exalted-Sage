@@ -186,6 +186,10 @@ namespace Bot
             DiscordSocketConfig config = new DiscordSocketConfig
             {
                 MessageCacheSize = 512,
+                AlwaysDownloadUsers= true,
+
+                GatewayIntents = GatewayIntents.AllUnprivileged 
+                    | GatewayIntents.GuildMembers,
 
                 WebSocketProvider = DefaultWebSocketProvider.Instance,
                 UdpSocketProvider = DefaultUdpSocketProvider.Instance

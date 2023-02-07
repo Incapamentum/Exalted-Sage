@@ -59,6 +59,11 @@ namespace Bot.Handlers
         {
             SocketTextChannel broadcastChannel;
 
+            if (!guild.HasAllMembers)
+            {
+                await guild.DownloadUsersAsync();
+            }
+
             var gUser = user as SocketGuildUser;
             var userRoles = gUser.Roles.ToList();
             var guildRoles = await DatabaseService
@@ -102,7 +107,7 @@ namespace Bot.Handlers
         {
             foreach (var role in userRoles)
             {
-                if (guildRoles.ContainsKey(role.Name))
+                if (guildRoles.ContainsValue(role.Id))
                     return true;
             }
 
