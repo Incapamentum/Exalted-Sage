@@ -128,12 +128,17 @@ namespace Bot.Handlers
             };
 
             embed.AddField("Discord username", guildUser.Username);
-            embed.AddField("Server nickname", guildUser.Nickname);
+
+            if (guildUser.Nickname != null)
+                embed.AddField("Server nickname", guildUser.Nickname);
+            else
+                embed.AddField("Server nickname", "unknown");
+
 
             embed.WithTitle("User Has Left");
 
-            await broadcast.SendMessageAsync($"Alert <@{leadershipIds.Item1}>" +
-                $" <@{leadershipIds.Item2}>", embed: embed.Build());
+            await broadcast.SendMessageAsync($"Alert <@&{leadershipIds.Item1}>" +
+                $" <@&{leadershipIds.Item2}>", embed: embed.Build());
         }
     }
 }
