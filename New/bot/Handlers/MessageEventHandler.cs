@@ -121,7 +121,6 @@ namespace Bot.Handlers
 
             var msg = message.Value as SocketMessage;
 
-            // Debugging purposes
             if (ReleaseMode.Mode == "Prod")
             {
                 var broadcastId = await ChannelHelper.GetChannelId(_mongoClient, "admin-tools",
@@ -147,6 +146,7 @@ namespace Bot.Handlers
                         break;
                 }
             }
+            // Debugging purposes
             else
             {
                 var broadcastChannel = _discordClient.GetChannel(1013185367924547654)
