@@ -8,7 +8,6 @@ namespace Bot.Models
     /// </summary>
     internal class WatchlistDoc : BaseTemplateDoc
     {
-
         public string[] Watchlist { get; set; } = null!;
     }
 }
