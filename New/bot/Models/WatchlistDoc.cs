@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
 using System.Collections.Generic;
 
 #nullable enable
@@ -10,14 +11,8 @@ namespace Bot.Models
     /// Model representing the fixed structure of a doc belonging to the
     /// Watchlist collection
     /// </summary>
-    internal class WatchlistDoc
+    internal class WatchlistDoc : BaseTemplateDoc
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
-
-        [BsonElement("Title")]
-        public string DocName { get; set; } = null!;
 
         public string[] Watchlist { get; set; } = null!;
     }
