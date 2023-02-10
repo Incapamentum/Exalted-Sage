@@ -1,9 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-#nullable enable
-
 using System.Collections.Generic;
+
+#nullable enable
 
 namespace Bot.Models
 {
