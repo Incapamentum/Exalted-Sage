@@ -13,11 +13,11 @@ namespace Bot.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = null!;
+        public string? Id { get; set; }
 
         [BsonElement("Title")]
-        public string DocName { get; set; } = null!;
+        public string? DocName { get; set; }
 
-        public string Date { get; set; } = null!;
+        public string? Date { get; set; }
     }
 }
