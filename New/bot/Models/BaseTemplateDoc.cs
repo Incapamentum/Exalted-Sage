@@ -5,6 +5,10 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Bot.Models
 {
+    /// <summary>
+    ///     Base templade model used for standardizing all other docs
+    ///     that inherit from it
+    /// </summary>
     internal class BaseTemplateDoc
     {
         [BsonId]
