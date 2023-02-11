@@ -6,6 +6,6 @@ namespace Bot.Models
 {
     internal class ChannelsDoc : BaseTemplateDoc
     {
-        public Dictionary<string, ulong> Channels { get; set; } = null!;
+        public Dictionary<string, ulong>? Channels { get; set; }
     }
 }

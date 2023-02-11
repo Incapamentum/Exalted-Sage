@@ -10,6 +10,6 @@ namespace Bot.Models
     /// </summary>
     internal class AchievementDoc : BaseTemplateDoc
     {
-        public Dictionary<int, string> Achievements { get; set; } = null!;
+        public Dictionary<int, string>? Achievements { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace Bot.Models
     /// </summary>
     internal class RolesDoc : BaseTemplateDoc
     {
-        public Dictionary<string, ulong> Roles { get; set; } = null!;
+        public Dictionary<string, ulong>? Roles { get; set; }
     }
 }

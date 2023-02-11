@@ -8,6 +8,6 @@ namespace Bot.Models
     /// </summary>
     internal class ResponseDoc : BaseTemplateDoc
     {
-        public string[] Responses { get; set; } = null!;
+        public string[]? Responses { get; set; }
     }
 }
