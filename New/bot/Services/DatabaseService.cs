@@ -13,18 +13,40 @@ namespace Bot.Services
     ///     Exposes a database as a service to the program via public methods
     ///     in the retrieval of stored documents.
     /// </summary>
-    public static class DatabaseService
+    public class DatabaseService
     {
-        static string dbName;
+        private readonly string _dbName;
+        private readonly MongoClient _client;
+
+        /// <summary>
+        ///     Establishes a connection to a NoSQL database.
+        /// </summary>
+        /// <param name="databaseName">
+        ///     
+        /// </param>
+        /// <param name="connectionUri">
+        ///     The URI string necessary to establish a connection to the
+        ///     database.
+        /// </param>
+        public DatabaseService(string databaseName, string connectionUri)
+        {
+            _dbName = databaseName;
+
+            var clientSettings = MongoClientSettings.
+                FromConnectionString(connectionUri);
+            clientSettings.ServerApi = new ServerApi(ServerApiVersion.V1);
+
+            _client = new MongoClient(clientSettings);
+        }
 
         /// <summary>
         ///     
         /// </summary>
         /// <param name="name"></param>
-        public static void SetDatabaseName(string name)
-        {
-            dbName = name;
-        }
+        //public static void SetDatabaseName(string name)
+        //{
+        //    dbName = name;
+        //}
 
         /// <summary>
         ///     Establishes a connection to the MongoDB cluster
@@ -36,16 +58,16 @@ namespace Bot.Services
         /// <returns>
         ///     A client interface connection to the MongoDB cluster.
         /// </returns>
-        public static MongoClient EstablishConnection(string connectionUri)
-        {
-            MongoClient client = null;
+        //public static MongoClient EstablishConnection(string connectionUri)
+        //{
+        //    MongoClient client = null;
 
-            var clientSettings = MongoClientSettings.FromConnectionString(connectionUri);
-            clientSettings.ServerApi = new ServerApi(ServerApiVersion.V1);
-            client = new MongoClient(clientSettings);
+        //    var clientSettings = MongoClientSettings.FromConnectionString(connectionUri);
+        //    clientSettings.ServerApi = new ServerApi(ServerApiVersion.V1);
+        //    client = new MongoClient(clientSettings);
 
-            return client;
-        }
+        //    return client;
+        //}
 
         [Obsolete("Better off to be supported in a separate, helper class vs " +
             "in this class.")]
@@ -57,27 +79,30 @@ namespace Bot.Services
         }
 
         /// <summary>
-        ///     Accesses the 'achievements' collection in the database to retrieve
-        ///     a (ID, name) mapping of all (currently) possible daily PvE achievements.
+        ///     Accesses the 'achievements' collection in the database to
+        ///     retrieve a (ID, name) mapping of all (currently) possible
+        ///     daily PvE achievements.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
         /// </param>
         /// <returns>
-        ///     A {achievementID, achivementName} pairing of daily PVE achievements.
+        ///     A {achievementID, achivementName} pairing of daily PVE
+        ///     achievements.
         /// </returns>
-        public static async Task<Dictionary<int, string>> GetDailyPveAchievements(MongoClient client)
+        public async Task<Dictionary<int, string>> GetDailyPveAchievements()
         {
-            var achievementCollection = GrabCollection<AchievementDoc>(client, "achievements");
-            var dailyAchieves = await GrabDocument(achievementCollection, "Daily Achievements");
+            var achievementCollection = GrabCollection<AchievementDoc>("achievements");
+            var dailyAchieves = await GrabDocument(achievementCollection,
+                "Daily Achievements");
 
             return dailyAchieves.Achievements;
         }
 
         /// <summary>
         ///     Accesses the 'watchlist' collection in the database to retrieve
-        ///     a list of a subset of daily PvE achievements. This subset corresponds
-        ///     to dailies meant to watch out for.
+        ///     a list of a subset of daily PvE achievements. This subset
+        ///     corresponds to dailies meant to watch out for.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
@@ -85,10 +110,11 @@ namespace Bot.Services
         /// <returns>
         ///     A list of strings of the daily PVE achievement watchlist
         /// </returns>
-        public static async Task<List<string>> GetDailyPveWatchlist(MongoClient client)
+        public async Task<List<string>> GetDailyPveWatchlist()
         {
-            var watchlistCollection = GrabCollection<WatchlistDoc>(client, "watchlists");
-            var watchlistDoc = await GrabDocument(watchlistCollection, "Daily Watchlist");
+            var watchlistCollection = GrabCollection<WatchlistDoc>("watchlists");
+            var watchlistDoc = await GrabDocument(watchlistCollection,
+                "Daily Watchlist");
 
             return watchlistDoc.Watchlist.ToList();
         }
@@ -107,18 +133,18 @@ namespace Bot.Services
         /// <returns>
         ///     A list of strings representing response callbacks the bot makes.
         /// </returns>
-        public static async Task<List<string>> GetResponses(MongoClient client, string responseType)
+        public async Task<List<string>> GetResponses(string responseType)
         {
-            var responseCollection = GrabCollection<ResponseDoc>(client, "responses");
+            var responseCollection = GrabCollection<ResponseDoc>("responses");
             var responseDoc = await GrabDocument(responseCollection, responseType);
 
             return responseDoc.Responses.ToList();
         }
 
         /// <summary>
-        ///     Accesses the 'categories' collection in the database to retrieve
-        ///     the (name, ID) mapping of the text channels found within the
-        ///     category.
+        ///     Accesses the 'categories' collection in the database to
+        ///     retrieve the (name, ID) mapping of the text channels found
+        ///     within the category.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to the cluster.
@@ -127,12 +153,13 @@ namespace Bot.Services
         ///     The name of the category doc to access.
         /// </param>
         /// <returns>
-        ///     A (string, ulong) mapping of the text channels found in the specified
-        ///     category.
+        ///     A (string, ulong) mapping of the text channels found in the
+        ///     specified category.
         /// </returns>
-        public static async Task<Dictionary<string, ulong>> GetCategoryTextChannels(MongoClient client, string catName)
+        public async Task<Dictionary<string, ulong>>
+            GetCategoryTextChannels(string catName)
         {
-            var categoryCollection = GrabCollection<CategoryDoc>(client, "categories");
+            var categoryCollection = GrabCollection<CategoryDoc>("categories");
             var cat = await GrabDocument(categoryCollection, catName);
 
             return cat.TextChannels;
@@ -153,25 +180,28 @@ namespace Bot.Services
         ///     A (string, ulong) mapping of the voice channels found in the specified
         ///     category.
         /// </returns>
-        public static async Task<Dictionary<string, ulong>> GetCategoryVoiceChannels(MongoClient client, string catName)
+        public async Task<Dictionary<string, ulong>>
+            GetCategoryVoiceChannels(string catName)
         {
-            var categoryCollection = GrabCollection<CategoryDoc>(client, "categories");
+            var categoryCollection = GrabCollection<CategoryDoc>("categories");
             var cat = await GrabDocument(categoryCollection, catName);
 
             return cat.VoiceChannels;
         }
 
-        public static async Task<Dictionary<string, ulong>> GetCategoryServerRoles(MongoClient client, string catName)
+        public async Task<Dictionary<string, ulong>>
+            GetCategoryServerRoles(string catName)
         {
-            var categoryCollection = GrabCollection<RolesDoc>(client, "roles");
+            var categoryCollection = GrabCollection<RolesDoc>("roles");
             var cat = await GrabDocument(categoryCollection, catName);
 
             return cat.Roles;
         }
 
-        public static async Task<Tuple<ulong, ulong>> GetLeadershipIds(MongoClient client)
+        public async Task<Tuple<ulong, ulong>>
+            GetLeadershipIds(MongoClient client)
         {
-            var categoryCollection = GrabCollection<RolesDoc>(client, "roles");
+            var categoryCollection = GrabCollection<RolesDoc>("roles");
             var cat = await GrabDocument(categoryCollection, "Guild Role IDs");
 
             return Tuple.Create(cat.Roles["Exalted"], cat.Roles["Ascended"]);
@@ -270,11 +300,11 @@ namespace Bot.Services
         ///     The name of the collection to retrieve.
         /// </param>
         /// <returns></returns>
-        private static MongoCollectionBase<TModel> GrabCollection<TModel>(MongoClient client, string type)
+        private MongoCollectionBase<TModel> GrabCollection<TModel>(string type)
         {
             MongoCollectionBase<TModel> collection;
 
-            var database = client.GetDatabase(dbName) as MongoDatabaseBase;
+            var database = _client.GetDatabase(_dbName) as MongoDatabaseBase;
 
             collection = database.GetCollection<TModel>(type) as MongoCollectionBase<TModel>;
 
