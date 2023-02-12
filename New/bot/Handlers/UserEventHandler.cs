@@ -20,7 +20,8 @@ namespace Bot.Handlers
     public class UserEventHandler
     {
         private readonly DiscordSocketClient _discordClient;
-        private readonly MongoClient _mongoClient;
+        private readonly DatabaseService _dbService;
+        //private readonly MongoClient _mongoClient;
 
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -34,10 +35,11 @@ namespace Bot.Handlers
         /// <param name="mongoClient">
         /// </param>
         public UserEventHandler(DiscordSocketClient discordClient,
-            MongoClient mongoClient)
+            DatabaseService dbService)
         {
             _discordClient = discordClient;
-            _mongoClient = mongoClient;
+            _dbService = dbService;
+            //_mongoClient = mongoClient;
         }
 
         /// <summary>
@@ -66,13 +68,13 @@ namespace Bot.Handlers
 
             var gUser = user as SocketGuildUser;
             var userRoles = gUser.Roles.ToList();
-            var guildRoles = await DatabaseService
-                .GetCategoryServerRoles(_mongoClient, "Guild Role IDs");
+            var guildRoles = await _dbService
+                .GetCategoryServerRoles("Guild Role IDs");
 
             if (ReleaseMode.Mode == "Prod")
             {
                 var broadcastId = await ChannelHelper.
-                    GetChannelId(_mongoClient, "admin-tools",
+                    GetChannelId(_dbService, "admin-tools",
                     "text", "bot-alerts");
                 broadcastChannel = _discordClient.GetChannel(broadcastId)
                     as SocketTextChannel;
@@ -119,7 +121,7 @@ namespace Bot.Handlers
         private async Task NotifyLeadership(SocketGuildUser guildUser,
             SocketTextChannel broadcast)
         {
-            var leadershipIds = await DatabaseService.GetLeadershipIds(_mongoClient);
+            var leadershipIds = await _dbService.GetLeadershipIds();
 
             var embed = new EmbedBuilder
             {
