@@ -40,45 +40,6 @@ namespace Bot.Services
         }
 
         /// <summary>
-        ///     
-        /// </summary>
-        /// <param name="name"></param>
-        //public static void SetDatabaseName(string name)
-        //{
-        //    dbName = name;
-        //}
-
-        /// <summary>
-        ///     Establishes a connection to the MongoDB cluster
-        ///     specified by the URI string.
-        /// </summary>
-        /// <param name="connectionUri">
-        ///     The URI string to connect to the MongoDB service.
-        /// </param>
-        /// <returns>
-        ///     A client interface connection to the MongoDB cluster.
-        /// </returns>
-        //public static MongoClient EstablishConnection(string connectionUri)
-        //{
-        //    MongoClient client = null;
-
-        //    var clientSettings = MongoClientSettings.FromConnectionString(connectionUri);
-        //    clientSettings.ServerApi = new ServerApi(ServerApiVersion.V1);
-        //    client = new MongoClient(clientSettings);
-
-        //    return client;
-        //}
-
-        [Obsolete("Better off to be supported in a separate, helper class vs " +
-            "in this class.")]
-        public static async Task<ulong> GetAdminAlertChannel(MongoClient client)
-        {
-            var channels = await GetCategoryTextChannels(client, "admin-tools");
-
-            return channels["bot-alerts"];
-        }
-
-        /// <summary>
         ///     Accesses the 'achievements' collection in the database to
         ///     retrieve a (ID, name) mapping of all (currently) possible
         ///     daily PvE achievements.
@@ -205,85 +166,6 @@ namespace Bot.Services
             var cat = await GrabDocument(categoryCollection, "Guild Role IDs");
 
             return Tuple.Create(cat.Roles["Exalted"], cat.Roles["Ascended"]);
-        }
-
-        /// <summary>
-        ///     Retrieves the collection of channels to broadcast messages to.
-        /// </summary>
-        /// <param name="client">
-        ///     The MongoDB client connection to cluster.
-        /// </param>
-        /// <returns>
-        ///     A {string, ulong} mapping of channnels to broadcast to.
-        /// </returns>
-        /// 
-        [Obsolete("Collection 'channels' will soon be deprecated." +
-            "Will be removed in a future build.")]
-        internal static async Task<Dictionary<string, ulong>> GetBroadcastChannels(MongoClient client)
-        {
-            var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
-            var broadcastDoc = await GrabDocument(channelsCollection, "Broadcast Channels");
-
-            return broadcastDoc.Channels;
-        }
-
-        /// <summary>
-        ///     Retrieves the collection of general channels.
-        /// </summary>
-        /// <param name="client">
-        ///     The MongoDB client connection to cluster.
-        /// </param>
-        /// <returns>
-        ///     A [string, ulong] mapping of general channels.
-        /// </returns>
-        /// 
-        [Obsolete("Collection 'channels' will soon be deprecated." +
-            "Will be removed in a future build.")]
-        internal static async Task<Dictionary<string, ulong>> GetGeneralChannels(MongoClient client)
-        {
-            var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
-            var generalDoc = await GrabDocument(channelsCollection, "General Channels");
-
-            return generalDoc.Channels;
-        }
-
-        /// <summary>
-        ///     Retrieves the collection of event voice channels.
-        /// </summary>
-        /// <param name="client">
-        ///     The MongoDB client connecton to cluster.
-        /// </param>
-        /// <returns>
-        ///     A [string, ulong] mapping of event voice channels.
-        /// </returns>
-        [Obsolete("Collection 'channels' will soon be deprecated." +
-            "Will be removed in a future build.")]
-        internal static async Task<Dictionary<string, ulong>> GetEventVoiceChannels(MongoClient client)
-        {
-            var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
-            var vcDoc = await GrabDocument(channelsCollection, "Event Voice Channels");
-
-            return vcDoc.Channels;
-        }
-
-        /// <summary>
-        ///     Retrieves the collection of supervised channels.
-        /// </summary>
-        /// <param name="client">
-        ///     The MongoDB client connection to cluster.
-        /// </param>
-        /// <returns>
-        ///     A [string, ulong] mapping of supervised channels.
-        /// </returns>
-        /// 
-        [Obsolete("Collection 'channels' will soon be deprecated." +
-            "Will be removed in a future build.")]
-        internal static async Task<Dictionary<string, ulong>> GetSupervisedChannels(MongoClient client)
-        {
-            var channelsCollection = GrabCollection<ChannelsDoc>(client, "channels");
-            var supervisedDoc = await GrabDocument(channelsCollection, "Supervised Channels");
-
-            return supervisedDoc.Channels;
         }
 
         /// <summary>
