@@ -2,7 +2,6 @@
 using Discord.Net.WebSockets;
 using Discord.Net.Udp;
 using Discord.WebSocket;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -56,8 +55,10 @@ namespace Bot
             //_slashCommandHandler = new SlashCommandHandler();
             _messageHandler = new MessageEventHandler(_discordClient,
                 _databaseService);
-            _userHandler = new UserEventHandler(_discordClient, _mongoClient);
-            _voiceHandler = new VoiceEventHandler(_discordClient, _mongoClient);
+            _userHandler = new UserEventHandler(_discordClient,
+                _databaseService);
+            _voiceHandler = new VoiceEventHandler(_discordClient,
+                _databaseService);
 
             _logService = new LogService(_discordClient);
 
