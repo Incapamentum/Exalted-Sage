@@ -19,14 +19,17 @@ namespace Bot.Handlers
     internal class VoiceEventHandler
     {
         private readonly DiscordSocketClient _discordClient;
-        private readonly MongoClient _mongoClient;
+        private readonly DatabaseService _dbService;
+        //private readonly MongoClient _mongoClient;
 
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public VoiceEventHandler(DiscordSocketClient discordClient, MongoClient mongoClient)
+        public VoiceEventHandler(DiscordSocketClient discordClient,
+            DatabaseService dbService)
         {
             _discordClient = discordClient;
-            _mongoClient = mongoClient;
+            _dbService = dbService;
+            //_mongoClient = mongoClient;
         }
 
         public async Task VoiceStateChangeAsync(SocketUser user, SocketVoiceState previous,
@@ -67,7 +70,7 @@ namespace Bot.Handlers
             string defaultName;
 
             var vcId = vc.Id;
-            var vcs = await DatabaseService.GetCategoryVoiceChannels(_mongoClient, "lfg-events");
+            var vcs = await _dbService.GetCategoryVoiceChannels("lfg-events");
 
             // Debugging purposes
             if (ReleaseMode.Mode == "Prod")
