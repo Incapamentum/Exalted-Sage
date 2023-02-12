@@ -2,7 +2,6 @@
 using Discord.Net.WebSockets;
 using Discord.Net.Udp;
 using Discord.WebSocket;
-using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -20,10 +19,13 @@ namespace Bot
         // These are app specific
         private readonly string _token;
 
+        // Services
+        private readonly DatabaseService _databaseService;
+
         // Client interfaces
         private readonly DiscordSocketClient _discordClient;
         private readonly DiscordSocketConfig _discordConfig;
-        private readonly MongoClient _mongoClient;
+        //private readonly MongoClient _mongoClient;
 
         // Handlers
         //private readonly SlashCommandHandler _slashCommandHandler;
@@ -37,18 +39,26 @@ namespace Bot
         public ExaltedSage(AppConfig appSettings)
         {
             _token = appSettings.settings.Token;
-            DatabaseService.SetDatabaseName(appSettings.settings.DatabaseName);
+            //DatabaseService.SetDatabaseName(appSettings.settings.DatabaseName);
 
-            // Initializing member variables
+            // Initializing the Discord client interface
             _discordConfig = GenerateConfig();
             _discordClient = new DiscordSocketClient(_discordConfig);
-            _mongoClient = DatabaseService.EstablishConnection(
+            //_mongoClient = DatabaseService.EstablishConnection(
+            //    appSettings.settings.ConnectionUri);
+
+            // Establishing connection to the database
+            _databaseService = new DatabaseService(
+                appSettings.settings.DatabaseName,
                 appSettings.settings.ConnectionUri);
 
             //_slashCommandHandler = new SlashCommandHandler();
-            _messageHandler = new MessageEventHandler(_discordClient, _mongoClient);
-            _userHandler = new UserEventHandler(_discordClient, _mongoClient);
-            _voiceHandler = new VoiceEventHandler(_discordClient, _mongoClient);
+            _messageHandler = new MessageEventHandler(_discordClient,
+                _databaseService);
+            _userHandler = new UserEventHandler(_discordClient,
+                _databaseService);
+            _voiceHandler = new VoiceEventHandler(_discordClient,
+                _databaseService);
 
             _logService = new LogService(_discordClient);
 
@@ -100,7 +110,8 @@ namespace Bot
             ulong channelId = 0;
 
             if (ReleaseMode.Mode == "Prod")
-                channelId = await ChannelHelper.GetChannelId(_mongoClient, "Guild", "text", "bot-channel");
+                channelId = await ChannelHelper.GetChannelId(_databaseService,
+                    "Guild", "text", "bot-channel");
             else
                 channelId = 720690834638372949;
 
@@ -112,8 +123,10 @@ namespace Bot
             {
                 // Different collections to filter results from
                 var tomorrowPveDailiesId = await HttpService.GetTomorrowsPveDailiesId();
-                var dailyPveAchievements = await DatabaseService.GetDailyPveAchievements(_mongoClient);
-                var dailyPveWatchlist = await DatabaseService.GetDailyPveWatchlist(_mongoClient);
+                var dailyPveAchievements = await _databaseService.
+                    GetDailyPveAchievements();
+                var dailyPveWatchlist = await _databaseService.
+                    GetDailyPveWatchlist();
 
                 List<string> dailyPveNames = new();
                 List<string> upcomingPveDailies = new();

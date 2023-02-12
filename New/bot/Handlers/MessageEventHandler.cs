@@ -19,7 +19,8 @@ namespace Bot.Handlers
     public class MessageEventHandler
     {
         private readonly DiscordSocketClient _discordClient;
-        private readonly MongoClient _mongoClient;
+        private readonly DatabaseService _dbService;
+        //private readonly MongoClient _mongoClient;
 
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -34,10 +35,11 @@ namespace Bot.Handlers
         ///     The MongoClient interface that accesses collections
         ///     from the database.
         /// </param>
-        public MessageEventHandler(DiscordSocketClient discordClient, MongoClient mongoClient)
+        public MessageEventHandler(DiscordSocketClient discordClient,
+            DatabaseService databaseService)
         {
             _discordClient = discordClient;
-            _mongoClient = mongoClient;
+            _dbService= databaseService;
         }
 
         /// <summary>
@@ -123,8 +125,8 @@ namespace Bot.Handlers
 
             if (ReleaseMode.Mode == "Prod")
             {
-                var broadcastId = await ChannelHelper.GetChannelId(_mongoClient, "admin-tools",
-                    "text", "bot-alerts");
+                var broadcastId = await ChannelHelper.GetChannelId(
+                    _dbService, "admin-tools", "text", "bot-alerts");
                 var broadcastChannel = _discordClient.GetChannel(broadcastId)
                     as SocketTextChannel;
 
@@ -171,7 +173,7 @@ namespace Bot.Handlers
         {
             string randomResponse = null;
 
-            var responses = await DatabaseService.GetResponses(_mongoClient, responseType);
+            var responses = await _dbService.GetResponses(responseType);
             var index = RandomHelper.rand.Next(responses.Count);
 
             randomResponse = responses[index];
@@ -201,7 +203,8 @@ namespace Bot.Handlers
 
             // TODO: the number of channels to be removed may end up growing depending
             // on the total number of channels in the doc.
-            var approvedChannels = await DatabaseService.GetCategoryTextChannels(_mongoClient, "Guild");
+            var approvedChannels = await _dbService
+                .GetCategoryTextChannels("Guild");
             approvedChannels.Remove("bot-channel");
 
             var approvedChannelsId = approvedChannels.Values.ToList();

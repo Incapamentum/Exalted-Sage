@@ -29,7 +29,7 @@ namespace Bot.Helpers
         /// <returns>
         ///     The ulong ID of the channel to look for.
         /// </returns>
-        internal static async Task<ulong> GetChannelId(MongoClient client,
+        internal static async Task<ulong> GetChannelId(DatabaseService dbService,
             string docName, string channelType, string channelName)
         {
             Dictionary<string, ulong> channels = null;
@@ -38,10 +38,10 @@ namespace Bot.Helpers
             switch (channelType)
             {
                 case "text":
-                    channels = await DatabaseService.GetCategoryTextChannels(client, docName);
+                    channels = await dbService.GetCategoryTextChannels(docName);
                     break;
                 case "voice":
-                    channels = await DatabaseService.GetCategoryVoiceChannels(client, docName);
+                    channels = await dbService.GetCategoryVoiceChannels(docName);
                     break;
             }
 

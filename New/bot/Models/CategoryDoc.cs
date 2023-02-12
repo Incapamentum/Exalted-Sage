@@ -1,21 +1,14 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-#nullable enable
-
 using System.Collections.Generic;
+
+#nullable enable
 
 namespace Bot.Models
 {
-    internal class CategoryDoc
+    internal class CategoryDoc : BaseTemplateDoc
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
-
-        [BsonElement("Title")]
-        public string DocName { get; set; } = null!;
-
         [BsonElement("CatId")]
         public ulong? CategoryId { get; set; }
 
