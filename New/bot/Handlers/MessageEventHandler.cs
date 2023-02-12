@@ -125,8 +125,8 @@ namespace Bot.Handlers
 
             if (ReleaseMode.Mode == "Prod")
             {
-                var broadcastId = await ChannelHelper.GetChannelId(_mongoClient, "admin-tools",
-                    "text", "bot-alerts");
+                var broadcastId = await ChannelHelper.GetChannelId(
+                    _databaseService, "admin-tools", "text", "bot-alerts");
                 var broadcastChannel = _discordClient.GetChannel(broadcastId)
                     as SocketTextChannel;
 
@@ -173,7 +173,7 @@ namespace Bot.Handlers
         {
             string randomResponse = null;
 
-            var responses = await DatabaseService.GetResponses(_mongoClient, responseType);
+            var responses = await _databaseService.GetResponses(responseType);
             var index = RandomHelper.rand.Next(responses.Count);
 
             randomResponse = responses[index];
@@ -203,7 +203,8 @@ namespace Bot.Handlers
 
             // TODO: the number of channels to be removed may end up growing depending
             // on the total number of channels in the doc.
-            var approvedChannels = await DatabaseService.GetCategoryTextChannels(_mongoClient, "Guild");
+            var approvedChannels = await _databaseService
+                .GetCategoryTextChannels("Guild");
             approvedChannels.Remove("bot-channel");
 
             var approvedChannelsId = approvedChannels.Values.ToList();
