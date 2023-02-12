@@ -109,7 +109,8 @@ namespace Bot
             ulong channelId = 0;
 
             if (ReleaseMode.Mode == "Prod")
-                channelId = await ChannelHelper.GetChannelId(_mongoClient, "Guild", "text", "bot-channel");
+                channelId = await ChannelHelper.GetChannelId(_databaseService,
+                    "Guild", "text", "bot-channel");
             else
                 channelId = 720690834638372949;
 
