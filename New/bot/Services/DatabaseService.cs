@@ -13,7 +13,7 @@ namespace Bot.Services
     ///     Exposes a database as a service to the program via public methods
     ///     in the retrieval of stored documents.
     /// </summary>
-    internal static class DatabaseService
+    public static class DatabaseService
     {
         static string dbName;
 
@@ -21,7 +21,7 @@ namespace Bot.Services
         ///     
         /// </summary>
         /// <param name="name"></param>
-        internal static void SetDatabaseName(string name)
+        public static void SetDatabaseName(string name)
         {
             dbName = name;
         }
@@ -36,7 +36,7 @@ namespace Bot.Services
         /// <returns>
         ///     A client interface connection to the MongoDB cluster.
         /// </returns>
-        internal static MongoClient EstablishConnection(string connectionUri)
+        public static MongoClient EstablishConnection(string connectionUri)
         {
             MongoClient client = null;
 
@@ -49,7 +49,7 @@ namespace Bot.Services
 
         [Obsolete("Better off to be supported in a separate, helper class vs " +
             "in this class.")]
-        internal static async Task<ulong> GetAdminAlertChannel(MongoClient client)
+        public static async Task<ulong> GetAdminAlertChannel(MongoClient client)
         {
             var channels = await GetCategoryTextChannels(client, "admin-tools");
 
@@ -66,7 +66,7 @@ namespace Bot.Services
         /// <returns>
         ///     A {achievementID, achivementName} pairing of daily PVE achievements.
         /// </returns>
-        internal static async Task<Dictionary<int, string>> GetDailyPveAchievements(MongoClient client)
+        public static async Task<Dictionary<int, string>> GetDailyPveAchievements(MongoClient client)
         {
             var achievementCollection = GrabCollection<AchievementDoc>(client, "achievements");
             var dailyAchieves = await GrabDocument(achievementCollection, "Daily Achievements");
@@ -85,7 +85,7 @@ namespace Bot.Services
         /// <returns>
         ///     A list of strings of the daily PVE achievement watchlist
         /// </returns>
-        internal static async Task<List<string>> GetDailyPveWatchlist(MongoClient client)
+        public static async Task<List<string>> GetDailyPveWatchlist(MongoClient client)
         {
             var watchlistCollection = GrabCollection<WatchlistDoc>(client, "watchlists");
             var watchlistDoc = await GrabDocument(watchlistCollection, "Daily Watchlist");
@@ -107,7 +107,7 @@ namespace Bot.Services
         /// <returns>
         ///     A list of strings representing response callbacks the bot makes.
         /// </returns>
-        internal static async Task<List<string>> GetResponses(MongoClient client, string responseType)
+        public static async Task<List<string>> GetResponses(MongoClient client, string responseType)
         {
             var responseCollection = GrabCollection<ResponseDoc>(client, "responses");
             var responseDoc = await GrabDocument(responseCollection, responseType);
@@ -130,7 +130,7 @@ namespace Bot.Services
         ///     A (string, ulong) mapping of the text channels found in the specified
         ///     category.
         /// </returns>
-        internal static async Task<Dictionary<string, ulong>> GetCategoryTextChannels(MongoClient client, string catName)
+        public static async Task<Dictionary<string, ulong>> GetCategoryTextChannels(MongoClient client, string catName)
         {
             var categoryCollection = GrabCollection<CategoryDoc>(client, "categories");
             var cat = await GrabDocument(categoryCollection, catName);
@@ -153,7 +153,7 @@ namespace Bot.Services
         ///     A (string, ulong) mapping of the voice channels found in the specified
         ///     category.
         /// </returns>
-        internal static async Task<Dictionary<string, ulong>> GetCategoryVoiceChannels(MongoClient client, string catName)
+        public static async Task<Dictionary<string, ulong>> GetCategoryVoiceChannels(MongoClient client, string catName)
         {
             var categoryCollection = GrabCollection<CategoryDoc>(client, "categories");
             var cat = await GrabDocument(categoryCollection, catName);
@@ -161,7 +161,7 @@ namespace Bot.Services
             return cat.VoiceChannels;
         }
 
-        internal static async Task<Dictionary<string, ulong>> GetCategoryServerRoles(MongoClient client, string catName)
+        public static async Task<Dictionary<string, ulong>> GetCategoryServerRoles(MongoClient client, string catName)
         {
             var categoryCollection = GrabCollection<RolesDoc>(client, "roles");
             var cat = await GrabDocument(categoryCollection, catName);
@@ -169,7 +169,7 @@ namespace Bot.Services
             return cat.Roles;
         }
 
-        internal static async Task<Tuple<ulong, ulong>> GetLeadershipIds(MongoClient client)
+        public static async Task<Tuple<ulong, ulong>> GetLeadershipIds(MongoClient client)
         {
             var categoryCollection = GrabCollection<RolesDoc>(client, "roles");
             var cat = await GrabDocument(categoryCollection, "Guild Role IDs");
