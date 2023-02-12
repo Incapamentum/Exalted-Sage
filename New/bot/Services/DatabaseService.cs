@@ -159,8 +159,7 @@ namespace Bot.Services
             return cat.Roles;
         }
 
-        public async Task<Tuple<ulong, ulong>>
-            GetLeadershipIds(MongoClient client)
+        public async Task<Tuple<ulong, ulong>> GetLeadershipIds()
         {
             var categoryCollection = GrabCollection<RolesDoc>("roles");
             var cat = await GrabDocument(categoryCollection, "Guild Role IDs");
