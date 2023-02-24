@@ -94,6 +94,44 @@ namespace Bot.Handlers
             }
         }
 
+        public async Task UserUpdatedAsync(SocketUser previous,
+            SocketUser current)
+        {
+            // Cast to GuildUser
+            var gPrevious = previous as SocketGuildUser;
+            var gCurrent = current as SocketGuildUser;
+
+            // Debugging purposes
+            if (ReleaseMode.Mode == "Prod")
+            {
+                // Check to see if user has lost the Gilded role
+                if (CheckForGildedRole(gPrevious) &&
+                    !CheckForGildedRole(gCurrent))
+                {
+                    // Update user's role to the Explorer role
+                    var explorerId = await _dbService.
+                        GrabUserRoleIdByName("Server Management Roles",
+                        "Explorer");
+
+                    await gCurrent.AddRoleAsync(explorerId);
+                }
+            }
+            else
+            {
+                // Check to see if user has lost the Gilded role
+                if (CheckForGildedRole(gPrevious) &&
+                    !CheckForGildedRole(gCurrent))
+                {
+                    // Update user's role to the Explorer role
+                    var explorerId = await _dbService.
+                        GrabUserRoleIdByName("Server Management Roles",
+                        "Explorer");
+
+                    await gCurrent.AddRoleAsync(explorerId);
+                }
+            }
+        }
+
         /// <summary>
         ///     Checks to see if the user has any in-game guild roles.
         /// </summary>
@@ -141,6 +179,18 @@ namespace Bot.Handlers
 
             await broadcast.SendMessageAsync($"Alert <@&{leadershipIds.Item1}>" +
                 $" <@&{leadershipIds.Item2}>", embed: embed.Build());
+        }
+
+        private static bool CheckForGildedRole(SocketGuildUser gUser)
+        {
+            var gUserRoles = gUser.Roles.ToList();
+
+            if (gUserRoles.Any(role => role.Name == "Gilded"))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
