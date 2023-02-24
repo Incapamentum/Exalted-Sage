@@ -161,10 +161,20 @@ namespace Bot.Services
 
         public async Task<Tuple<ulong, ulong>> GetLeadershipIds()
         {
-            var categoryCollection = GrabCollection<RolesDoc>("roles");
-            var cat = await GrabDocument(categoryCollection, "Guild Role IDs");
+            var roleCollection = GrabCollection<RolesDoc>("roles");
+            var roles = await GrabDocument(roleCollection, "Guild Role IDs");
 
-            return Tuple.Create(cat.Roles["Exalted"], cat.Roles["Ascended"]);
+            return Tuple.Create(roles.Roles["Exalted"], roles.Roles["Ascended"]);
+        }
+
+
+        public async Task<ulong> GrabUserRoleIdByName(string catName, string roleName)
+        {
+            var roleCollection = GrabCollection<RolesDoc>("roles");
+            var roles = await GrabDocument<RolesDoc>(roleCollection, catName);
+
+            // This might throw an error
+            return roles.Roles[roleName];
         }
 
         /// <summary>
