@@ -41,5 +41,18 @@ namespace BotTests
             Assert.IsNotNull(responseRoles);
             Assert.IsNotNull(responseWatchlist);
         }
+
+        [TestMethod]
+        public void CheckIfIdRetrievalFails()
+        {
+            string catName = "Server Management Roles";
+
+            var taskActiveCommander = dbService.
+                GrabUserRoleIdByName(catName, "Active Commander");
+            taskActiveCommander.Wait();
+            var responseActiveCommander = taskActiveCommander.Result;
+
+            Assert.AreEqual((ulong)739588924896444417, responseActiveCommander);
+        }
     }
 }
