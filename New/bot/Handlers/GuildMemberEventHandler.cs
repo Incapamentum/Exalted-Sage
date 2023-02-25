@@ -106,7 +106,7 @@ namespace Bot.Handlers
             SocketGuildUser current)
         {
             if ((!HasRole(previous, "Gilded") && HasRole(current, "Gilded"))
-                && (HasRole(current, "Explorer"))
+                && (HasRole(current, "Explorer")))
             {
                 return true;
             }
@@ -119,8 +119,8 @@ namespace Bot.Handlers
         private static bool CheckIfLostGilded(SocketGuildUser previous,
             SocketGuildUser current)
         {
-            if ((HasRole(previous, "Gilded") && !HasRole(current, "Gilded")
-                && (!HasRole(current, "Explorer"))
+            if ((HasRole(previous, "Gilded") && !HasRole(current, "Gilded"))
+                && (!HasRole(current, "Explorer")))
             {
                 return true;
             }
