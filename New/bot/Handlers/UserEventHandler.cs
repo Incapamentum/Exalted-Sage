@@ -105,8 +105,7 @@ namespace Bot.Handlers
             if (ReleaseMode.Mode == "Prod")
             {
                 // Check to see if user has lost the Gilded role
-                if (CheckForGildedRole(gPrevious) &&
-                    !CheckForGildedRole(gCurrent))
+                if (CheckIfGainedGilded(gPrevious, gCurrent))
                 {
                     // Update user's role to the Explorer role
                     var explorerId = await _dbService.
@@ -119,8 +118,7 @@ namespace Bot.Handlers
             else
             {
                 // Check to see if user has lost the Gilded role
-                if (CheckForGildedRole(gPrevious) &&
-                    !CheckForGildedRole(gCurrent))
+                if (CheckIfGainedGilded(gPrevious, gCurrent))
                 {
                     // Update user's role to the Explorer role
                     var explorerId = await _dbService.
@@ -181,11 +179,33 @@ namespace Bot.Handlers
                 $" <@&{leadershipIds.Item2}>", embed: embed.Build());
         }
 
-        private static bool CheckForGildedRole(SocketGuildUser gUser)
+        private static bool CheckForRole(SocketGuildUser gUser, string roleName)
         {
             var gUserRoles = gUser.Roles.ToList();
 
-            if (gUserRoles.Any(role => role.Name == "Gilded"))
+            if (gUserRoles.Any(role => role.Name == roleName))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Checks to see if the user has gained the Gilded role or
+        ///     has lost it.
+        /// </summary>
+        /// <param name="prevGUser"></param>
+        /// <param name="currentGUser"></param>
+        /// <returns>
+        ///     True if the user gained the Gilded role, false if they lost
+        ///     it
+        /// </returns>
+        private static bool CheckIfGainedGilded(SocketGuildUser prevGUser,
+            SocketGuildUser currentGUser)
+        {
+            if (CheckForRole(prevGUser, "Gilded") &&
+                !CheckForRole(currentGUser, "Gilded"))
             {
                 return true;
             }
