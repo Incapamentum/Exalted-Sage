@@ -66,7 +66,8 @@ namespace Bot
             _logService = new LogService(_discordClient);
 
             // Guild member events
-
+            _discordClient.GuildMemberUpdated 
+                += _guildMemberEventHandler.GuildMemberUpdatedAsync;
 
             //_discordClient.SlashCommandExecuted += _slashCommandHandler.SlashCommandExecute;
             // Message events
