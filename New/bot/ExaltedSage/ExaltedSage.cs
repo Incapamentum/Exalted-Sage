@@ -78,7 +78,8 @@ namespace Bot
             _discordClient.UserLeft += _userHandler.UserLeftAsync;
 
             // Voice channel events
-            _discordClient.UserVoiceStateUpdated += _voiceHandler.VoiceStateChangeAsync;
+            _discordClient.UserVoiceStateUpdated 
+                += _voiceHandler.VoiceStateChangeAsync;
 
             _discordClient.Log += _logService.LogAsync;
 
