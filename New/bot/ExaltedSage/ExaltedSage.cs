@@ -29,6 +29,7 @@ namespace Bot
 
         // Handlers
         //private readonly SlashCommandHandler _slashCommandHandler;
+        private readonly GuildMemberEventHandler _guildMemberEventHandler;
         private readonly MessageEventHandler _messageHandler;
         private readonly UserEventHandler _userHandler;
         private readonly VoiceEventHandler _voiceHandler;
@@ -53,6 +54,8 @@ namespace Bot
                 appSettings.settings.ConnectionUri);
 
             //_slashCommandHandler = new SlashCommandHandler();
+            _guildMemberEventHandler = new GuildMemberEventHandler
+                (_discordClient, _databaseService);
             _messageHandler = new MessageEventHandler(_discordClient,
                 _databaseService);
             _userHandler = new UserEventHandler(_discordClient,
@@ -62,6 +65,9 @@ namespace Bot
 
             _logService = new LogService(_discordClient);
 
+            // Guild member events
+
+
             //_discordClient.SlashCommandExecuted += _slashCommandHandler.SlashCommandExecute;
             // Message events
             _discordClient.MessageReceived += _messageHandler.MessageReceivedAsync;
@@ -69,7 +75,6 @@ namespace Bot
 
             // User events
             _discordClient.UserLeft += _userHandler.UserLeftAsync;
-            _discordClient.UserUpdated += _userHandler.UserUpdatedAsync;
 
             // Voice channel events
             _discordClient.UserVoiceStateUpdated += _voiceHandler.VoiceStateChangeAsync;
