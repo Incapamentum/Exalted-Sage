@@ -44,7 +44,7 @@ namespace Bot.Handlers
                 {
                     await current.RemoveRoleAsync(explorerId);
                 }
-                else
+                else if (!CheckForRole(current, "Explorer"))
                 {
                     await current.AddRoleAsync(explorerId);
                 }
