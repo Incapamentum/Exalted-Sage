@@ -44,7 +44,7 @@ namespace Bot.Handlers
                 {
                     await current.RemoveRoleAsync(explorerId);
                 }
-                else if (!CheckForRole(current, "Explorer"))
+                else if (CheckIfLostGilded(prev, current))
                 {
                     await current.AddRoleAsync(explorerId);
                 }
@@ -75,7 +75,7 @@ namespace Bot.Handlers
         /// <returns>
         ///     True if the user has the role, false otherwise.
         /// </returns>
-        private static bool CheckForRole(SocketGuildUser user, string roleName)
+        private static bool HasRole(SocketGuildUser user, string roleName)
         {
             var userRoles = user.Roles.ToList();
 
@@ -105,8 +105,22 @@ namespace Bot.Handlers
         private static bool CheckIfGainedGilded(SocketGuildUser previous,
             SocketGuildUser current)
         {
-            if (!CheckForRole(previous, "Gilded") &&
-                CheckForRole(current, "Gilded"))
+            if ((!HasRole(previous, "Gilded") && HasRole(current, "Gilded"))
+                && (HasRole(current, "Explorer")))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        // This has to check whether Gilded has been lost and role doesn't currently
+        // have the Explorer
+        private static bool CheckIfLostGilded(SocketGuildUser previous,
+            SocketGuildUser current)
+        {
+            if ((HasRole(previous, "Gilded") && !HasRole(current, "Gilded"))
+                && (!HasRole(current, "Explorer")))
             {
                 return true;
             }
