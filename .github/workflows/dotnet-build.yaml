@@ -26,6 +26,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Exalted-Sage
-        path: New/bot/bin/Release/net6.0/
+        path: New/Bot/bin/Release/net6.0/
 #     - name: Test
 #       run: dotnet test --no-build --verbosity normal
