@@ -17,11 +17,8 @@ namespace Bot.Handlers
     /// <summary>
     ///     Handles any user-related events
     /// </summary>
-    public class UserEventHandler
+    public class UserEventHandler : BaseEventHandler
     {
-        private readonly DiscordSocketClient _discordClient;
-        private readonly DatabaseService _dbService;
-        //private readonly MongoClient _mongoClient;
 
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -35,12 +32,8 @@ namespace Bot.Handlers
         /// <param name="mongoClient">
         /// </param>
         public UserEventHandler(DiscordSocketClient discordClient,
-            DatabaseService dbService)
-        {
-            _discordClient = discordClient;
-            _dbService = dbService;
-            //_mongoClient = mongoClient;
-        }
+            DatabaseService dbService) : base(discordClient, dbService)
+        { }
 
         /// <summary>
         ///     Fired off whenever a user leaves the server.

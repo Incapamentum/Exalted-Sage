@@ -16,21 +16,13 @@ namespace Bot.Handlers
     /// <summary>
     ///     Handler class that handles state of voice channels
     /// </summary>
-    internal class VoiceEventHandler
+    internal class VoiceEventHandler : BaseEventHandler
     {
-        private readonly DiscordSocketClient _discordClient;
-        private readonly DatabaseService _dbService;
-        //private readonly MongoClient _mongoClient;
-
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public VoiceEventHandler(DiscordSocketClient discordClient,
-            DatabaseService dbService)
-        {
-            _discordClient = discordClient;
-            _dbService = dbService;
-            //_mongoClient = mongoClient;
-        }
+            DatabaseService dbService) : base(discordClient, dbService)
+        { }
 
         public async Task VoiceStateChangeAsync(SocketUser user, SocketVoiceState previous,
             SocketVoiceState current)

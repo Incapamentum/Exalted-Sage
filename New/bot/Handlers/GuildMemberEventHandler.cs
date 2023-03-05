@@ -16,17 +16,12 @@ namespace Bot.Handlers
     /// <summary>
     ///     Handles any guild member-related events
     /// </summary>
-    public class GuildMemberEventHandler
+    public class GuildMemberEventHandler : BaseEventHandler
     {
-        private readonly DiscordSocketClient _discordClient;
-        private readonly DatabaseService _dbService;
 
         public GuildMemberEventHandler(DiscordSocketClient discordClient,
-            DatabaseService dbService)
-        {
-            _discordClient = discordClient;
-            _dbService = dbService;
-        }
+            DatabaseService dbService) : base(discordClient, dbService)
+        { }
 
         public async Task
             GuildMemberUpdatedAsync(Cacheable<SocketGuildUser, UInt64> previous,
