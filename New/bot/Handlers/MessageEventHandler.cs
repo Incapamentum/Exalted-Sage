@@ -16,11 +16,8 @@ namespace Bot.Handlers
     /// <summary>
     ///     Handles any message-related events.
     /// </summary>
-    public class MessageEventHandler
+    public class MessageEventHandler : BaseEventHandler
     {
-        private readonly DiscordSocketClient _discordClient;
-        private readonly DatabaseService _dbService;
-        //private readonly MongoClient _mongoClient;
 
         private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -31,16 +28,14 @@ namespace Bot.Handlers
         /// <param name="discordClient">
         ///     The SocketClient interface to interact with Discord.
         /// </param>
-        /// <param name="mongoClient">
-        ///     The MongoClient interface that accesses collections
-        ///     from the database.
+        /// <param name="databaseService">
+        ///     The MongoClient interface is encapsulated here, with support
+        ///     for CRUD operations.
         /// </param>
         public MessageEventHandler(DiscordSocketClient discordClient,
             DatabaseService databaseService)
-        {
-            _discordClient = discordClient;
-            _dbService= databaseService;
-        }
+            : base(discordClient, databaseService)
+        { }
 
         /// <summary>
         ///     Triggered whenever a message is sent by a user, therefore being
