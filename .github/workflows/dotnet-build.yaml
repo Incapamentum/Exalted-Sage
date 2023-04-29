@@ -19,9 +19,9 @@ jobs:
       with:
         dotnet-version: 6.0.400
     - name: Restore Dependencies
-      run: dotnet restore ./New/bot/bot.csproj
+      run: dotnet restore ./New/Bot/Bot.csproj
     - name: Build
-      run: dotnet build ./New/bot/bot.csproj --configuration Release --version-suffix ${{ steps.commit.outputs.short }} --no-restore
+      run: dotnet build ./New/Bot/Bot.csproj --configuration Release --version-suffix ${{ steps.commit.outputs.short }} --no-restore
     - name: Archive Build
       uses: actions/upload-artifact@v3
       with:
