@@ -210,7 +210,8 @@ namespace Bot
                 AlwaysDownloadUsers= true,
 
                 GatewayIntents = GatewayIntents.AllUnprivileged 
-                    | GatewayIntents.GuildMembers,
+                    | GatewayIntents.GuildMembers
+                    | GatewayIntents.MessageContent,
 
                 WebSocketProvider = DefaultWebSocketProvider.Instance,
                 UdpSocketProvider = DefaultUdpSocketProvider.Instance
