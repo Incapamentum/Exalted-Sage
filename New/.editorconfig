@@ -1,4 +1,10 @@
-﻿[*.cs]
+﻿[*]
+guidelines = 80
+
+[*.cs]
+
+[*.(cs, vb)]
+guidelines = 80, 120
 
 # IDE0059: Unnecessary assignment of a value
 dotnet_diagnostic.IDE0059.severity = none
