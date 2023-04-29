@@ -25,7 +25,8 @@ namespace Bot.Services
             List<int> tomorrowsIds = new();
 
             HttpResponseMessage response;
-            response = await client.GetAsync("https://api.guildwars2.com/v2/achievements/daily/tomorrow");
+            response = await client
+                .GetAsync("https://api.guildwars2.com/v2/achievements/daily/tomorrow");
 
             try
             {
@@ -67,7 +68,9 @@ namespace Bot.Services
             HttpClient client = new();
 
             HttpResponseMessage response;
-            response = await client.GetAsync("https://api.guildwars2.com/v2/achievements/" + id.ToString());
+            response = await client
+                .GetAsync("https://api.guildwars2.com/v2/achievements/"
+                + id.ToString());
 
             try
             {

@@ -53,7 +53,8 @@ namespace Bot.Services
         /// </returns>
         public async Task<Dictionary<int, string>> GetDailyPveAchievements()
         {
-            var achievementCollection = GrabCollection<AchievementDoc>("achievements");
+            var achievementCollection 
+                = GrabCollection<AchievementDoc>("achievements");
             var dailyAchieves = await GrabDocument(achievementCollection,
                 "Daily Achievements");
 
@@ -82,8 +83,8 @@ namespace Bot.Services
 
         /// <summary>
         ///     Accesses the 'responses' collection in the database to retrieve
-        ///     a list of responses. Each doc in this collection corresponds with
-        ///     a particular type.
+        ///     a list of responses. Each doc in this collection corresponds
+        ///     with a particular type.
         /// </summary>
         /// <param name="client">
         ///     The MongoDB client connection to cluster.
@@ -138,8 +139,8 @@ namespace Bot.Services
         ///     The name of the category doc to access.
         /// </param>
         /// <returns>
-        ///     A (string, ulong) mapping of the voice channels found in the specified
-        ///     category.
+        ///     A (string, ulong) mapping of the voice channels found in the
+        ///     specified category.
         /// </returns>
         public async Task<Dictionary<string, ulong>>
             GetCategoryVoiceChannels(string catName)
@@ -168,7 +169,8 @@ namespace Bot.Services
         }
 
 
-        public async Task<ulong> GrabUserRoleIdByName(string catName, string roleName)
+        public async Task<ulong> GrabUserRoleIdByName(string catName,
+            string roleName)
         {
             var roleCollection = GrabCollection<RolesDoc>("roles");
             var roles = await GrabDocument<RolesDoc>(roleCollection, catName);
@@ -197,7 +199,8 @@ namespace Bot.Services
 
             var database = _client.GetDatabase(_dbName) as MongoDatabaseBase;
 
-            collection = database.GetCollection<TModel>(type) as MongoCollectionBase<TModel>;
+            collection = database.GetCollection<TModel>(type)
+                as MongoCollectionBase<TModel>;
 
             return collection;
         }
@@ -216,7 +219,8 @@ namespace Bot.Services
         ///     The title of the doc to look for.
         /// </param>
         /// <returns></returns>
-        private static async Task<TDoc> GrabDocument<TDoc>(MongoCollectionBase<TDoc> collection, string title)
+        private static async Task<TDoc> 
+            GrabDocument<TDoc>(MongoCollectionBase<TDoc> collection, string title)
         {
             TDoc doc;
 
