@@ -19,7 +19,8 @@ namespace Bot.Handlers
     public class MessageEventHandler : BaseEventHandler
     {
 
-        private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static NLog.Logger Logger = NLog.LogManager
+            .GetCurrentClassLogger();
 
         /// <summary>
         ///     Handles specific event-driven processes triggered by
@@ -70,13 +71,15 @@ namespace Bot.Handlers
                 {
                     // Guild category
                     case 716050945615855777:
-                        Logger.Info("Processing a message with following origin: "
+                        Logger
+                            .Info("Processing a message with following origin: "
                             + message.Channel.Name + " in " + chan.Category.Name);
                         await ProcessMessageResponse(message, selfId);
                         break;
 
                     default:
-                        Logger.Info("No processing will be done! (No supported category)");
+                        Logger.Info("No processing will be done!" +
+                            " (No supported category)");
                         break;
                 }
             }
@@ -88,13 +91,13 @@ namespace Bot.Handlers
         }
 
         /// <summary>
-        ///     Currently keeps track of messages deleted only in supervised channels.
-        ///     Upon message deletion, creates an embedded message to publish to the
-        ///     indicated broadcast channel.
+        ///     Currently keeps track of messages deleted only in supervised
+        ///     channels. Upon message deletion, creates an embedded message to
+        ///     publish to the indicated broadcast channel.
         /// </summary>
         /// <param name="message">
-        ///     Cacheable copy of the deleted message. Not guaranteed to actually
-        ///     be cached.
+        ///     Cacheable copy of the deleted message. Not guaranteed to
+        ///     actually be cached.
         /// </param>
         /// <param name="channel">
         ///     Cacheable copy of the channel from which the message was deleted
@@ -106,8 +109,9 @@ namespace Bot.Handlers
         /// <remarks>
         ///     NOTE: fix later (maybe)
         /// </remarks>
-        public async Task MessageDeletedAsync(Cacheable<IMessage, UInt64> message,
-                                              Cacheable<IMessageChannel, UInt64> channel)
+        public async Task 
+            MessageDeletedAsync(Cacheable<IMessage, UInt64> message,
+                Cacheable<IMessageChannel, UInt64> channel)
         {
             // Make sure caches are valid
             if (!message.HasValue && !channel.HasValue)
@@ -139,15 +143,16 @@ namespace Bot.Handlers
                         break;
 
                     default:
-                        Logger.Info("No processing will be done! (No supported category)");
+                        Logger.Info("No processing will be done!" +
+                            " (No supported category)");
                         break;
                 }
             }
             // Debugging purposes
             else
             {
-                var broadcastChannel = _discordClient.GetChannel(1013185367924547654)
-                    as SocketTextChannel;
+                var broadcastChannel = _discordClient
+                    .GetChannel(1013185367924547654) as SocketTextChannel;
 
                 await ProcessTradeMessageDeletion(msg, broadcastChannel);
                 // Need to test something? Put it in here.
@@ -177,8 +182,8 @@ namespace Bot.Handlers
         }
 
         /// <summary>
-        ///     Process the received message by extracting data from it, which is used
-        ///     in determining which response the bot will reply with.
+        ///     Process the received message by extracting data from it, which
+        ///     is used in determining which response the bot will reply with.
         /// </summary>
         /// <param name="message">
         ///     The SocketMessage that the bot received.
@@ -188,9 +193,11 @@ namespace Bot.Handlers
         /// </param>
         /// 
         /// <remarks>
-        ///     Try and avoid the bot to respond to certain channels. We don't want that.
+        ///     Try and avoid the bot to respond to certain channels.
+        ///     We don't want that.
         /// </remarks>
-        private async Task ProcessMessageResponse(SocketMessage message, ulong botId)
+        private async Task 
+            ProcessMessageResponse(SocketMessage message, ulong botId)
         {
             string response = null;
 
@@ -247,7 +254,9 @@ namespace Bot.Handlers
         /// <returns>
         ///     None.
         /// </returns>
-        private static async Task ProcessTradeMessageDeletion(SocketMessage msg, SocketTextChannel broadcast)
+        private static async Task 
+            ProcessTradeMessageDeletion(SocketMessage msg,
+                SocketTextChannel broadcast)
         {
             // Obtain information regarding the message deletion
             var user = msg.Author;
@@ -279,7 +288,8 @@ namespace Bot.Handlers
         ///     The UID of the bot.
         /// </param>
         /// <returns></returns>
-        private static bool BotWasPinged(List<SocketUser> mentionedUsers, ulong botId)
+        private static bool 
+            BotWasPinged(List<SocketUser> mentionedUsers, ulong botId)
         {
             if (mentionedUsers.Count > 0)
             {
@@ -306,7 +316,9 @@ namespace Bot.Handlers
         /// <returns>
         ///     True if message contains any of the substrings, false otherwise.
         /// </returns>
-        private static bool MessageContainsSubstring(List<String> contentStrings, params string[] substrings)
+        private static bool 
+            MessageContainsSubstring(List<String> contentStrings,
+                params string[] substrings)
         {
             var chance = RandomHelper.rand.NextDouble();
 
@@ -338,7 +350,8 @@ namespace Bot.Handlers
         ///     applicable towards any subset of channels if it ever gets that
         ///     way.
         /// </remarks>
-        private static bool TradeChannelOrigin(List<ulong> channelIds, ulong channelId)
+        private static bool 
+            TradeChannelOrigin(List<ulong> channelIds, ulong channelId)
         {
             if (channelIds.Contains(channelId))
                 return true;

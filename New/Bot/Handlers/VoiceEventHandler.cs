@@ -18,14 +18,16 @@ namespace Bot.Handlers
     /// </summary>
     internal class VoiceEventHandler : BaseEventHandler
     {
-        private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static NLog.Logger Logger = NLog.LogManager
+            .GetCurrentClassLogger();
 
         public VoiceEventHandler(DiscordSocketClient discordClient,
             DatabaseService dbService) : base(discordClient, dbService)
         { }
 
-        public async Task VoiceStateChangeAsync(SocketUser user, SocketVoiceState previous,
-            SocketVoiceState current)
+        public async Task 
+            VoiceStateChangeAsync(SocketUser user, SocketVoiceState previous,
+                SocketVoiceState current)
         {
             var previousVc = previous.VoiceChannel;
 
@@ -77,7 +79,8 @@ namespace Bot.Handlers
             // Check: only change if name is not default and no users in channel
             if (vc.Name != defaultName && vc.ConnectedUsers.Count == 0)
             {
-                Logger.Info($"Voice Channel {vc.Name} will default to {defaultName}.");
+                Logger.Info($"Voice Channel {vc.Name} will default to" +
+                    $" {defaultName}.");
 
                 await vc.ModifyAsync(x =>
                 {
