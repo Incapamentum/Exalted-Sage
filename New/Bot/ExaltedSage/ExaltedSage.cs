@@ -123,7 +123,7 @@ namespace Bot
 
         private void StartServerResetEventTimer()
         {
-            if (_isServerResetTimerRunning)
+            if (!_isServerResetTimerRunning)
             {
                 _isServerResetTimerRunning = true;
 
@@ -224,25 +224,6 @@ namespace Bot
                 }
             }
         }
-
-        private void StartServerResetTimer()
-        {
-            //if ()
-        }
-
-        /// <summary>
-        ///     Calculates an hour delay from time of execution.
-        /// </summary>
-        /// <returns>
-        ///     An hour delay.
-        /// </returns>
-        //private static TimeSpan CalculateHourDelay()
-        //{
-        //    DateTime nextHour = DateTime.Now.AddHours(1);
-        //    TimeSpan delay = nextHour - DateTime.Now;
-
-        //    return delay;
-        //}
 
         /// <summary>
         ///     Wrapper class that periodically calls the async task.
