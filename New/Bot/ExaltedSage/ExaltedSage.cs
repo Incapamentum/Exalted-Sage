@@ -236,15 +236,15 @@ namespace Bot
         /// </param>
         /// <param name="cancellationToken"></param>
         /// 
-        //private static async Task PeriodicAsync(Func<Task> action,
-        //    TimeSpan interval, CancellationToken cancellationToken = default)
-        //{
-        //    using var timer = new PeriodicTimer(interval);
-        //    while (await timer.WaitForNextTickAsync(cancellationToken))
-        //    {
-        //        await action();
-        //    }
-        //}
+        private static async Task PeriodicAsync(Func<Task> action,
+            TimeSpan interval, CancellationToken cancellationToken = default)
+        {
+            using var timer = new PeriodicTimer(interval);
+            while (await timer.WaitForNextTickAsync(cancellationToken))
+            {
+                await action();
+            }
+        }
 
         private static DiscordSocketConfig GenerateConfig()
         {
