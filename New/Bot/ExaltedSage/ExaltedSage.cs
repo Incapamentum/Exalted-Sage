@@ -36,6 +36,10 @@ namespace Bot
         // Services
         private readonly LogService _logService;
 
+        // Server-reset events
+        private Timer _serverResetTimer;
+        private bool _isServerResetTimerRunning = false;
+
         public ExaltedSage(AppConfig appSettings)
         {
             _token = appSettings.settings.Token;
@@ -78,6 +82,8 @@ namespace Bot
             _discordClient.Log += _logService.LogAsync;
 
             _discordClient.Ready += ReadyAsync;
+            _discordClient.Connected += ConnectedAsync;
+            _discordClient.Disconnected += DisconnectedAsync;
         }
 
         /// <summary>
@@ -92,15 +98,49 @@ namespace Bot
             await Task.Delay(Timeout.Infinite);
         }
 
+        private Task ConnectedAsync()
+        {
+            StartServerResetEventTimer();
+
+            return Task.CompletedTask;
+        }
+
+        private Task DisconnectedAsync(Exception e)
+        {
+            StopServerResetEventTimer();
+
+            return Task.CompletedTask;
+        }
+
         private Task ReadyAsync()
         {
             var period = new TimeSpan(1, 0, 0);
 
-            PeriodicAsync(OnServerReset, period);
-
             Console.WriteLine($"{_discordClient.CurrentUser} is online!");
 
             return Task.CompletedTask;
+        }
+
+        private void StartServerResetEventTimer()
+        {
+            if (_isServerResetTimerRunning)
+            {
+                _isServerResetTimerRunning = true;
+
+                var interval = TimeSpan.FromHours(1);
+
+                _serverResetTimer = new Timer(async _ =>
+                    await OnServerReset(), null, TimeSpan.Zero, interval);
+            }
+        }
+
+        private void StopServerResetEventTimer()
+        {
+            if (_isServerResetTimerRunning)
+            {
+                _serverResetTimer.Dispose();
+                _isServerResetTimerRunning = false;
+            }
         }
 
         /// <summary>
@@ -109,8 +149,9 @@ namespace Bot
         /// </summary>
         private async Task OnServerReset()
         {
-            ulong channelId = 0;
+            ulong channelId;
 
+            // Obtain proper channel based on environment
             if (ReleaseMode.Mode == "Prod")
                 channelId = await ChannelHelper.GetChannelId(_databaseService,
                     "Guild", "text", "bot-channel");
@@ -121,7 +162,7 @@ namespace Bot
                 as SocketTextChannel;
             var utcNow = DateTime.UtcNow;
 
-            // TODO: this may require some clean-up.
+            // Server reset
             if (utcNow.Hour == 0)
             {
                 // Different collections to filter results from
@@ -147,8 +188,8 @@ namespace Bot
                     var embed = new EmbedBuilder
                     {
                         Title = "Daily Alert",
-                        Description = "Attention! A daily achievement that is" +
-                        " being monitored will appear tomorrow!",
+                        Description = "Attention! A daily achievement" +
+                        " that is being monitored will appear tomorrow!",
                         Color = 0xffee05
                     };
 
@@ -173,14 +214,35 @@ namespace Bot
                     }
 
                     // Broadcast the embedded message
-                    await broadcastChannel.SendMessageAsync(embed: embed.Build());
+                    await broadcastChannel
+                        .SendMessageAsync(embed: embed.Build());
                 }
                 else
                 {
-                    await broadcastChannel.SendMessageAsync("Nothing to report...");
+                    await broadcastChannel
+                        .SendMessageAsync("Nothing to report...");
                 }
             }
         }
+
+        private void StartServerResetTimer()
+        {
+            //if ()
+        }
+
+        /// <summary>
+        ///     Calculates an hour delay from time of execution.
+        /// </summary>
+        /// <returns>
+        ///     An hour delay.
+        /// </returns>
+        //private static TimeSpan CalculateHourDelay()
+        //{
+        //    DateTime nextHour = DateTime.Now.AddHours(1);
+        //    TimeSpan delay = nextHour - DateTime.Now;
+
+        //    return delay;
+        //}
 
         /// <summary>
         ///     Wrapper class that periodically calls the async task.
@@ -193,21 +255,21 @@ namespace Bot
         /// </param>
         /// <param name="cancellationToken"></param>
         /// 
-        private static async Task PeriodicAsync(Func<Task> action,
-            TimeSpan interval, CancellationToken cancellationToken = default)
-        {
-            using var timer = new PeriodicTimer(interval);
-            while (await timer.WaitForNextTickAsync(cancellationToken))
-            {
-                await action();
-            }
-        }
+        //private static async Task PeriodicAsync(Func<Task> action,
+        //    TimeSpan interval, CancellationToken cancellationToken = default)
+        //{
+        //    using var timer = new PeriodicTimer(interval);
+        //    while (await timer.WaitForNextTickAsync(cancellationToken))
+        //    {
+        //        await action();
+        //    }
+        //}
 
-        private DiscordSocketConfig GenerateConfig()
+        private static DiscordSocketConfig GenerateConfig()
         {
             // Everything will be set to their default values unless otherwise
             // set explicitly
-            DiscordSocketConfig config = new DiscordSocketConfig
+            DiscordSocketConfig config = new()
             {
                 MessageCacheSize = 512,
                 AlwaysDownloadUsers= true,
