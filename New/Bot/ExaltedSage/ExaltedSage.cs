@@ -40,6 +40,9 @@ namespace Bot
         private Timer _serverResetTimer;
         private bool _isServerResetTimerRunning = false;
 
+        // ReadyEvent task completion
+        TaskCompletionSource<bool> _readyEventTask;
+
         public ExaltedSage(AppConfig appSettings)
         {
             _token = appSettings.settings.Token;
@@ -94,6 +97,10 @@ namespace Bot
             await _discordClient.LoginAsync(TokenType.Bot, _token);
             await _discordClient.StartAsync();
 
+            // Wait for the ready event to complete
+            _readyEventTask = new TaskCompletionSource<bool>();
+            await _readyEventTask.Task;
+
             // Block program until it's closed
             await Task.Delay(Timeout.Infinite);
         }
@@ -114,9 +121,11 @@ namespace Bot
 
         private Task ReadyAsync()
         {
-            var period = new TimeSpan(1, 0, 0);
-
             Console.WriteLine($"{_discordClient.CurrentUser} is online!");
+
+            _readyEventTask.SetResult(true);
+
+            _discordClient.Ready -= ReadyAsync;
 
             return Task.CompletedTask;
         }
@@ -130,7 +139,7 @@ namespace Bot
                 var interval = TimeSpan.FromHours(1);
 
                 _serverResetTimer = new Timer(async _ =>
-                    await OnServerReset(), null, TimeSpan.Zero, interval);
+                    await OnServerReset(), null, TimeSpan.FromSeconds(5), interval);
             }
         }
 
